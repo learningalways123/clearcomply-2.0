@@ -1,0 +1,225 @@
+{
+  "frameworkId": "nist-800-53",
+  "questions": [
+    {
+      "id": "ac-001",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": ["AC-1"],
+      "questionText": "Does your organization have documented access control policies and procedures?",
+      "stakeholderRoleId": "information-security-manager",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "ac-002",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": ["AC-2"],
+      "questionText": "Describe your account management procedures, including account creation, modification, and termination processes.",
+      "stakeholderRoleId": "system-administrator",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "ac-003",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": ["AC-3"],
+      "questionText": "How does your system enforce approved authorizations for logical access?",
+      "stakeholderRoleId": "system-administrator",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "ac-004",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": ["AC-6"],
+      "questionText": "Does your organization implement least privilege principles for user accounts?",
+      "stakeholderRoleId": "information-security-manager",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "ir-001",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": ["IR-1"],
+      "questionText": "Does your organization have documented incident response policies and procedures?",
+      "stakeholderRoleId": "incident-response-manager",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "ir-002",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": ["IR-2"],
+      "questionText": "Describe your incident response training program for personnel with incident response roles.",
+      "stakeholderRoleId": "incident-response-manager",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "ir-003",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": ["IR-4"],
+      "questionText": "How does your organization handle and report security incidents?",
+      "stakeholderRoleId": "incident-response-manager",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "ir-004",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": ["IR-6"],
+      "questionText": "Does your organization maintain incident response reporting to appropriate personnel and external organizations?",
+      "stakeholderRoleId": "incident-response-manager",
+      "answerType": "yes_no",
+      "criticality": "Medium"
+    },
+    {
+      "id": "si-001",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": ["SI-1"],
+      "questionText": "Does your organization have documented system and information integrity policies?",
+      "stakeholderRoleId": "information-security-manager",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "si-002",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": ["SI-2"],
+      "questionText": "Describe your flaw remediation process for information systems.",
+      "stakeholderRoleId": "system-administrator",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "si-003",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": ["SI-3"],
+      "questionText": "Does your organization implement malicious code protection mechanisms?",
+      "stakeholderRoleId": "system-administrator",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "si-004",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": ["SI-4"],
+      "questionText": "How does your organization monitor information systems for security events?",
+      "stakeholderRoleId": "security-analyst",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "ca-001",
+      "familyId": "CA",
+      "familyName": "Security Assessment and Authorization",
+      "controlRefs": ["CA-1"],
+      "questionText": "Does your organization have documented security assessment and authorization policies?",
+      "stakeholderRoleId": "information-security-manager",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "ca-002",
+      "familyId": "CA",
+      "familyName": "Security Assessment and Authorization",
+      "controlRefs": ["CA-2"],
+      "questionText": "Describe your security assessments process for information systems.",
+      "stakeholderRoleId": "security-assessor",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "ca-003",
+      "familyId": "CA",
+      "familyName": "Security Assessment and Authorization",
+      "controlRefs": ["CA-3"],
+      "questionText": "How does your organization manage system interconnections and information exchange?",
+      "stakeholderRoleId": "system-administrator",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "ra-001",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": ["RA-1"],
+      "questionText": "Does your organization have documented risk assessment policies and procedures?",
+      "stakeholderRoleId": "risk-manager",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "ra-002",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": ["RA-3"],
+      "questionText": "Describe your risk assessment process and how frequently assessments are conducted.",
+      "stakeholderRoleId": "risk-manager",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "ra-003",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": ["RA-5"],
+      "questionText": "How does your organization scan for vulnerabilities in information systems?",
+      "stakeholderRoleId": "security-analyst",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "sc-001",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": ["SC-1"],
+      "questionText": "Does your organization have documented system and communications protection policies?",
+      "stakeholderRoleId": "information-security-manager",
+      "answerType": "yes_no",
+      "criticality": "High"
+    },
+    {
+      "id": "sc-002",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": ["SC-7"],
+      "questionText": "Describe your boundary protection mechanisms for information systems.",
+      "stakeholderRoleId": "network-administrator",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "sc-003",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": ["SC-8"],
+      "questionText": "How does your organization protect the confidentiality and integrity of transmitted information?",
+      "stakeholderRoleId": "network-administrator",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "sc-004",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": ["SC-13"],
+      "questionText": "Does your organization implement FIPS-validated or NSA-approved cryptography?",
+      "stakeholderRoleId": "cryptography-officer",
+      "answerType": "yes_no",
+      "criticality": "Medium"
+    }
+  ]
+}

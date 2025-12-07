@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Backend service (FastAPI)
+  backend:
+    build:
+      context: ./Service
+      dockerfile: Dockerfile
+    container_name: clearcomply-backend
+    environment:
+      - ENVIRONMENT=production
+      - HOST=0.0.0.0
+      - PORT=8000
+      - RELOAD=False
+    ports:
+      - "8000:8000"
+    volumes:
+      # For development, mount source code for hot reload
+      - ./Service:/app
+      - /app/__pycache__
+    networks:
+      - clearcomply-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Frontend service (React)
+  frontend:
+    build:
+      context: ./UI
+      dockerfile: Dockerfile
+    container_name: clearcomply-frontend
+    ports:
+      - "80:80"
+      - "3000:80"  # Alternative port for development
+    depends_on:
+      - backend
+    networks:
+      - clearcomply-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  clearcomply-network:
+    driver: bridge
+
+# Optional: Add volumes for persistent data
+# volumes:
+#   postgres_data:
+#   redis_data:
