@@ -76,7 +76,7 @@ const NewAssessment: React.FC = () => {
 
   // Load families when NIST 800-53 is selected
   useEffect(() => {
-    const nistFramework = selectedFrameworks.find(f => f.id === 'nist-800-53');
+    const nistFramework = selectedFrameworks.find(f => f.id === 'NIST-800-53');
     if (nistFramework) {
       loadFamilies();
     } else {
@@ -146,7 +146,7 @@ const NewAssessment: React.FC = () => {
   const loadFamilies = async () => {
     try {
       setFamiliesLoading(true);
-      const families = await apiService.getFamilies('nist-800-53');
+      const families = await apiService.getFamilies('NIST-800-53');
       setFamilies(families);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load families');
@@ -163,7 +163,7 @@ const NewAssessment: React.FC = () => {
 
       // Load questions for each selected family
       for (const family of selectedFamilies) {
-        const questions = await apiService.getQuestions('nist-800-53', family.familyId);
+        const questions = await apiService.getQuestions('NIST-800-53', family.familyId);
         questionsByFamily[family.familyId] = questions;
         
         // Add to all questions list (avoid duplicates)
@@ -422,7 +422,7 @@ const NewAssessment: React.FC = () => {
               )}
 
               {/* NIST Families Selection */}
-              {selectedFrameworks.some(f => f.id === 'nist-800-53') && (
+              {selectedFrameworks.some(f => f.id === 'NIST-800-53') && (
                 <Box mt={3}>
                   <Typography variant="h6" gutterBottom>
                     Select NIST Families
@@ -587,7 +587,7 @@ const NewAssessment: React.FC = () => {
               </Box>
 
               {/* NIST Questions Summary */}
-              {selectedFrameworks.some(f => f.id === 'nist-800-53') && (
+              {selectedFrameworks.some(f => f.id === 'NIST-800-53') && (
                 <>
                   <Divider sx={{ my: 2 }} />
                   

@@ -1,7 +1,7 @@
 // API service for Clear Comply backend integration
 
 // Try both possible API URLs in case of environment variable issues
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
 
 export interface Framework {
   id: string;

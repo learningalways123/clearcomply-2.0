@@ -1,0 +1,3905 @@
+{
+  "frameworkId": "NIST-800-53",
+  "questions": [
+    {
+      "id": "NIST-AC-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Access Control? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Access Control activities and decisions within the organization?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How are Access Control responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Access Control processes and controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Access Control procedures, and who participates in that review?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How do you ensure that Access Control controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Access Control controls are operating effectively?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Access Control policies requested, approved, and documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Access Control approach, if they impact this area?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Access Control?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Access Control activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "Describe how Access Control considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Access Control practices? If yes, summarize them.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Access Control?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AC-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AC",
+      "familyName": "Access Control",
+      "controlRefs": [
+        "AC-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Access Control processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AT-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Awareness and Training? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Awareness and Training activities and decisions within the organization?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How are Awareness and Training responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Awareness and Training processes and controls?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Awareness and Training procedures, and who participates in that review?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How do you ensure that Awareness and Training controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Awareness and Training controls are operating effectively?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Awareness and Training policies requested, approved, and documented?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Awareness and Training approach, if they impact this area?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Awareness and Training?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Awareness and Training activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "Describe how Awareness and Training considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Awareness and Training practices? If yes, summarize them.",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Awareness and Training?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AT-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "AT-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Awareness and Training processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-AU-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Audit and Accountability? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Audit and Accountability activities and decisions within the organization?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How are Audit and Accountability responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Audit and Accountability processes and controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Audit and Accountability procedures, and who participates in that review?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How do you ensure that Audit and Accountability controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Audit and Accountability controls are operating effectively?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Audit and Accountability policies requested, approved, and documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Audit and Accountability approach, if they impact this area?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Audit and Accountability?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Audit and Accountability activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "Describe how Audit and Accountability considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Audit and Accountability practices? If yes, summarize them.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Audit and Accountability?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-AU-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "AU",
+      "familyName": "Audit and Accountability",
+      "controlRefs": [
+        "AU-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Audit and Accountability processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Assessment, Authorization, and Monitoring? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Assessment, Authorization, and Monitoring activities and decisions within the organization?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How are Assessment, Authorization, and Monitoring responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Assessment, Authorization, and Monitoring processes and controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Assessment, Authorization, and Monitoring procedures, and who participates in that review?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How do you ensure that Assessment, Authorization, and Monitoring controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Assessment, Authorization, and Monitoring controls are operating effectively?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Assessment, Authorization, and Monitoring policies requested, approved, and documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Assessment, Authorization, and Monitoring approach, if they impact this area?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Assessment, Authorization, and Monitoring?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Assessment, Authorization, and Monitoring activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "Describe how Assessment, Authorization, and Monitoring considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Assessment, Authorization, and Monitoring practices? If yes, summarize them.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Assessment, Authorization, and Monitoring?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CA-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CA",
+      "familyName": "Assessment, Authorization, and Monitoring",
+      "controlRefs": [
+        "CA-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Assessment, Authorization, and Monitoring processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Configuration Management? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Configuration Management activities and decisions within the organization?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How are Configuration Management responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Configuration Management processes and controls?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Configuration Management procedures, and who participates in that review?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How do you ensure that Configuration Management controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Configuration Management controls are operating effectively?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Configuration Management policies requested, approved, and documented?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Configuration Management approach, if they impact this area?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Configuration Management?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Configuration Management activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "Describe how Configuration Management considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Configuration Management practices? If yes, summarize them.",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Configuration Management?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CM-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CM",
+      "familyName": "Configuration Management",
+      "controlRefs": [
+        "CM-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Configuration Management processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "DEVOPS",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Contingency Planning? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Contingency Planning activities and decisions within the organization?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How are Contingency Planning responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Contingency Planning processes and controls?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Contingency Planning procedures, and who participates in that review?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How do you ensure that Contingency Planning controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Contingency Planning controls are operating effectively?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Contingency Planning policies requested, approved, and documented?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Contingency Planning approach, if they impact this area?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Contingency Planning?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Contingency Planning activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "Describe how Contingency Planning considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Contingency Planning practices? If yes, summarize them.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Contingency Planning?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-CP-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "CP",
+      "familyName": "Contingency Planning",
+      "controlRefs": [
+        "CP-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Contingency Planning processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Identification and Authentication? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Identification and Authentication activities and decisions within the organization?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How are Identification and Authentication responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Identification and Authentication processes and controls?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Identification and Authentication procedures, and who participates in that review?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How do you ensure that Identification and Authentication controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Identification and Authentication controls are operating effectively?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Identification and Authentication policies requested, approved, and documented?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Identification and Authentication approach, if they impact this area?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Identification and Authentication?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Identification and Authentication activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "Describe how Identification and Authentication considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Identification and Authentication practices? If yes, summarize them.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Identification and Authentication?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IA-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IA",
+      "familyName": "Identification and Authentication",
+      "controlRefs": [
+        "IA-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Identification and Authentication processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Incident Response? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Incident Response activities and decisions within the organization?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How are Incident Response responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Incident Response processes and controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Incident Response procedures, and who participates in that review?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How do you ensure that Incident Response controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Incident Response controls are operating effectively?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Incident Response policies requested, approved, and documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Incident Response approach, if they impact this area?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Incident Response?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Incident Response activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "Describe how Incident Response considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Incident Response practices? If yes, summarize them.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Incident Response?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-IR-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "IR",
+      "familyName": "Incident Response",
+      "controlRefs": [
+        "IR-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Incident Response processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-MA-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Maintenance? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Maintenance activities and decisions within the organization?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How are Maintenance responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Maintenance processes and controls?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Maintenance procedures, and who participates in that review?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How do you ensure that Maintenance controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Maintenance controls are operating effectively?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Maintenance policies requested, approved, and documented?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Maintenance approach, if they impact this area?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Maintenance?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Maintenance activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "Describe how Maintenance considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Maintenance practices? If yes, summarize them.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Maintenance?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MA-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MA",
+      "familyName": "Maintenance",
+      "controlRefs": [
+        "MA-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Maintenance processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Media Protection? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Media Protection activities and decisions within the organization?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How are Media Protection responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Media Protection processes and controls?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Media Protection procedures, and who participates in that review?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How do you ensure that Media Protection controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Media Protection controls are operating effectively?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Media Protection policies requested, approved, and documented?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Media Protection approach, if they impact this area?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Media Protection?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Media Protection activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "Describe how Media Protection considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Media Protection practices? If yes, summarize them.",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Media Protection?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-MP-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "MP",
+      "familyName": "Media Protection",
+      "controlRefs": [
+        "MP-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Media Protection processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Physical and Environmental Protection? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Physical and Environmental Protection activities and decisions within the organization?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How are Physical and Environmental Protection responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Physical and Environmental Protection processes and controls?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Physical and Environmental Protection procedures, and who participates in that review?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How do you ensure that Physical and Environmental Protection controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Physical and Environmental Protection controls are operating effectively?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Physical and Environmental Protection policies requested, approved, and documented?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Physical and Environmental Protection approach, if they impact this area?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Physical and Environmental Protection?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Physical and Environmental Protection activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "Describe how Physical and Environmental Protection considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Physical and Environmental Protection practices? If yes, summarize them.",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Physical and Environmental Protection?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PE-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PE",
+      "familyName": "Physical and Environmental Protection",
+      "controlRefs": [
+        "PE-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Physical and Environmental Protection processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "FACILITIES",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Planning? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Planning activities and decisions within the organization?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How are Planning responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Planning processes and controls?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Planning procedures, and who participates in that review?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How do you ensure that Planning controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Planning controls are operating effectively?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Planning policies requested, approved, and documented?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Planning approach, if they impact this area?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Planning?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Planning activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "Describe how Planning considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Planning practices? If yes, summarize them.",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Planning?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PL-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PL",
+      "familyName": "Planning",
+      "controlRefs": [
+        "PL-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Planning processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Program Management? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Program Management activities and decisions within the organization?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How are Program Management responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Program Management processes and controls?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Program Management procedures, and who participates in that review?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How do you ensure that Program Management controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Program Management controls are operating effectively?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Program Management policies requested, approved, and documented?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Program Management approach, if they impact this area?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Program Management?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Program Management activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "Describe how Program Management considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Program Management practices? If yes, summarize them.",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Program Management?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PM-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PM",
+      "familyName": "Program Management",
+      "controlRefs": [
+        "PM-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Program Management processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Personnel Security? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Personnel Security activities and decisions within the organization?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How are Personnel Security responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Personnel Security processes and controls?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Personnel Security procedures, and who participates in that review?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How do you ensure that Personnel Security controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Personnel Security controls are operating effectively?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Personnel Security policies requested, approved, and documented?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Personnel Security approach, if they impact this area?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Personnel Security?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Personnel Security activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "Describe how Personnel Security considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Personnel Security practices? If yes, summarize them.",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Personnel Security?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PS-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PS",
+      "familyName": "Personnel Security",
+      "controlRefs": [
+        "PS-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Personnel Security processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "HR",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for PII Processing and Transparency? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing PII Processing and Transparency activities and decisions within the organization?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How are PII Processing and Transparency responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your PII Processing and Transparency processes and controls?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How often do you review and update your PII Processing and Transparency procedures, and who participates in that review?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How do you ensure that PII Processing and Transparency controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that PII Processing and Transparency controls are operating effectively?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from PII Processing and Transparency policies requested, approved, and documented?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your PII Processing and Transparency approach, if they impact this area?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to PII Processing and Transparency?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How are issues discovered in PII Processing and Transparency activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "Describe how PII Processing and Transparency considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current PII Processing and Transparency practices? If yes, summarize them.",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to PII Processing and Transparency?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-PT-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "PT",
+      "familyName": "PII Processing and Transparency",
+      "controlRefs": [
+        "PT-GENERAL"
+      ],
+      "questionText": "How do you test or validate that PII Processing and Transparency processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "PRIVACY",
+      "answerType": "text",
+      "criticality": "Medium"
+    },
+    {
+      "id": "NIST-RA-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Risk Assessment? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Risk Assessment activities and decisions within the organization?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How are Risk Assessment responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Risk Assessment processes and controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Risk Assessment procedures, and who participates in that review?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How do you ensure that Risk Assessment controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Risk Assessment controls are operating effectively?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Risk Assessment policies requested, approved, and documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Risk Assessment approach, if they impact this area?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Risk Assessment?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Risk Assessment activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "Describe how Risk Assessment considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Risk Assessment practices? If yes, summarize them.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Risk Assessment?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-RA-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "RA-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Risk Assessment processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for System and Services Acquisition? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing System and Services Acquisition activities and decisions within the organization?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How are System and Services Acquisition responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your System and Services Acquisition processes and controls?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How often do you review and update your System and Services Acquisition procedures, and who participates in that review?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How do you ensure that System and Services Acquisition controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that System and Services Acquisition controls are operating effectively?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from System and Services Acquisition policies requested, approved, and documented?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your System and Services Acquisition approach, if they impact this area?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to System and Services Acquisition?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How are issues discovered in System and Services Acquisition activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "Describe how System and Services Acquisition considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current System and Services Acquisition practices? If yes, summarize them.",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to System and Services Acquisition?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SA-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SA",
+      "familyName": "System and Services Acquisition",
+      "controlRefs": [
+        "SA-GENERAL"
+      ],
+      "questionText": "How do you test or validate that System and Services Acquisition processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for System and Communications Protection? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing System and Communications Protection activities and decisions within the organization?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How are System and Communications Protection responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your System and Communications Protection processes and controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How often do you review and update your System and Communications Protection procedures, and who participates in that review?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How do you ensure that System and Communications Protection controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that System and Communications Protection controls are operating effectively?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from System and Communications Protection policies requested, approved, and documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your System and Communications Protection approach, if they impact this area?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to System and Communications Protection?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How are issues discovered in System and Communications Protection activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "Describe how System and Communications Protection considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current System and Communications Protection practices? If yes, summarize them.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to System and Communications Protection?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SC-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SC",
+      "familyName": "System and Communications Protection",
+      "controlRefs": [
+        "SC-GENERAL"
+      ],
+      "questionText": "How do you test or validate that System and Communications Protection processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for System and Information Integrity? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing System and Information Integrity activities and decisions within the organization?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How are System and Information Integrity responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your System and Information Integrity processes and controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How often do you review and update your System and Information Integrity procedures, and who participates in that review?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How do you ensure that System and Information Integrity controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that System and Information Integrity controls are operating effectively?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from System and Information Integrity policies requested, approved, and documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your System and Information Integrity approach, if they impact this area?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to System and Information Integrity?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How are issues discovered in System and Information Integrity activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "Describe how System and Information Integrity considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current System and Information Integrity practices? If yes, summarize them.",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to System and Information Integrity?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SI-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SI",
+      "familyName": "System and Information Integrity",
+      "controlRefs": [
+        "SI-GENERAL"
+      ],
+      "questionText": "How do you test or validate that System and Information Integrity processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-001",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "Do you have formally documented policies for Supply Chain Risk Management? If yes, where are they stored and how are they approved?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-002",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "Who is accountable for managing Supply Chain Risk Management activities and decisions within the organization?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-003",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How are Supply Chain Risk Management responsibilities communicated to staff and relevant stakeholders?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-004",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "What tools or systems are used to support your Supply Chain Risk Management processes and controls?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-005",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How often do you review and update your Supply Chain Risk Management procedures, and who participates in that review?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-006",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How do you ensure that Supply Chain Risk Management controls are consistently followed in day-to-day operations?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-007",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "What evidence can you provide to demonstrate that Supply Chain Risk Management controls are operating effectively?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-008",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How are exceptions or deviations from Supply Chain Risk Management policies requested, approved, and documented?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-009",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How are third-party providers included in your Supply Chain Risk Management approach, if they impact this area?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-010",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "What metrics or KPIs, if any, do you track related to Supply Chain Risk Management?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-011",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How are issues discovered in Supply Chain Risk Management activities logged, triaged, and remediated?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-012",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "Describe how Supply Chain Risk Management considerations are incorporated into new projects or system changes.",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-013",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "Have you identified any significant gaps or risks in your current Supply Chain Risk Management practices? If yes, summarize them.",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-014",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How do you train or brief relevant personnel on expectations related to Supply Chain Risk Management?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    },
+    {
+      "id": "NIST-SR-015",
+      "frameworkId": "NIST-800-53",
+      "familyId": "SR",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "SR-GENERAL"
+      ],
+      "questionText": "How do you test or validate that Supply Chain Risk Management processes work as intended during real events, incidents, or audits?",
+      "stakeholderRoleId": "PROCUREMENT",
+      "answerType": "text",
+      "criticality": "High"
+    }
+  ]
+}

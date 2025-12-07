@@ -41,7 +41,7 @@ class DataStore:
                 "description": "Service Organization Control 2 - Framework for managing customer data based on five trust service principles: security, availability, processing integrity, confidentiality, and privacy."
             },
             {
-                "id": "nist-800-53",
+                "id": "NIST-800-53",
                 "name": "NIST 800-53",
                 "description": "NIST Special Publication 800-53 - Security and Privacy Controls for Federal Information Systems and Organizations."
             },
@@ -123,7 +123,7 @@ class DataStore:
         nist_controls = [
             {
                 "id": "NIST-AC-1",
-                "frameworkId": "nist-800-53",
+                "frameworkId": "NIST-800-53",
                 "domain": "Access Control",
                 "title": "Access Control Policy and Procedures",
                 "description": "Develop, document, and disseminate access control policy and procedures.",
@@ -131,7 +131,7 @@ class DataStore:
             },
             {
                 "id": "NIST-AC-2",
-                "frameworkId": "nist-800-53",
+                "frameworkId": "NIST-800-53",
                 "domain": "Access Control",
                 "title": "Account Management",
                 "description": "Manage information system accounts including establishing, activating, modifying, disabling, and removing accounts.",
@@ -139,7 +139,7 @@ class DataStore:
             },
             {
                 "id": "NIST-AC-3",
-                "frameworkId": "nist-800-53",
+                "frameworkId": "NIST-800-53",
                 "domain": "Access Control",
                 "title": "Access Enforcement",
                 "description": "Enforce approved authorizations for logical access to information and system resources.",
@@ -147,7 +147,7 @@ class DataStore:
             },
             {
                 "id": "NIST-IR-1",
-                "frameworkId": "nist-800-53",
+                "frameworkId": "NIST-800-53",
                 "domain": "Incident Response",
                 "title": "Incident Response Policy and Procedures",
                 "description": "Develop, document, and disseminate incident response policy and procedures.",
@@ -155,7 +155,7 @@ class DataStore:
             },
             {
                 "id": "NIST-IR-2",
-                "frameworkId": "nist-800-53",
+                "frameworkId": "NIST-800-53",
                 "domain": "Incident Response",
                 "title": "Incident Response Training",
                 "description": "Provide incident response training to information system users.",
@@ -163,7 +163,7 @@ class DataStore:
             },
             {
                 "id": "NIST-SA-9",
-                "frameworkId": "nist-800-53",
+                "frameworkId": "NIST-800-53",
                 "domain": "Vendor Risk",
                 "title": "External Information System Services",
                 "description": "Require providers of external information system services to comply with organizational information security requirements.",
@@ -171,7 +171,7 @@ class DataStore:
             },
             {
                 "id": "NIST-CP-1",
-                "frameworkId": "nist-800-53",
+                "frameworkId": "NIST-800-53",
                 "domain": "Business Continuity",
                 "title": "Contingency Planning Policy and Procedures",
                 "description": "Develop, document, and disseminate contingency planning policy and procedures.",
@@ -371,8 +371,8 @@ class DataStore:
             current_dir = os.path.dirname(os.path.dirname(__file__))
             data_dir = os.path.join(current_dir, 'data')
             
-            # Load NIST 800-53 question bank
-            nist_file_path = os.path.join(data_dir, 'nist_800_53_questions.json')
+            # Load NIST 800-53 question bank (300 questions)
+            nist_file_path = os.path.join(data_dir, 'nist_800_53_300_questions.json')
             if os.path.exists(nist_file_path):
                 with open(nist_file_path, 'r') as f:
                     question_bank_data = json.load(f)
