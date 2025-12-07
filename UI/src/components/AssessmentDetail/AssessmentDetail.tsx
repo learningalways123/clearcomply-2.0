@@ -59,7 +59,7 @@ const AssessmentDetail: React.FC = () => {
     }
   }, [id]);
 
-  // Auto-save effect with debouncing
+  // Auto-save effect with debouncing (1 minute delay)
   useEffect(() => {
     if (!assessment || saving) return;
 
@@ -68,10 +68,10 @@ const AssessmentDetail: React.FC = () => {
       clearTimeout(autoSaveTimeoutRef.current);
     }
 
-    // Set new timeout for auto-save (2 seconds after last change)
+    // Set new timeout for auto-save (1 minute after last change)
     autoSaveTimeoutRef.current = setTimeout(() => {
       saveAnswers(true); // true indicates auto-save
-    }, 2000);
+    }, 60000);
 
     return () => {
       if (autoSaveTimeoutRef.current) {
