@@ -118,3 +118,26 @@ class AuditLogRecord(Base):
     entity_id = Column(String, nullable=True, index=True)
     # Free-form JSON detail (assessment name, answer counts, old/new role, …)
     detail = Column(Text, nullable=True)
+
+
+class PoamRecord(Base):
+    __tablename__ = "poam_items"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    question_id = Column(String, nullable=True)
+
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    # open | in_remediation | closed
+    status = Column(String, nullable=False, default="open")
+    # high | medium | low
+    priority = Column(String, nullable=False, default="medium")
+    due_date = Column(String, nullable=True)   # stored as ISO date string "YYYY-MM-DD"
+    owner = Column(String, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    closed_at = Column(DateTime, nullable=True)
+
+    assessment = relationship("AssessmentRecord", backref="poam_items")

@@ -23,9 +23,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { useAsync } from '../../hooks/useAsync';
 import { api } from '../../services/api';
-import type { Assessment, Framework, Question, AnswerSubmission } from '../../services/api';
+import type { Assessment, Framework, Question, AnswerSubmission, AssessmentSummary } from '../../services/api';
 import QuestionCard from './QuestionCard';
 import type { AnswerValue, YesNoJustification } from './QuestionCard';
+
+// Status helpers
+const STATUS_META: Record<string, { label: string; next: string | null; nextLabel: string | null; chipColor: string; chipBg: string }> = {
+  draft:       { label: 'Draft',       next: 'in_progress', nextLabel: 'Start Assessment', chipColor: '#6b7280', chipBg: '#f3f4f6' },
+  in_progress: { label: 'In Progress', next: 'submitted',   nextLabel: 'Submit for Review',  chipColor: '#2563eb', chipBg: '#eff6ff' },
+  submitted:   { label: 'Submitted',   next: 'reviewed',    nextLabel: 'Mark Reviewed',       chipColor: '#d97706', chipBg: '#fffbeb' },
+  reviewed:    { label: 'Reviewed',    next: null,          nextLabel: null,                  chipColor: '#059669', chipBg: '#ecfdf5' },
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -87,6 +95,7 @@ export default function AssessmentDetail() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [latestAssessment, setLatestAssessment] = useState<Assessment | null>(null);
+  const [transitioning, setTransitioning] = useState(false);
 
   // Auto-save 60 s after last change
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -117,12 +126,31 @@ export default function AssessmentDetail() {
           answeredQuestions: summary.answeredQuestions,
           completionPercent: summary.completionPercent,
         },
+        riskScore: (summary as AssessmentSummary).riskScore,
       }));
       if (!auto) setToast('Progress saved!');
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Failed to save');
     } finally {
       setSaving(false);
+    }
+  };
+
+  // ── Status transition ─────────────────────────────────────────────────────
+
+  const advanceStatus = async () => {
+    const current = latestAssessment ?? assessment;
+    const meta = STATUS_META[current.status];
+    if (!meta?.next) return;
+    setTransitioning(true);
+    try {
+      await api.updateAssessmentStatus(current.id, meta.next);
+      setLatestAssessment(prev => ({ ...(prev ?? assessment), status: meta.next as Assessment['status'] }));
+      setToast(`Status updated to: ${STATUS_META[meta.next!]?.label}`);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Failed to update status');
+    } finally {
+      setTransitioning(false);
     }
   };
 
@@ -149,20 +177,45 @@ export default function AssessmentDetail() {
   const byFamily = groupByFamily(questions ?? []);
   const familyIds = Object.keys(byFamily);
   const frameworkName = (fid: string) => frameworks.find(f => f.id === fid)?.name ?? fid;
+  const statusMeta = STATUS_META[shown.status] ?? STATUS_META['in_progress'];
 
   return (
     <Box>
       {/* Header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3, flexWrap: 'wrap' }}>
         <IconButton onClick={() => navigate('/assessments')} size="small">
           <ArrowBackIcon />
         </IconButton>
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h4">{shown.name}</Typography>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+            <Typography variant="h4">{shown.name}</Typography>
+            <Box sx={{ px: 1.5, py: 0.4, borderRadius: 2, bgcolor: statusMeta.chipBg, display: 'inline-flex' }}>
+              <Typography variant="caption" fontWeight={700} sx={{ color: statusMeta.chipColor }}>
+                {statusMeta.label}
+              </Typography>
+            </Box>
+            {shown.riskScore != null && (
+              <Box sx={{ px: 1.5, py: 0.4, borderRadius: 2, bgcolor: shown.riskScore >= 75 ? '#ecfdf5' : shown.riskScore >= 50 ? '#fffbeb' : '#fef2f2' }}>
+                <Typography variant="caption" fontWeight={700} sx={{ color: shown.riskScore >= 75 ? '#059669' : shown.riskScore >= 50 ? '#d97706' : '#dc2626' }}>
+                  Risk Score: {shown.riskScore}%
+                </Typography>
+              </Box>
+            )}
+          </Box>
           <Typography variant="body2" color="text.secondary">
             {shown.frameworkIds.map(frameworkName).join(' · ')}
           </Typography>
         </Box>
+        {statusMeta.next && (
+          <Button
+            variant="outlined"
+            onClick={advanceStatus}
+            disabled={transitioning}
+            sx={{ borderColor: statusMeta.chipColor, color: statusMeta.chipColor }}
+          >
+            {transitioning ? <CircularProgress size={16} color="inherit" /> : statusMeta.nextLabel}
+          </Button>
+        )}
         <Button
           variant="contained"
           startIcon={saving ? <CircularProgress size={16} color="inherit" /> : <SaveIcon />}

@@ -89,9 +89,20 @@ class AssessmentQuestionStats(BaseModel):
     completionPercent: float = Field(..., description="Completion percentage rounded to 2 decimal places")
 
 
+# Valid assessment status values and their allowed forward transitions
+ASSESSMENT_STATUSES = ["draft", "in_progress", "submitted", "reviewed"]
+STATUS_TRANSITIONS: Dict[str, List[str]] = {
+    "draft": ["in_progress"],
+    "in_progress": ["submitted"],
+    "submitted": ["reviewed", "in_progress"],
+    "reviewed": [],
+}
+
+
 class Assessment(BaseModel):
     id: str
     name: str
+    status: str = "in_progress"
     frameworkIds: List[str]
     selectedControlIds: List[str]
     selectedQuestionIds: List[str] = Field(default=[], description="List of selected question IDs")
@@ -101,6 +112,7 @@ class Assessment(BaseModel):
     createdAt: datetime
     stats: AssessmentStats
     questionStats: AssessmentQuestionStats = Field(default_factory=lambda: AssessmentQuestionStats(totalQuestions=0, answeredQuestions=0, completionPercent=0.0))
+    riskScore: Optional[float] = Field(default=None, description="Weighted compliance risk score 0-100 (higher = more compliant)")
 
 
 # Request/Response Models
@@ -116,6 +128,8 @@ class CreateAssessmentRequest(BaseModel):
 class AssessmentResponse(BaseModel):
     id: str
     name: str
+    status: str = "in_progress"
+    riskScore: Optional[float] = None
     frameworkIds: List[str]
     selectedControlIds: List[str]
     selectedQuestionIds: List[str]
@@ -137,12 +151,18 @@ class SubmitAnswersRequest(BaseModel):
     answers: List[AnswerSubmission]
 
 
+class UpdateStatusRequest(BaseModel):
+    status: str = Field(..., description="New status: draft | in_progress | submitted | reviewed")
+
+
 class AssessmentSummaryResponse(BaseModel):
     id: str
     name: str
+    status: str = "in_progress"
     totalQuestions: int
     answeredQuestions: int
     completionPercent: float
+    riskScore: Optional[float] = None
 
 
 class QuestionWithAnswer(BaseModel):
@@ -171,6 +191,41 @@ class ErrorResponse(BaseModel):
 class NotFoundResponse(BaseModel):
     detail: str
     error_type: str = "not_found"
+
+
+# POA&M models
+class PoamItem(BaseModel):
+    id: str
+    assessmentId: str
+    questionId: Optional[str] = None
+    title: str
+    description: Optional[str] = None
+    status: str = "open"           # open | in_remediation | closed
+    priority: str = "medium"       # high | medium | low
+    dueDate: Optional[str] = None  # ISO date string
+    owner: Optional[str] = None
+    createdAt: datetime
+    updatedAt: datetime
+    closedAt: Optional[datetime] = None
+
+
+class CreatePoamRequest(BaseModel):
+    assessmentId: str
+    questionId: Optional[str] = None
+    title: str = Field(..., min_length=1)
+    description: Optional[str] = None
+    priority: str = "medium"
+    dueDate: Optional[str] = None
+    owner: Optional[str] = None
+
+
+class UpdatePoamRequest(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[str] = None
+    priority: Optional[str] = None
+    dueDate: Optional[str] = None
+    owner: Optional[str] = None
 
 
 # CSF Module Model

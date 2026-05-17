@@ -12,9 +12,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Chip from '@mui/material/Chip';
-import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Tooltip from '@mui/material/Tooltip';
 
 import AddIcon from '@mui/icons-material/Add';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -28,18 +28,64 @@ import type { Assessment, Framework } from '../../services/api';
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', {
     year: 'numeric', month: 'short', day: 'numeric',
-    hour: '2-digit', minute: '2-digit',
   });
-}
-
-function coverageColor(pct: number): 'success' | 'warning' | 'error' {
-  if (pct >= 80) return 'success';
-  if (pct >= 50) return 'warning';
-  return 'error';
 }
 
 function frameworkName(id: string, frameworks: Framework[]) {
   return frameworks.find(f => f.id === id)?.name ?? id;
+}
+
+const STATUS_META: Record<string, { label: string; color: 'default' | 'info' | 'warning' | 'success' }> = {
+  draft:       { label: 'Draft',       color: 'default' },
+  in_progress: { label: 'In Progress', color: 'info' },
+  submitted:   { label: 'Submitted',   color: 'warning' },
+  reviewed:    { label: 'Reviewed',    color: 'success' },
+};
+
+function StatusChip({ status }: { status: string }) {
+  const meta = STATUS_META[status] ?? { label: status, color: 'default' as const };
+  return <Chip label={meta.label} color={meta.color} size="small" />;
+}
+
+function CompletionRing({ value }: { value: number }) {
+  const color = value >= 75 ? '#10b981' : value >= 40 ? '#f97316' : '#ef4444';
+  return (
+    <Tooltip title={`${value.toFixed(1)}% answered`}>
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress variant="determinate" value={100} size={44}
+          sx={{ color: '#e5e7eb', position: 'absolute', top: 0, left: 0 }} />
+        <CircularProgress variant="determinate" value={Math.min(value, 100)} size={44}
+          sx={{ color }} />
+        <Box sx={{
+          top: 0, left: 0, bottom: 0, right: 0, position: 'absolute',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <Typography variant="caption" fontWeight={700} fontSize={9} sx={{ color }}>
+            {Math.round(value)}%
+          </Typography>
+        </Box>
+      </Box>
+    </Tooltip>
+  );
+}
+
+function RiskBadge({ score }: { score?: number | null }) {
+  if (score == null) return <Typography variant="caption" color="text.disabled">—</Typography>;
+  const color = score >= 75 ? '#10b981' : score >= 50 ? '#f97316' : '#ef4444';
+  const label = score >= 75 ? 'Low Risk' : score >= 50 ? 'Med Risk' : 'High Risk';
+  return (
+    <Tooltip title={`Weighted compliance score: ${score}%`}>
+      <Box sx={{
+        px: 1, py: 0.25, borderRadius: 1, bgcolor: `${color}18`,
+        display: 'inline-flex', alignItems: 'center', gap: 0.5,
+      }}>
+        <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: color }} />
+        <Typography variant="caption" fontWeight={700} sx={{ color }}>
+          {score}% · {label}
+        </Typography>
+      </Box>
+    </Tooltip>
+  );
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -65,7 +111,6 @@ export default function AssessmentsOverview() {
 
   return (
     <Box>
-      {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
         <Box>
           <Typography variant="h4" gutterBottom>Assessments</Typography>
@@ -73,11 +118,7 @@ export default function AssessmentsOverview() {
             Manage and track your compliance assessments
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => navigate('/new-assessment')}
-        >
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/new-assessment')}>
           New Assessment
         </Button>
       </Box>
@@ -93,9 +134,7 @@ export default function AssessmentsOverview() {
       <Card>
         {assessments.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 8, px: 2 }}>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              No assessments yet
-            </Typography>
+            <Typography variant="h6" color="text.secondary" gutterBottom>No assessments yet</Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
               Create your first assessment to start tracking compliance.
             </Typography>
@@ -108,7 +147,7 @@ export default function AssessmentsOverview() {
             <Table>
               <TableHead>
                 <TableRow sx={{ bgcolor: 'grey.50' }}>
-                  {['Assessment', 'Frameworks', 'Coverage', 'Controls', 'Created', ''].map(h => (
+                  {['Assessment', 'Frameworks', 'Status', 'Completion', 'Risk Score', 'Created', ''].map(h => (
                     <TableCell key={h}>
                       <Typography variant="subtitle2" fontWeight={600}>{h}</Typography>
                     </TableCell>
@@ -117,19 +156,12 @@ export default function AssessmentsOverview() {
               </TableHead>
               <TableBody>
                 {assessments.map((a) => (
-                  <TableRow
-                    key={a.id}
-                    hover
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => navigate(`/assessments/${a.id}`)}
-                  >
+                  <TableRow key={a.id} hover sx={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/assessments/${a.id}`)}>
                     <TableCell>
                       <Typography variant="subtitle2" fontWeight={500}>{a.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {a.id.substring(0, 8)}…
-                      </Typography>
+                      <Typography variant="caption" color="text.secondary">{a.id.substring(0, 8)}…</Typography>
                     </TableCell>
-
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                         {a.frameworkIds.map(id => (
@@ -137,37 +169,13 @@ export default function AssessmentsOverview() {
                         ))}
                       </Box>
                     </TableCell>
-
+                    <TableCell><StatusChip status={a.status} /></TableCell>
+                    <TableCell><CompletionRing value={a.questionStats?.completionPercent ?? 0} /></TableCell>
+                    <TableCell><RiskBadge score={a.riskScore} /></TableCell>
+                    <TableCell><Typography variant="body2">{formatDate(a.createdAt)}</Typography></TableCell>
                     <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={a.stats.coveragePercent}
-                          color={coverageColor(a.stats.coveragePercent)}
-                          sx={{ width: 64, height: 6, borderRadius: 3 }}
-                        />
-                        <Typography variant="body2" fontWeight={500}>
-                          {a.stats.coveragePercent.toFixed(1)}%
-                        </Typography>
-                      </Box>
-                    </TableCell>
-
-                    <TableCell>
-                      <Typography variant="body2">
-                        {a.stats.selectedControls} / {a.stats.totalControls}
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell>
-                      <Typography variant="body2">{formatDate(a.createdAt)}</Typography>
-                    </TableCell>
-
-                    <TableCell>
-                      <Button
-                        size="small"
-                        startIcon={<VisibilityIcon />}
-                        onClick={(e) => { e.stopPropagation(); navigate(`/assessments/${a.id}`); }}
-                      >
+                      <Button size="small" startIcon={<VisibilityIcon />}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/assessments/${a.id}`); }}>
                         View
                       </Button>
                     </TableCell>

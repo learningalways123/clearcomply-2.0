@@ -14,13 +14,36 @@ from typing import Dict, List, Optional
 from app.models import (
     Assessment, AssessmentQuestionStats, AssessmentStats,
     Control, CriticalityLevel, Family, Framework, Question, QuestionAnswer,
-    QuestionBank, QuestionWithAnswer,
+    QuestionBank, QuestionWithAnswer, PoamItem,
 )
 from app.database import db_session
-from app.db_models import AssessmentRecord, AnswerRecord
+from app.db_models import AssessmentRecord, AnswerRecord, PoamRecord
 
 
-def _record_to_assessment(rec: AssessmentRecord) -> Assessment:
+WEIGHTS = {"High": 3, "Medium": 2, "Low": 1}
+
+
+def _compute_risk_score(answers: Dict[str, QuestionAnswer], questions: Dict[str, "Question"]) -> Optional[float]:
+    """Weighted compliance score 0–100. Higher = more compliant."""
+    w_yes = 0
+    w_total = 0
+    for qid, ans in answers.items():
+        yn = (ans.yesNo or "").strip().lower()
+        if yn not in ("yes", "no"):
+            continue
+        q = questions.get(qid)
+        if not q:
+            continue
+        w = WEIGHTS.get(q.criticality.value if hasattr(q.criticality, 'value') else str(q.criticality), 1)
+        w_total += w
+        if yn == "yes":
+            w_yes += w
+    if w_total == 0:
+        return None
+    return round(w_yes / w_total * 100, 1)
+
+
+def _record_to_assessment(rec: AssessmentRecord, questions: Optional[Dict] = None) -> Assessment:
     answers: Dict[str, QuestionAnswer] = {}
     for a in rec.answers:
         answers[a.question_id] = QuestionAnswer(
@@ -29,9 +52,11 @@ def _record_to_assessment(rec: AssessmentRecord) -> Assessment:
             justification=a.justification,
             lastUpdated=a.updated_at or datetime.utcnow(),
         )
+    risk_score = _compute_risk_score(answers, questions or {}) if questions else None
     return Assessment(
         id=rec.id,
         name=rec.name,
+        status=rec.status or "in_progress",
         frameworkIds=json.loads(rec.framework_ids or "[]"),
         selectedControlIds=json.loads(rec.selected_control_ids or "[]"),
         selectedQuestionIds=json.loads(rec.selected_question_ids or "[]"),
@@ -49,6 +74,7 @@ def _record_to_assessment(rec: AssessmentRecord) -> Assessment:
             answeredQuestions=rec.answered_questions,
             completionPercent=rec.completion_percent,
         ),
+        riskScore=risk_score,
     )
 
 
@@ -193,12 +219,12 @@ class DataStore:
             rec = db.query(AssessmentRecord).filter_by(id=assessment_id).first()
             if not rec:
                 return None
-            return _record_to_assessment(rec)
+            return _record_to_assessment(rec, self.questions)
 
     def get_all_assessments(self) -> List[Assessment]:
         with db_session() as db:
             recs = db.query(AssessmentRecord).order_by(AssessmentRecord.created_at.desc()).all()
-            return [_record_to_assessment(r) for r in recs]
+            return [_record_to_assessment(r, self.questions) for r in recs]
 
     # ── Answers (SQLite) ─────────────────────────────────────────────────────
     def update_assessment_answers_v2(
@@ -248,6 +274,92 @@ class DataStore:
         from app.models import AnswerSubmission
         subs = [AnswerSubmission(questionId=qid, value=val) for qid, val in answers.items()]
         return self.update_assessment_answers_v2(assessment_id, subs)
+
+    def update_assessment_status(self, assessment_id: str, new_status: str) -> Assessment:
+        with db_session() as db:
+            rec = db.query(AssessmentRecord).filter_by(id=assessment_id).first()
+            if not rec:
+                raise ValueError(f"Assessment '{assessment_id}' not found")
+            rec.status = new_status
+        return self.get_assessment_by_id(assessment_id)
+
+    # ── POA&M (SQLite) ───────────────────────────────────────────────────────
+    def _poam_record_to_item(self, r: PoamRecord) -> PoamItem:
+        return PoamItem(
+            id=r.id,
+            assessmentId=r.assessment_id,
+            questionId=r.question_id,
+            title=r.title,
+            description=r.description,
+            status=r.status,
+            priority=r.priority,
+            dueDate=r.due_date,
+            owner=r.owner,
+            createdAt=r.created_at or datetime.utcnow(),
+            updatedAt=r.updated_at or datetime.utcnow(),
+            closedAt=r.closed_at,
+        )
+
+    def get_all_poam_items(self, assessment_id: Optional[str] = None, status: Optional[str] = None) -> List[PoamItem]:
+        with db_session() as db:
+            q = db.query(PoamRecord)
+            if assessment_id:
+                q = q.filter_by(assessment_id=assessment_id)
+            if status:
+                q = q.filter_by(status=status)
+            recs = q.order_by(PoamRecord.created_at.desc()).all()
+            return [self._poam_record_to_item(r) for r in recs]
+
+    def create_poam_item(self, req) -> PoamItem:
+        with db_session() as db:
+            rec = PoamRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=req.assessmentId,
+                question_id=req.questionId,
+                title=req.title,
+                description=req.description,
+                priority=req.priority or "medium",
+                due_date=req.dueDate,
+                owner=req.owner,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+            )
+            db.add(rec)
+            db.flush()
+            return self._poam_record_to_item(rec)
+
+    def update_poam_item(self, item_id: str, req) -> PoamItem:
+        with db_session() as db:
+            rec = db.query(PoamRecord).filter_by(id=item_id).first()
+            if not rec:
+                raise ValueError(f"POAM item '{item_id}' not found")
+            now = datetime.utcnow()
+            if req.title is not None:
+                rec.title = req.title
+            if req.description is not None:
+                rec.description = req.description
+            if req.priority is not None:
+                rec.priority = req.priority
+            if req.dueDate is not None:
+                rec.due_date = req.dueDate
+            if req.owner is not None:
+                rec.owner = req.owner
+            if req.status is not None:
+                rec.status = req.status
+                if req.status == "closed" and rec.closed_at is None:
+                    rec.closed_at = now
+                elif req.status != "closed":
+                    rec.closed_at = None
+            rec.updated_at = now
+            db.flush()
+            return self._poam_record_to_item(rec)
+
+    def delete_poam_item(self, item_id: str) -> None:
+        with db_session() as db:
+            rec = db.query(PoamRecord).filter_by(id=item_id).first()
+            if not rec:
+                raise ValueError(f"POAM item '{item_id}' not found")
+            db.delete(rec)
 
     def get_assessment_questions_with_answers(self, assessment_id: str) -> List[QuestionWithAnswer]:
         assessment = self.get_assessment_by_id(assessment_id)

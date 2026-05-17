@@ -51,6 +51,8 @@ app.include_router(api_router)
 async def startup():
     init_db()
     print("[startup] Database initialized")
+    from app.seed_data import seed_demo_data
+    seed_demo_data()
 
 # Pydantic models for existing endpoints
 class HealthResponse(BaseModel):

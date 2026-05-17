@@ -12,7 +12,8 @@ from app.models import (
     CreateAssessmentRequest, AssessmentResponse,
     NotFoundResponse, ErrorResponse, Family, Question,
     SubmitAnswersRequest, AssessmentSummaryResponse, QuestionWithAnswer,
-    AssessmentQuestionStats
+    AssessmentQuestionStats, UpdateStatusRequest,
+    PoamItem, CreatePoamRequest, UpdatePoamRequest, STATUS_TRANSITIONS,
 )
 from app.data_store import data_store
 from app.auth import get_current_user, User
@@ -244,6 +245,8 @@ async def create_assessment(request: CreateAssessmentRequest):
     return AssessmentResponse(
         id=created_assessment.id,
         name=created_assessment.name,
+        status=created_assessment.status,
+        riskScore=created_assessment.riskScore,
         frameworkIds=created_assessment.frameworkIds,
         selectedControlIds=created_assessment.selectedControlIds,
         selectedQuestionIds=created_assessment.selectedQuestionIds,
@@ -279,6 +282,8 @@ async def get_assessment(assessment_id: str):
     return AssessmentResponse(
         id=assessment.id,
         name=assessment.name,
+        status=assessment.status,
+        riskScore=assessment.riskScore,
         frameworkIds=assessment.frameworkIds,
         selectedControlIds=assessment.selectedControlIds,
         selectedQuestionIds=assessment.selectedQuestionIds,
@@ -303,6 +308,8 @@ async def get_assessments():
         AssessmentResponse(
             id=assessment.id,
             name=assessment.name,
+            status=assessment.status,
+            riskScore=assessment.riskScore,
             frameworkIds=assessment.frameworkIds,
             selectedControlIds=assessment.selectedControlIds,
             selectedQuestionIds=assessment.selectedQuestionIds,
@@ -533,3 +540,85 @@ async def get_dashboard():
     - Top outstanding risks (High-crit questions answered 'No')
     """
     return data_store.get_dashboard_data()
+
+
+# ===== ASSESSMENT STATUS ENDPOINT =====
+
+@router.patch("/assessments/{assessment_id}/status", response_model=AssessmentSummaryResponse)
+async def update_assessment_status(assessment_id: str, request: UpdateStatusRequest):
+    """Advance or revert assessment status through the state machine."""
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+    allowed = STATUS_TRANSITIONS.get(assessment.status, [])
+    if request.status not in allowed:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot transition from '{assessment.status}' to '{request.status}'. Allowed: {allowed}"
+        )
+    updated = data_store.update_assessment_status(assessment_id, request.status)
+    audit_service.log_action(
+        action="UPDATE_STATUS",
+        entity_type="assessment",
+        entity_id=assessment_id,
+        detail={"from": assessment.status, "to": request.status},
+    )
+    return AssessmentSummaryResponse(
+        id=updated.id, name=updated.name, status=updated.status,
+        totalQuestions=updated.questionStats.totalQuestions,
+        answeredQuestions=updated.questionStats.answeredQuestions,
+        completionPercent=updated.questionStats.completionPercent,
+        riskScore=updated.riskScore,
+    )
+
+
+# ===== POA&M ENDPOINTS =====
+
+@router.get("/poam", response_model=List[PoamItem])
+async def list_poam_items(
+    assessment_id: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+):
+    """List all POA&M items, optionally filtered by assessment or status."""
+    return data_store.get_all_poam_items(assessment_id=assessment_id, status=status)
+
+
+@router.post("/poam", response_model=PoamItem, status_code=201)
+async def create_poam_item(request: CreatePoamRequest):
+    """Create a new POA&M remediation item."""
+    assessment = data_store.get_assessment_by_id(request.assessmentId)
+    if not assessment:
+        raise HTTPException(status_code=404, detail=f"Assessment '{request.assessmentId}' not found")
+    item = data_store.create_poam_item(request)
+    audit_service.log_action(
+        action="CREATE_POAM",
+        entity_type="poam",
+        entity_id=item.id,
+        detail={"assessmentId": request.assessmentId, "title": request.title, "priority": request.priority},
+    )
+    return item
+
+
+@router.patch("/poam/{item_id}", response_model=PoamItem)
+async def update_poam_item(item_id: str, request: UpdatePoamRequest):
+    """Update an existing POA&M item."""
+    try:
+        item = data_store.update_poam_item(item_id, request)
+        audit_service.log_action(
+            action="UPDATE_POAM",
+            entity_type="poam",
+            entity_id=item_id,
+            detail={"status": request.status, "priority": request.priority},
+        )
+        return item
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.delete("/poam/{item_id}", status_code=204)
+async def delete_poam_item(item_id: str):
+    """Delete a POA&M item."""
+    try:
+        data_store.delete_poam_item(item_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

@@ -63,6 +63,7 @@ export interface QuestionStats {
 export interface Assessment {
   id: string;
   name: string;
+  status: 'draft' | 'in_progress' | 'submitted' | 'reviewed';
   frameworkIds: string[];
   selectedControlIds: string[];
   selectedQuestionIds?: string[];
@@ -71,6 +72,7 @@ export interface Assessment {
   createdAt: string;
   stats: AssessmentStats;
   questionStats?: QuestionStats;
+  riskScore?: number | null;
 }
 
 export interface Family {
@@ -125,9 +127,45 @@ export interface AuditLogEntry {
 export interface AssessmentSummary {
   id: string;
   name: string;
+  status: string;
   totalQuestions: number;
   answeredQuestions: number;
   completionPercent: number;
+  riskScore?: number | null;
+}
+
+export interface PoamItem {
+  id: string;
+  assessmentId: string;
+  questionId?: string | null;
+  title: string;
+  description?: string | null;
+  status: 'open' | 'in_remediation' | 'closed';
+  priority: 'high' | 'medium' | 'low';
+  dueDate?: string | null;
+  owner?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  closedAt?: string | null;
+}
+
+export interface CreatePoamRequest {
+  assessmentId: string;
+  questionId?: string;
+  title: string;
+  description?: string;
+  priority?: 'high' | 'medium' | 'low';
+  dueDate?: string;
+  owner?: string;
+}
+
+export interface UpdatePoamRequest {
+  title?: string;
+  description?: string;
+  status?: 'open' | 'in_remediation' | 'closed';
+  priority?: 'high' | 'medium' | 'low';
+  dueDate?: string;
+  owner?: string;
 }
 
 export interface DashboardRisk {
@@ -244,4 +282,18 @@ export const api = {
   // Dashboard
   getDashboard: () =>
     apiClient.get<DashboardData>('/dashboard').then(r => r.data),
+
+  // Assessment status transition
+  updateAssessmentStatus: (id: string, status: string) =>
+    apiClient.patch<AssessmentSummary>(`/assessments/${id}/status`, { status }).then(r => r.data),
+
+  // POA&M
+  getPoamItems: (params?: { assessment_id?: string; status?: string }) =>
+    apiClient.get<PoamItem[]>('/poam', { params }).then(r => r.data),
+  createPoamItem: (req: CreatePoamRequest) =>
+    apiClient.post<PoamItem>('/poam', req).then(r => r.data),
+  updatePoamItem: (id: string, req: UpdatePoamRequest) =>
+    apiClient.patch<PoamItem>(`/poam/${id}`, req).then(r => r.data),
+  deletePoamItem: (id: string) =>
+    apiClient.delete(`/poam/${id}`),
 };
