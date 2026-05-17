@@ -421,10 +421,7 @@ async def get_assessment_questions(assessment_id: str):
         for question_id in assessment.selectedQuestionIds:
             question = data_store.get_question_by_id(question_id)
             if question:
-                answer_value = None
-                if question_id in assessment.answers:
-                    answer_value = assessment.answers[question_id].value
-                
+                ans = assessment.answers.get(question_id)
                 question_with_answer = QuestionWithAnswer(
                     id=question.id,
                     familyId=question.familyId,
@@ -434,7 +431,12 @@ async def get_assessment_questions(assessment_id: str):
                     stakeholderRoleId=question.stakeholderRoleId,
                     answerType=question.answerType,
                     criticality=question.criticality,
-                    answerValue=answer_value
+                    functionId=question.functionId,
+                    functionName=question.functionName,
+                    subcategoryText=question.subcategoryText,
+                    answerValue=ans.value if ans else None,
+                    answerYesNo=ans.yesNo if ans else None,
+                    answerJustification=ans.justification if ans else None,
                 )
                 questions_with_answers.append(question_with_answer)
         

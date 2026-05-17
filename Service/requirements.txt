@@ -12,3 +12,6 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 # Database
 sqlalchemy==2.0.23
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2

@@ -235,6 +235,7 @@ class DataStore:
                         updated_at=now,
                         updated_by_email=updated_by_email,
                     ))
+            db.flush()  # make new rows visible to the count query below
             total = len(selected_ids)
             all_ans = db.query(AnswerRecord).filter_by(assessment_id=assessment_id).all()
             answered = sum(1 for a in all_ans if (a.yes_no and a.yes_no.strip()) or (a.value and a.value.strip()))
