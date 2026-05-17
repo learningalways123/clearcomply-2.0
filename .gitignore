@@ -66,3 +66,4 @@ coverage/
 
 # OS specific
 .directory
+client_secret_*.json
