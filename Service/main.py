@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 # Import our routes
 from app.routes import router as api_router
 from app.auth_routes import auth_router
+from app.database import init_db
 
 # Load environment variables
 load_dotenv()
@@ -44,6 +45,12 @@ app.add_middleware(
 # Include API routes
 app.include_router(auth_router)
 app.include_router(api_router)
+
+
+@app.on_event("startup")
+async def startup():
+    init_db()
+    print("[startup] Database initialized")
 
 # Pydantic models for existing endpoints
 class HealthResponse(BaseModel):

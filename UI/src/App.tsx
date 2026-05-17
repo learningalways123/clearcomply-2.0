@@ -9,6 +9,7 @@ import AppLayout from './components/Layout/AppLayout';
 import AssessmentsOverview from './components/AssessmentsOverview/AssessmentsOverview';
 import AssessmentDetail from './components/AssessmentDetail/AssessmentDetail';
 import NewAssessment from './components/NewAssessment/NewAssessment';
+import AuditLog from './components/AuditLog/AuditLog';
 
 const theme = createTheme({
   palette: {
@@ -61,6 +62,7 @@ export default function App() {
                       <Route path="/assessments" element={<AssessmentsOverview />} />
                       <Route path="/assessments/:id" element={<AssessmentDetail />} />
                       <Route path="/new-assessment" element={<NewAssessment />} />
+                      <Route path="/audit-log" element={<AuditLog />} />
                     </Routes>
                   </AppLayout>
                 </ProtectedRoute>

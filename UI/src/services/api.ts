@@ -111,6 +111,17 @@ export interface AnswerSubmission {
   justification?: string;
 }
 
+export interface AuditLogEntry {
+  id: number;
+  timestamp: string;
+  userEmail: string | null;
+  userName: string | null;
+  action: string;
+  entityType: string | null;
+  entityId: string | null;
+  detail: Record<string, unknown> | null;
+}
+
 export interface CreateAssessmentRequest {
   name: string;
   frameworkIds: string[];
@@ -180,4 +191,8 @@ export const api = {
   // Health
   checkHealth: () =>
     apiClient.get<{ status: string; message: string; version: string }>('/status').then(r => r.data),
+
+  // Audit Log
+  getAuditLog: (params?: { limit?: number; offset?: number; user_email?: string; entity_id?: string; action?: string }) =>
+    apiClient.get<{ entries: AuditLogEntry[]; count: number }>('/audit-log', { params }).then(r => r.data),
 };

@@ -2,7 +2,7 @@
 API routes for Clear Comply Service Layer
 """
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 from datetime import datetime
 import uuid
@@ -15,6 +15,8 @@ from app.models import (
     AssessmentQuestionStats
 )
 from app.data_store import data_store
+from app.auth import get_current_user, User
+from app import audit_service
 
 # Create router instance
 router = APIRouter(prefix="/api", tags=["Clear Comply API"])
@@ -229,6 +231,14 @@ async def create_assessment(request: CreateAssessmentRequest):
     
     # Save assessment
     created_assessment = data_store.create_assessment(assessment)
+
+    # Audit log (best-effort, no auth required on this endpoint)
+    audit_service.log_action(
+        action="CREATE_ASSESSMENT",
+        entity_type="assessment",
+        entity_id=created_assessment.id,
+        detail={"name": created_assessment.name, "frameworks": created_assessment.frameworkIds},
+    )
     
     # Return response
     return AssessmentResponse(
@@ -461,12 +471,17 @@ async def submit_assessment_answers(assessment_id: str, request: SubmitAnswersRe
         )
         
         if has_new_format:
-            # Use new format handler
             updated_assessment = data_store.update_assessment_answers_v2(assessment_id, request.answers)
         else:
-            # Convert to legacy format for backward compatibility
             answers_dict = {answer.questionId: answer.value or "" for answer in request.answers}
             updated_assessment = data_store.update_assessment_answers(assessment_id, answers_dict)
+
+        audit_service.log_action(
+            action="SUBMIT_ANSWERS",
+            entity_type="assessment",
+            entity_id=assessment_id,
+            detail={"answersCount": len(request.answers)},
+        )
         
         # Return summary response
         return AssessmentSummaryResponse(
@@ -478,14 +493,26 @@ async def submit_assessment_answers(assessment_id: str, request: SubmitAnswersRe
         )
     
     except ValueError as e:
-        raise HTTPException(
-            status_code=400,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=400, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error while submitting answers: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Internal server error while submitting answers: {str(e)}")
+
+
+# ===== AUDIT LOG ENDPOINT =====
+
+@router.get("/audit-log", summary="Get audit log entries")
+async def get_audit_log(
+    limit: int = Query(50, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+    user_email: Optional[str] = Query(None),
+    entity_id: Optional[str] = Query(None),
+    action: Optional[str] = Query(None),
+):
+    """Return audit log entries, newest first. Accessible without auth for now."""
+    entries = audit_service.get_audit_log(
+        limit=limit, offset=offset,
+        user_email=user_email, entity_id=entity_id, action=action,
+    )
+    return {"entries": entries, "count": len(entries)}
