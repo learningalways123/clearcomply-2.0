@@ -1,632 +1,460 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  TextField,
-  Autocomplete,
-  Chip,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  FormControlLabel,
-  Checkbox,
-  Alert,
-  CircularProgress,
-  Divider,
-} from '@mui/material';
-import {
-  ExpandMore as ExpandMoreIcon,
-  Assessment as AssessmentIcon,
-} from '@mui/icons-material';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { apiService } from '../../services/api';
-import type { Framework, Control, CreateAssessmentRequest, Family, Question } from '../../services/api';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
-interface ControlsByFrameworkDomain {
-  [frameworkId: string]: {
-    framework: Framework;
-    domains: {
-      [domain: string]: Control[];
-    };
-  };
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import { useAsync } from '../../hooks/useAsync';
+import { api } from '../../services/api';
+import type { Framework, Control, Family, Module, Question } from '../../services/api';
+import SummaryPanel from './SummaryPanel';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+type DomainMap = Record<string, Control[]>;
+type FrameworkControls = Record<string, { framework: Framework; domains: DomainMap }>;
+
+function groupByDomain(controls: Control[]): DomainMap {
+  return controls.reduce<DomainMap>((acc, c) => {
+    (acc[c.domain] = acc[c.domain] ?? []).push(c);
+    return acc;
+  }, {});
 }
 
-const NewAssessment: React.FC = () => {
+const CRIT_COLOR = { High: 'error' as const, Medium: 'warning' as const, Low: 'success' as const };
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function NewAssessment() {
   const navigate = useNavigate();
 
-  // State
-  const [assessmentName, setAssessmentName] = useState('');
-  const [frameworks, setFrameworks] = useState<Framework[]>([]);
+  // ── Framework list (loaded once) ──
+  const { data: frameworks = [], loading: frameworksLoading, error: frameworksError } =
+    useAsync(() => api.getFrameworks(), true);
+
+  // ── Form state ──
+  const [name, setName] = useState('');
   const [selectedFrameworks, setSelectedFrameworks] = useState<Framework[]>([]);
-  const [controlsByFramework, setControlsByFramework] = useState<ControlsByFrameworkDomain>({});
   const [selectedControlIds, setSelectedControlIds] = useState<Set<string>>(new Set());
-  
-  // NIST question bank state
+
+  // ── Controls ──
+  const [controlsByFw, setControlsByFw] = useState<FrameworkControls>({});
+  const [controlsLoading, setControlsLoading] = useState(false);
+
+  // ── NIST families + questions ──
   const [families, setFamilies] = useState<Family[]>([]);
   const [selectedFamilies, setSelectedFamilies] = useState<Family[]>([]);
-  const [questionsByFamily, setQuestionsByFamily] = useState<{[familyId: string]: Question[]}>({});
-  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
-  
-  // Loading and error states
-  const [frameworksLoading, setFrameworksLoading] = useState(true);
-  const [controlsLoading, setControlsLoading] = useState(false);
+  const [questionsByFamily, setQuestionsByFamily] = useState<Record<string, Question[]>>({});
   const [familiesLoading, setFamiliesLoading] = useState(false);
   const [questionsLoading, setQuestionsLoading] = useState(false);
+
+  // ── CSF modules + questions ──
+  const [modules, setModules] = useState<Module[]>([]);
+  const [selectedModules, setSelectedModules] = useState<Module[]>([]);
+  const [questionsByModule, setQuestionsByModule] = useState<Record<string, Question[]>>({});
+  const [modulesLoading, setModulesLoading] = useState(false);
+
+  // ── Create ──
   const [creating, setCreating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
 
-  // Load frameworks on component mount
-  useEffect(() => {
-    loadFrameworks();
-  }, []);
+  const isNist = selectedFrameworks.some(f => f.id === 'NIST-800-53');
+  const isCsf  = selectedFrameworks.some(f => f.id === 'NIST-CSF-2.0');
 
-  // Load controls when frameworks are selected
+  // Load controls when frameworks change
   useEffect(() => {
-    if (selectedFrameworks.length > 0) {
-      loadControls();
-    } else {
-      setControlsByFramework({});
-      setSelectedControlIds(new Set());
-    }
+    if (!selectedFrameworks.length) { setControlsByFw({}); setSelectedControlIds(new Set()); return; }
+    let cancelled = false;
+    setControlsLoading(true);
+    Promise.all(selectedFrameworks.map(f => api.getControls(f.id).then(c => ({ f, c }))))
+      .then(results => {
+        if (cancelled) return;
+        const map: FrameworkControls = {};
+        results.forEach(({ f, c }) => { map[f.id] = { framework: f, domains: groupByDomain(c) }; });
+        setControlsByFw(map);
+        setSelectedControlIds(new Set());
+      })
+      .catch(() => {/* handled by alert */})
+      .finally(() => { if (!cancelled) setControlsLoading(false); });
+    return () => { cancelled = true; };
   }, [selectedFrameworks]);
 
-  // Load families when NIST 800-53 is selected
+  // Load NIST families
   useEffect(() => {
-    const nistFramework = selectedFrameworks.find(f => f.id === 'NIST-800-53');
-    if (nistFramework) {
-      loadFamilies();
-    } else {
-      setFamilies([]);
-      setSelectedFamilies([]);
-      setQuestionsByFamily({});
-      setAllQuestions([]);
-    }
-  }, [selectedFrameworks]);
+    if (!isNist) { setFamilies([]); setSelectedFamilies([]); setQuestionsByFamily({}); return; }
+    let cancelled = false;
+    setFamiliesLoading(true);
+    api.getFamilies('NIST-800-53')
+      .then(f => { if (!cancelled) setFamilies(f); })
+      .finally(() => { if (!cancelled) setFamiliesLoading(false); });
+    return () => { cancelled = true; };
+  }, [isNist]);
 
-  // Load questions when families are selected
+  // Load CSF modules
   useEffect(() => {
-    if (selectedFamilies.length > 0) {
-      loadQuestions();
-    } else {
-      setQuestionsByFamily({});
-      setAllQuestions([]);
-    }
+    if (!isCsf) { setModules([]); setSelectedModules([]); setQuestionsByModule({}); return; }
+    let cancelled = false;
+    setModulesLoading(true);
+    api.getFrameworkModules('NIST-CSF-2.0')
+      .then(m => { if (!cancelled) setModules(m); })
+      .finally(() => { if (!cancelled) setModulesLoading(false); });
+    return () => { cancelled = true; };
+  }, [isCsf]);
+
+  // Load NIST questions when families selected
+  useEffect(() => {
+    if (!selectedFamilies.length) { setQuestionsByFamily({}); return; }
+    let cancelled = false;
+    setQuestionsLoading(true);
+    Promise.all(selectedFamilies.map(f =>
+      api.getQuestions('NIST-800-53', f.familyId).then(qs => ({ id: f.familyId, qs })),
+    )).then(results => {
+      if (cancelled) return;
+      const map: Record<string, Question[]> = {};
+      results.forEach(({ id, qs }) => { map[id] = qs; });
+      setQuestionsByFamily(map);
+    }).finally(() => { if (!cancelled) setQuestionsLoading(false); });
+    return () => { cancelled = true; };
   }, [selectedFamilies]);
 
-  const loadFrameworks = async () => {
-    try {
-      setFrameworksLoading(true);
-      const frameworks = await apiService.getFrameworks();
-      setFrameworks(frameworks);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load frameworks');
-    } finally {
-      setFrameworksLoading(false);
-    }
-  };
-
-  const loadControls = async () => {
-    try {
-      setControlsLoading(true);
-      const controlsByFramework: ControlsByFrameworkDomain = {};
-
-      // Load controls for each selected framework
-      for (const framework of selectedFrameworks) {
-        const controls = await apiService.getControls(framework.id);
-        
-        // Group controls by domain
-        const domains: { [domain: string]: Control[] } = {};
-        controls.forEach(control => {
-          if (!domains[control.domain]) {
-            domains[control.domain] = [];
-          }
-          domains[control.domain].push(control);
+  // Load CSF questions when modules selected
+  useEffect(() => {
+    if (!selectedModules.length) { setQuestionsByModule({}); return; }
+    let cancelled = false;
+    setQuestionsLoading(true);
+    const ids = selectedModules.map(m => m.moduleId);
+    api.getQuestionsByModules('NIST-CSF-2.0', ids)
+      .then(qs => {
+        if (cancelled) return;
+        const map: Record<string, Question[]> = {};
+        qs.forEach(q => {
+          const key = q.functionId ?? 'other';
+          (map[key] = map[key] ?? []).push(q);
         });
+        setQuestionsByModule(map);
+      })
+      .finally(() => { if (!cancelled) setQuestionsLoading(false); });
+    return () => { cancelled = true; };
+  }, [selectedModules]);
 
-        controlsByFramework[framework.id] = {
-          framework,
-          domains,
-        };
-      }
+  // ── Derived totals ──
+  const totalControls = Object.values(controlsByFw).reduce(
+    (sum, { domains }) => sum + Object.values(domains).flat().length, 0,
+  );
+  const allQuestions: Question[] = [
+    ...Object.values(questionsByFamily).flat(),
+    ...Object.values(questionsByModule).flat(),
+  ].filter((q, i, arr) => arr.findIndex(x => x.id === q.id) === i);
 
-      setControlsByFramework(controlsByFramework);
-      // Clear previous selections when frameworks change
-      setSelectedControlIds(new Set());
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load controls');
-    } finally {
-      setControlsLoading(false);
-    }
+  // ── Control toggle helpers ──
+  const toggleControl = useCallback((id: string) => {
+    setSelectedControlIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
+
+  const toggleAllDomain = (controls: Control[]) => {
+    const ids = controls.map(c => c.id);
+    const allSelected = ids.every(id => selectedControlIds.has(id));
+    setSelectedControlIds(prev => {
+      const next = new Set(prev);
+      allSelected ? ids.forEach(id => next.delete(id)) : ids.forEach(id => next.add(id));
+      return next;
+    });
   };
 
-  const loadFamilies = async () => {
+  // ── Submit ──
+  const handleCreate = async () => {
+    if (!name.trim()) { setCreateError('Please enter an assessment name.'); return; }
+    if (!selectedFrameworks.length) { setCreateError('Please select at least one framework.'); return; }
+    setCreating(true);
+    setCreateError(null);
     try {
-      setFamiliesLoading(true);
-      const families = await apiService.getFamilies('NIST-800-53');
-      setFamilies(families);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load families');
-    } finally {
-      setFamiliesLoading(false);
-    }
-  };
-
-  const loadQuestions = async () => {
-    try {
-      setQuestionsLoading(true);
-      const questionsByFamily: {[familyId: string]: Question[]} = {};
-      const allQuestions: Question[] = [];
-
-      // Load questions for each selected family
-      for (const family of selectedFamilies) {
-        const questions = await apiService.getQuestions('NIST-800-53', family.familyId);
-        questionsByFamily[family.familyId] = questions;
-        
-        // Add to all questions list (avoid duplicates)
-        questions.forEach(question => {
-          if (!allQuestions.find(q => q.id === question.id)) {
-            allQuestions.push(question);
-          }
-        });
-      }
-
-      setQuestionsByFamily(questionsByFamily);
-      setAllQuestions(allQuestions);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load questions');
-    } finally {
-      setQuestionsLoading(false);
-    }
-  };
-
-  const handleControlToggle = (controlId: string) => {
-    const newSelected = new Set(selectedControlIds);
-    if (newSelected.has(controlId)) {
-      newSelected.delete(controlId);
-    } else {
-      newSelected.add(controlId);
-    }
-    setSelectedControlIds(newSelected);
-  };
-
-  const handleFamilyToggle = (family: Family) => {
-    const isSelected = selectedFamilies.find(f => f.id === family.id);
-    if (isSelected) {
-      setSelectedFamilies(selectedFamilies.filter(f => f.id !== family.id));
-    } else {
-      setSelectedFamilies([...selectedFamilies, family]);
-    }
-  };
-
-  const handleSelectAllFamilies = () => {
-    if (selectedFamilies.length === families.length) {
-      setSelectedFamilies([]);
-    } else {
-      setSelectedFamilies([...families]);
-    }
-  };
-
-  const handleCreateAssessment = async () => {
-    if (!assessmentName.trim()) {
-      setError('Please enter an assessment name');
-      return;
-    }
-
-    if (selectedFrameworks.length === 0) {
-      setError('Please select at least one framework');
-      return;
-    }
-
-    try {
-      setCreating(true);
-      setError(null);
-
-      const request: CreateAssessmentRequest = {
-        name: assessmentName.trim(),
+      const assessment = await api.createAssessment({
+        name: name.trim(),
         frameworkIds: selectedFrameworks.map(f => f.id),
         selectedControlIds: Array.from(selectedControlIds),
         selectedQuestionIds: allQuestions.map(q => q.id),
-      };
-
-      const assessment = await apiService.createAssessment(request);
-      
-      // Navigate to the created assessment detail page
+        familyIds: selectedFamilies.map(f => f.familyId),
+        moduleIds: selectedModules.map(m => m.moduleId),
+      });
       navigate(`/assessments/${assessment.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create assessment');
-    } finally {
+      setCreateError(err instanceof Error ? err.message : 'Failed to create assessment');
       setCreating(false);
     }
   };
 
-  // Calculate statistics
-  const totalControls = Object.values(controlsByFramework).reduce(
-    (total, { domains }) => 
-      total + Object.values(domains).reduce((domainTotal, controls) => domainTotal + controls.length, 0),
-    0
-  );
-  const selectedControls = selectedControlIds.size;
-  const coveragePercent = totalControls > 0 ? Math.round((selectedControls / totalControls) * 100 * 100) / 100 : 0;
-  
-  // Question statistics
-  const totalQuestions = allQuestions.length;
-  const selectedFamiliesCount = selectedFamilies.length;
-
-  const getCriticalityColor = (criticality: string) => {
-    switch (criticality) {
-      case 'High':
-        return 'error';
-      case 'Medium':
-        return 'warning';
-      case 'Low':
-        return 'success';
-      default:
-        return 'default';
-    }
-  };
-
+  // ── Render ──
   if (frameworksLoading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress />
-      </Box>
-    );
+    return <Box sx={{ display: 'flex', justifyContent: 'center', pt: 8 }}><CircularProgress /></Box>;
+  }
+
+  if (frameworksError) {
+    return <Alert severity="error">{frameworksError}</Alert>;
   }
 
   return (
     <Box>
-      {/* Header */}
-      <Box mb={3}>
-        <Typography variant="h4" fontWeight={600} gutterBottom>
-          Create New Assessment
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Select frameworks and controls to create a new compliance assessment.
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h4" gutterBottom>Create New Assessment</Typography>
+        <Typography variant="body2" color="text.secondary">
+          Select frameworks, controls, and question banks to build your compliance assessment.
         </Typography>
       </Box>
 
-      {/* Error Alert */}
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
-      )}
+      {createError && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setCreateError(null)}>{createError}</Alert>}
 
-      <Box display="flex" gap={3} flexDirection={{ xs: 'column', lg: 'row' }}>
-        {/* Main Form */}
-        <Box flex={1}>
-          <Card>
+      <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', lg: 'row' }, alignItems: 'flex-start' }}>
+        {/* ── Main form ── */}
+        <Box sx={{ flex: 1 }}>
+          <Card sx={{ mb: 3 }}>
             <CardContent>
-              {/* Assessment Name */}
-              <Box mb={3}>
-                <Typography variant="h6" gutterBottom>
-                  Assessment Details
-                </Typography>
-                <TextField
-                  fullWidth
-                  label="Assessment Name"
-                  value={assessmentName}
-                  onChange={(e) => setAssessmentName(e.target.value)}
-                  placeholder="e.g., SOC 2 Security Review Q4 2025"
-                  variant="outlined"
-                />
-              </Box>
+              <Typography variant="h6" gutterBottom>Assessment Details</Typography>
+              <TextField
+                fullWidth
+                label="Assessment Name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="e.g., SOC 2 Security Review Q4 2025"
+              />
+            </CardContent>
+          </Card>
 
-              {/* Framework Selection */}
-              <Box mb={3}>
-                <Typography variant="h6" gutterBottom>
-                  Select Frameworks
-                </Typography>
-                <Autocomplete
-                  multiple
-                  options={frameworks}
-                  getOptionLabel={(option) => option.name}
-                  value={selectedFrameworks}
-                  onChange={(_, newValue) => setSelectedFrameworks(newValue)}
-                  renderTags={(value, getTagProps) =>
-                    value.map((option, index) => (
-                      <Chip
-                        variant="outlined"
-                        label={option.name}
-                        {...getTagProps({ index })}
-                        key={option.id}
-                      />
-                    ))
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      placeholder="Select compliance frameworks..."
-                      variant="outlined"
-                    />
-                  )}
-                />
-              </Box>
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>Frameworks</Typography>
+              <Autocomplete
+                multiple
+                options={frameworks}
+                getOptionLabel={o => o.name}
+                value={selectedFrameworks}
+                onChange={(_, v) => setSelectedFrameworks(v)}
+                renderTags={(val, props) =>
+                  val.map((o, i) => <Chip key={o.id} label={o.name} {...props({ index: i })} />)
+                }
+                renderInput={params => (
+                  <TextField {...params} placeholder="Choose compliance frameworks…" />
+                )}
+              />
+            </CardContent>
+          </Card>
 
-              {/* Controls Selection */}
-              {selectedFrameworks.length > 0 && (
-                <Box>
-                  <Typography variant="h6" gutterBottom>
-                    Select Controls
-                  </Typography>
-                  
-                  {controlsLoading ? (
-                    <Box display="flex" justifyContent="center" p={3}>
-                      <CircularProgress />
-                    </Box>
-                  ) : (
-                    <Box>
-                      {Object.entries(controlsByFramework).map(([frameworkId, { framework, domains }]) => (
-                        <Box key={frameworkId} mb={2}>
-                          <Typography variant="h6" color="primary" gutterBottom>
-                            {framework.name}
-                          </Typography>
-                          
-                          {Object.entries(domains).map(([domain, controls]) => (
-                            <Accordion key={`${frameworkId}-${domain}`} sx={{ mb: 1 }}>
-                              <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                sx={{ backgroundColor: 'grey.50' }}
-                              >
-                                <Typography variant="subtitle1" fontWeight={500}>
-                                  {domain} ({controls.length} controls)
-                                </Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                {controls.map((control) => (
-                                  <FormControlLabel
-                                    key={control.id}
-                                    control={
-                                      <Checkbox
-                                        checked={selectedControlIds.has(control.id)}
-                                        onChange={() => handleControlToggle(control.id)}
-                                      />
-                                    }
-                                    label={
-                                      <Box>
-                                        <Box display="flex" alignItems="center" gap={1}>
-                                          <Typography variant="subtitle2" fontWeight={500}>
-                                            {control.title}
-                                          </Typography>
-                                          <Chip
-                                            size="small"
-                                            label={control.criticality}
-                                            color={getCriticalityColor(control.criticality) as any}
-                                            variant="outlined"
-                                          />
-                                        </Box>
-                                        <Typography variant="body2" color="text.secondary">
-                                          {control.description}
-                                        </Typography>
-                                      </Box>
-                                    }
-                                    sx={{ 
-                                      width: '100%', 
-                                      alignItems: 'flex-start',
-                                      mb: 1,
-                                    }}
+          {/* Controls */}
+          {selectedFrameworks.length > 0 && (
+            <Card sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>Controls</Typography>
+                {controlsLoading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}><CircularProgress /></Box>
+                ) : (
+                  Object.entries(controlsByFw).map(([fwId, { framework, domains }]) => (
+                    <Box key={fwId} sx={{ mb: 2 }}>
+                      <Typography variant="subtitle1" color="primary.main" fontWeight={600} gutterBottom>
+                        {framework.name}
+                      </Typography>
+                      {Object.entries(domains).map(([domain, controls]) => {
+                        const domainSelected = controls.every(c => selectedControlIds.has(c.id));
+                        return (
+                          <Accordion key={`${fwId}-${domain}`} sx={{ mb: 1 }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ bgcolor: 'grey.50' }}>
+                              <FormControlLabel
+                                onClick={e => e.stopPropagation()}
+                                control={
+                                  <Checkbox
+                                    checked={domainSelected}
+                                    indeterminate={controls.some(c => selectedControlIds.has(c.id)) && !domainSelected}
+                                    onChange={() => toggleAllDomain(controls)}
+                                    size="small"
                                   />
-                                ))}
-                              </AccordionDetails>
-                            </Accordion>
-                          ))}
-                        </Box>
-                      ))}
+                                }
+                                label={
+                                  <Typography variant="subtitle2" fontWeight={500}>
+                                    {domain} ({controls.length})
+                                  </Typography>
+                                }
+                              />
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              {controls.map(c => (
+                                <FormControlLabel
+                                  key={c.id}
+                                  control={
+                                    <Checkbox
+                                      checked={selectedControlIds.has(c.id)}
+                                      onChange={() => toggleControl(c.id)}
+                                      size="small"
+                                    />
+                                  }
+                                  label={
+                                    <Box>
+                                      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                        <Typography variant="body2" fontWeight={500}>{c.title}</Typography>
+                                        <Chip
+                                          size="small"
+                                          label={c.criticality}
+                                          color={CRIT_COLOR[c.criticality] ?? 'default'}
+                                          variant="outlined"
+                                        />
+                                      </Box>
+                                      <Typography variant="caption" color="text.secondary">{c.description}</Typography>
+                                    </Box>
+                                  }
+                                  sx={{ width: '100%', alignItems: 'flex-start', mb: 0.5 }}
+                                />
+                              ))}
+                            </AccordionDetails>
+                          </Accordion>
+                        );
+                      })}
                     </Box>
-                  )}
-                </Box>
-              )}
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          )}
 
-              {/* NIST Families Selection */}
-              {selectedFrameworks.some(f => f.id === 'NIST-800-53') && (
-                <Box mt={3}>
-                  <Typography variant="h6" gutterBottom>
-                    Select NIST Families
-                  </Typography>
-                  
-                  {familiesLoading ? (
-                    <Box display="flex" justifyContent="center" p={3}>
-                      <CircularProgress />
-                    </Box>
-                  ) : families.length > 0 ? (
-                    <Box>
-                      <Box mb={2}>
-                        <Button
-                          variant="outlined"
-                          onClick={handleSelectAllFamilies}
-                          size="small"
-                        >
-                          {selectedFamilies.length === families.length ? 'Deselect All' : 'Select All'} Families
-                        </Button>
-                      </Box>
-                      
-                      <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
-                        {families.map((family) => (
+          {/* NIST Families */}
+          {isNist && (
+            <Card sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>NIST 800-53 Families</Typography>
+                {familiesLoading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}><CircularProgress /></Box>
+                ) : (
+                  <Box>
+                    <Button
+                      size="small" variant="outlined" sx={{ mb: 2 }}
+                      onClick={() =>
+                        setSelectedFamilies(selectedFamilies.length === families.length ? [] : [...families])
+                      }
+                    >
+                      {selectedFamilies.length === families.length ? 'Deselect All' : 'Select All'}
+                    </Button>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {families.map(f => {
+                        const active = selectedFamilies.some(sf => sf.id === f.id);
+                        return (
                           <Chip
-                            key={family.id}
-                            label={`${family.familyId} - ${family.familyName}`}
-                            onClick={() => handleFamilyToggle(family)}
-                            color={selectedFamilies.find(f => f.id === family.id) ? 'primary' : 'default'}
-                            variant={selectedFamilies.find(f => f.id === family.id) ? 'filled' : 'outlined'}
+                            key={f.id}
+                            label={`${f.familyId} — ${f.familyName}`}
+                            onClick={() =>
+                              setSelectedFamilies(
+                                active ? selectedFamilies.filter(sf => sf.id !== f.id)
+                                       : [...selectedFamilies, f],
+                              )
+                            }
+                            color={active ? 'primary' : 'default'}
+                            variant={active ? 'filled' : 'outlined'}
                             clickable
                           />
-                        ))}
+                        );
+                      })}
+                    </Box>
+                    {questionsLoading && (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
+                        <CircularProgress size={16} />
+                        <Typography variant="body2" color="text.secondary">Loading questions…</Typography>
                       </Box>
-                    </Box>
-                  ) : null}
-                </Box>
-              )}
+                    )}
+                    {selectedFamilies.length > 0 && !questionsLoading && (
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                        {Object.values(questionsByFamily).flat().length} questions loaded
+                      </Typography>
+                    )}
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
-              {/* Question Preview */}
-              {allQuestions.length > 0 && (
-                <Box mt={3}>
-                  <Typography variant="h6" gutterBottom>
-                    Question Preview ({allQuestions.length} questions)
-                  </Typography>
-                  
-                  {questionsLoading ? (
-                    <Box display="flex" justifyContent="center" p={3}>
-                      <CircularProgress />
+          {/* CSF Modules */}
+          {isCsf && (
+            <Card sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>CSF 2.0 Modules</Typography>
+                {modulesLoading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}><CircularProgress /></Box>
+                ) : (
+                  <Box>
+                    <Button
+                      size="small" variant="outlined" sx={{ mb: 2 }}
+                      onClick={() =>
+                        setSelectedModules(selectedModules.length === modules.length ? [] : [...modules])
+                      }
+                    >
+                      {selectedModules.length === modules.length ? 'Deselect All' : 'Select All'}
+                    </Button>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {modules.map(m => {
+                        const active = selectedModules.some(sm => sm.moduleId === m.moduleId);
+                        return (
+                          <Chip
+                            key={m.moduleId}
+                            label={`${m.moduleName} (${m.questionCount})`}
+                            onClick={() =>
+                              setSelectedModules(
+                                active ? selectedModules.filter(sm => sm.moduleId !== m.moduleId)
+                                       : [...selectedModules, m],
+                              )
+                            }
+                            color={active ? 'primary' : 'default'}
+                            variant={active ? 'filled' : 'outlined'}
+                            clickable
+                          />
+                        );
+                      })}
                     </Box>
-                  ) : (
-                    <Box maxHeight="400px" overflow="auto">
-                      {selectedFamilies.map((family) => (
-                        <Accordion key={family.id} sx={{ mb: 1 }}>
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            sx={{ backgroundColor: 'grey.50' }}
-                          >
-                            <Typography variant="subtitle1" fontWeight={500}>
-                              {family.familyId} - {family.familyName} 
-                              ({questionsByFamily[family.familyId]?.length || 0} questions)
-                            </Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            {questionsByFamily[family.familyId]?.map((question) => (
-                              <Box key={question.id} mb={2} p={2} sx={{ backgroundColor: 'grey.25', borderRadius: 1 }}>
-                                <Typography variant="subtitle2" gutterBottom>
-                                  {question.questionText}
-                                </Typography>
-                                <Box display="flex" gap={1} alignItems="center" flexWrap="wrap">
-                                  <Chip
-                                    size="small"
-                                    label={question.stakeholderRoleId}
-                                    variant="outlined"
-                                    color="info"
-                                  />
-                                  <Chip
-                                    size="small"
-                                    label={question.criticality}
-                                    color={getCriticalityColor(question.criticality) as any}
-                                    variant="outlined"
-                                  />
-                                  <Chip
-                                    size="small"
-                                    label={question.answerType}
-                                    variant="outlined"
-                                    color="default"
-                                  />
-                                </Box>
-                              </Box>
-                            )) || (
-                              <Typography variant="body2" color="text.secondary">
-                                No questions available for this family.
-                              </Typography>
-                            )}
-                          </AccordionDetails>
-                        </Accordion>
-                      ))}
-                    </Box>
-                  )}
-                </Box>
-              )}
-            </CardContent>
-          </Card>
+                    {questionsLoading && (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
+                        <CircularProgress size={16} />
+                        <Typography variant="body2" color="text.secondary">Loading questions…</Typography>
+                      </Box>
+                    )}
+                    {selectedModules.length > 0 && !questionsLoading && (
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                        {Object.values(questionsByModule).flat().length} questions loaded
+                      </Typography>
+                    )}
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </Box>
 
-        {/* Summary Panel */}
-        <Box sx={{ width: { xs: '100%', lg: '350px' } }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Assessment Summary
-              </Typography>
-              
-              <Box mb={2}>
-                <Typography variant="body2" color="text.secondary">
-                  Assessment Name
-                </Typography>
-                <Typography variant="body1">
-                  {assessmentName || 'Not specified'}
-                </Typography>
-              </Box>
-
-              <Box mb={2}>
-                <Typography variant="body2" color="text.secondary">
-                  Selected Frameworks
-                </Typography>
-                <Typography variant="body1">
-                  {selectedFrameworks.length > 0 
-                    ? selectedFrameworks.map(f => f.name).join(', ')
-                    : 'None selected'
-                  }
-                </Typography>
-              </Box>
-
-              <Divider sx={{ my: 2 }} />
-
-              <Box mb={2}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Total Controls
-                </Typography>
-                <Typography variant="h4" color="primary">
-                  {totalControls}
-                </Typography>
-              </Box>
-
-              <Box mb={2}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Selected Controls
-                </Typography>
-                <Typography variant="h4" color="success.main">
-                  {selectedControls}
-                </Typography>
-              </Box>
-
-              <Box mb={2}>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Coverage Percentage
-                </Typography>
-                <Typography variant="h4" color="warning.main">
-                  {coveragePercent}%
-                </Typography>
-              </Box>
-
-              {/* NIST Questions Summary */}
-              {selectedFrameworks.some(f => f.id === 'NIST-800-53') && (
-                <>
-                  <Divider sx={{ my: 2 }} />
-                  
-                  <Box mb={2}>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      Selected Families
-                    </Typography>
-                    <Typography variant="h4" color="secondary">
-                      {selectedFamiliesCount}
-                    </Typography>
-                  </Box>
-
-                  <Box mb={3}>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      Total Questions
-                    </Typography>
-                    <Typography variant="h4" color="info.main">
-                      {totalQuestions}
-                    </Typography>
-                  </Box>
-                </>
-              )}
-
-              <Button
-                fullWidth
-                variant="contained"
-                size="large"
-                startIcon={creating ? <CircularProgress size={16} /> : <AssessmentIcon />}
-                onClick={handleCreateAssessment}
-                disabled={creating || !assessmentName.trim() || selectedFrameworks.length === 0}
-              >
-                {creating ? 'Creating...' : 'Create Assessment'}
-              </Button>
-            </CardContent>
-          </Card>
+        {/* ── Summary sidebar ── */}
+        <Box sx={{ width: { xs: '100%', lg: 320 } }}>
+          <SummaryPanel
+            name={name}
+            selectedFrameworks={selectedFrameworks}
+            totalControls={totalControls}
+            selectedControls={selectedControlIds.size}
+            selectedFamilies={selectedFamilies}
+            selectedModules={selectedModules}
+            totalQuestions={allQuestions.length}
+            creating={creating}
+            onSubmit={handleCreate}
+          />
         </Box>
       </Box>
     </Box>
   );
-};
-
-export default NewAssessment;
+}

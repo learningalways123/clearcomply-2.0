@@ -17,6 +17,7 @@ class CriticalityLevel(str, Enum):
 class AnswerType(str, Enum):
     TEXT = "text"
     YES_NO = "yes_no"
+    YES_NO_JUSTIFICATION = "yes_no_justification"
     MULTIPLE_CHOICE = "multiple_choice"
     NUMERIC = "numeric"
 
@@ -39,6 +40,7 @@ class Family(BaseModel):
 # Question Models  
 class Question(BaseModel):
     id: str
+    frameworkId: str
     familyId: str
     familyName: str
     controlRefs: List[str] = Field(default=[], description="Related control references")
@@ -46,6 +48,9 @@ class Question(BaseModel):
     stakeholderRoleId: str
     answerType: AnswerType
     criticality: CriticalityLevel
+    functionId: Optional[str] = None  # For CSF questions
+    functionName: Optional[str] = None  # For CSF questions
+    subcategoryText: Optional[str] = None  # For CSF questions
 
 
 # Question Bank Model
@@ -72,7 +77,9 @@ class AssessmentStats(BaseModel):
 
 
 class QuestionAnswer(BaseModel):
-    value: str
+    value: str = Field(default="", description="Answer value for text/yes_no questions")
+    yesNo: Optional[str] = Field(default=None, description="Yes/No/Not applicable answer")
+    justification: Optional[str] = Field(default=None, description="Justification text")
     lastUpdated: datetime
 
 
@@ -88,6 +95,8 @@ class Assessment(BaseModel):
     frameworkIds: List[str]
     selectedControlIds: List[str]
     selectedQuestionIds: List[str] = Field(default=[], description="List of selected question IDs")
+    moduleIds: List[str] = Field(default=[], description="List of selected CSF module IDs")
+    familyIds: List[str] = Field(default=[], description="List of selected NIST family IDs")
     answers: Dict[str, QuestionAnswer] = Field(default={}, description="Answers keyed by question ID")
     createdAt: datetime
     stats: AssessmentStats
@@ -100,6 +109,8 @@ class CreateAssessmentRequest(BaseModel):
     frameworkIds: List[str] = Field(..., min_items=1, description="List of framework IDs")
     selectedControlIds: List[str] = Field(default=[], description="List of selected control IDs")
     selectedQuestionIds: List[str] = Field(default=[], description="List of selected question IDs")
+    moduleIds: List[str] = Field(default=[], description="List of selected CSF module IDs")
+    familyIds: List[str] = Field(default=[], description="List of selected NIST family IDs")
 
 
 class AssessmentResponse(BaseModel):
@@ -108,6 +119,8 @@ class AssessmentResponse(BaseModel):
     frameworkIds: List[str]
     selectedControlIds: List[str]
     selectedQuestionIds: List[str]
+    moduleIds: List[str] = Field(default=[], description="List of selected CSF module IDs")
+    familyIds: List[str] = Field(default=[], description="List of selected NIST family IDs")
     createdAt: str  # ISO8601 string format
     stats: AssessmentStats
     questionStats: AssessmentQuestionStats
@@ -115,7 +128,9 @@ class AssessmentResponse(BaseModel):
 
 class AnswerSubmission(BaseModel):
     questionId: str
-    value: str
+    value: Optional[str] = None  # For text/yes_no questions
+    yesNo: Optional[str] = None  # For yes_no_justification questions
+    justification: Optional[str] = None  # For yes_no_justification questions
 
 
 class SubmitAnswersRequest(BaseModel):
@@ -139,7 +154,12 @@ class QuestionWithAnswer(BaseModel):
     stakeholderRoleId: str
     answerType: AnswerType
     criticality: CriticalityLevel
+    functionId: Optional[str] = None  # For CSF questions
+    functionName: Optional[str] = None  # For CSF questions
+    subcategoryText: Optional[str] = None  # For CSF questions
     answerValue: Optional[str] = None
+    answerYesNo: Optional[str] = None
+    answerJustification: Optional[str] = None
 
 
 # Error Response Models
@@ -151,3 +171,10 @@ class ErrorResponse(BaseModel):
 class NotFoundResponse(BaseModel):
     detail: str
     error_type: str = "not_found"
+
+
+# CSF Module Model
+class Module(BaseModel):
+    moduleId: str
+    moduleName: str
+    questionCount: int

@@ -1,7 +1,37 @@
-// API service for Clear Comply backend integration
+// API service — single axios instance with auth interceptor.
+// All request methods live here; no token management needed in components.
 
-// Try both possible API URLs in case of environment variable issues
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+import axios from 'axios';
+
+const RAW_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+// Ensure we never double-up /api
+export const API_BASE_URL = RAW_BASE.endsWith('/api') ? RAW_BASE : `${RAW_BASE}/api`;
+
+export const apiClient = axios.create({ baseURL: API_BASE_URL });
+
+// Inject the Bearer token on every request automatically
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Normalise error messages
+apiClient.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    const detail = err.response?.data?.detail;
+    const message =
+      typeof detail === 'string'
+        ? detail
+        : err.message || 'Request failed';
+    return Promise.reject(new Error(message));
+  },
+);
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface Framework {
   id: string;
@@ -36,6 +66,8 @@ export interface Assessment {
   frameworkIds: string[];
   selectedControlIds: string[];
   selectedQuestionIds?: string[];
+  moduleIds?: string[];
+  familyIds?: string[];
   createdAt: string;
   stats: AssessmentStats;
   questionStats?: QuestionStats;
@@ -48,6 +80,12 @@ export interface Family {
   frameworkId: string;
 }
 
+export interface Module {
+  moduleId: string;
+  moduleName: string;
+  questionCount: number;
+}
+
 export interface Question {
   id: string;
   familyId: string;
@@ -55,19 +93,22 @@ export interface Question {
   controlRefs: string[];
   questionText: string;
   stakeholderRoleId: string;
-  answerType: 'text' | 'yes_no' | 'multiple_choice' | 'numeric';
+  answerType: 'text' | 'yes_no' | 'yes_no_justification' | 'multiple_choice' | 'numeric';
   criticality: 'Low' | 'Medium' | 'High';
+  functionId?: string;
+  functionName?: string;
+  subcategoryText?: string;
   answerValue?: string;
+  answerYesNo?: string;
+  answerJustification?: string;
   lastUpdated?: string;
 }
 
 export interface AnswerSubmission {
   questionId: string;
-  value: string;
-}
-
-export interface SubmitAnswersRequest {
-  answers: AnswerSubmission[];
+  value?: string;
+  yesNo?: string;
+  justification?: string;
 }
 
 export interface CreateAssessmentRequest {
@@ -75,99 +116,68 @@ export interface CreateAssessmentRequest {
   frameworkIds: string[];
   selectedControlIds: string[];
   selectedQuestionIds?: string[];
+  moduleIds?: string[];
+  familyIds?: string[];
 }
 
-class ApiService {
-  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-    
-    try {
-      const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...options?.headers,
-        },
-        ...options,
-      });
+// ─── API methods ──────────────────────────────────────────────────────────────
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
-      }
+export const api = {
+  // Auth
+  googleLogin: (credential: string) =>
+    apiClient.post<{ access_token: string; user: { email: string; name: string; picture?: string; role: string } }>(
+      '/auth/google/login',
+      { credential },
+    ).then(r => r.data),
 
-      return await response.json();
-    } catch (error) {
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Unable to connect to the API. Please ensure the backend is running.');
-      }
-      throw error;
-    }
-  }
+  // Frameworks
+  getFrameworks: () => apiClient.get<Framework[]>('/frameworks').then(r => r.data),
 
-  // Framework endpoints
-  async getFrameworks(): Promise<Framework[]> {
-    return this.request<Framework[]>('/frameworks');
-  }
+  // Controls
+  getControls: (frameworkId?: string) => {
+    const url = frameworkId ? `/controls?frameworkId=${frameworkId}` : '/controls';
+    return apiClient.get<Control[]>(url).then(r => r.data);
+  },
 
-  // Control endpoints
-  async getControls(frameworkId?: string): Promise<Control[]> {
-    const endpoint = frameworkId ? `/controls?frameworkId=${frameworkId}` : '/controls';
-    return this.request<Control[]>(endpoint);
-  }
+  // Families
+  getFamilies: (frameworkId?: string) => {
+    const url = frameworkId ? `/families?framework_id=${frameworkId}` : '/families';
+    return apiClient.get<Family[]>(url).then(r => r.data);
+  },
 
-  // Family endpoints
-  async getFamilies(frameworkId?: string): Promise<Family[]> {
-    const endpoint = frameworkId ? `/families?framework_id=${frameworkId}` : '/families';
-    return this.request<Family[]>(endpoint);
-  }
+  // Questions
+  getQuestions: (frameworkId?: string, familyId?: string) => {
+    const params = new URLSearchParams();
+    if (frameworkId) params.set('framework_id', frameworkId);
+    if (familyId) params.set('family_id', familyId);
+    const qs = params.toString();
+    return apiClient.get<Question[]>(`/questions${qs ? `?${qs}` : ''}`).then(r => r.data);
+  },
 
-  // Question endpoints
-  async getQuestions(frameworkId?: string, familyId?: string): Promise<Question[]> {
-    let endpoint = '/questions';
-    const params = [];
-    if (frameworkId) params.push(`framework_id=${frameworkId}`);
-    if (familyId) params.push(`family_id=${familyId}`);
-    if (params.length > 0) {
-      endpoint += `?${params.join('&')}`;
-    }
-    return this.request<Question[]>(endpoint);
-  }
+  // Modules
+  getFrameworkModules: (frameworkId: string) =>
+    apiClient.get<Module[]>(`/frameworks/${frameworkId}/modules`).then(r => r.data),
 
-  async getQuestion(questionId: string): Promise<Question> {
-    return this.request<Question>(`/questions/${questionId}`);
-  }
+  getQuestionsByModules: (frameworkId: string, moduleIds: string[]) =>
+    apiClient
+      .get<Question[]>(`/frameworks/${frameworkId}/questions?moduleIds=${moduleIds.join(',')}`)
+      .then(r => r.data),
 
-  // Assessment endpoints
-  async createAssessment(data: CreateAssessmentRequest): Promise<Assessment> {
-    return this.request<Assessment>('/assessments', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
+  // Assessments
+  getAssessments: () => apiClient.get<Assessment[]>('/assessments').then(r => r.data),
 
-  async getAssessments(): Promise<Assessment[]> {
-    return this.request<Assessment[]>('/assessments');
-  }
+  getAssessment: (id: string) => apiClient.get<Assessment>(`/assessments/${id}`).then(r => r.data),
 
-  async getAssessment(id: string): Promise<Assessment> {
-    return this.request<Assessment>(`/assessments/${id}`);
-  }
+  getAssessmentQuestions: (id: string) =>
+    apiClient.get<Question[]>(`/assessments/${id}/questions`).then(r => r.data),
 
-  async getAssessmentQuestions(id: string): Promise<Question[]> {
-    return this.request<Question[]>(`/assessments/${id}/questions`);
-  }
+  createAssessment: (data: CreateAssessmentRequest) =>
+    apiClient.post<Assessment>('/assessments', data).then(r => r.data),
 
-  async submitAssessmentAnswers(id: string, data: SubmitAnswersRequest): Promise<Assessment> {
-    return this.request<Assessment>(`/assessments/${id}/answers`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
+  submitAnswers: (id: string, answers: AnswerSubmission[]) =>
+    apiClient.post<Assessment>(`/assessments/${id}/answers`, { answers }).then(r => r.data),
 
-  // Health check
-  async checkHealth(): Promise<{ status: string; message: string; version: string }> {
-    return this.request('/status');
-  }
-}
-
-export const apiService = new ApiService();
+  // Health
+  checkHealth: () =>
+    apiClient.get<{ status: string; message: string; version: string }>('/status').then(r => r.data),
+};

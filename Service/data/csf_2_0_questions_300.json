@@ -1,0 +1,4805 @@
+{
+  "frameworkId": "NIST-CSF-2.0",
+  "questions": [
+    {
+      "id": "GV.OC-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-01"
+      ],
+      "questionText": "Have we documented our organization's mission, objectives, and activities?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "yes_no_justification",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The organizational mission is understood and informs cybersecurity risk management"
+    },
+    {
+      "id": "GV.OC-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-01"
+      ],
+      "questionText": "Do cybersecurity stakeholders understand how security supports the mission?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "yes_no_justification",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The organizational mission is understood and informs cybersecurity risk management"
+    },
+    {
+      "id": "GV.OC-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-01"
+      ],
+      "questionText": "Is cybersecurity risk management aligned with organizational priorities?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The organizational mission is understood and informs cybersecurity risk management"
+    },
+    {
+      "id": "GV.OC-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-01"
+      ],
+      "questionText": "How does cybersecurity enable or hinder mission achievement?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The organizational mission is understood and informs cybersecurity risk management"
+    },
+    {
+      "id": "GV.OC-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-02"
+      ],
+      "questionText": "Have we identified all internal stakeholders (executives, business units, IT, legal, HR)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Internal and external stakeholders are understood, and their needs and expectations regarding cybersecurity risk management are understood and considered"
+    },
+    {
+      "id": "GV.OC-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-02"
+      ],
+      "questionText": "Have we identified all external stakeholders (customers, partners, regulators, investors)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Internal and external stakeholders are understood, and their needs and expectations regarding cybersecurity risk management are understood and considered"
+    },
+    {
+      "id": "GV.OC-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-02"
+      ],
+      "questionText": "Do we understand stakeholder expectations for cybersecurity?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Internal and external stakeholders are understood, and their needs and expectations regarding cybersecurity risk management are understood and considered"
+    },
+    {
+      "id": "GV.OC-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-02"
+      ],
+      "questionText": "How do we gather and document stakeholder requirements?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Internal and external stakeholders are understood, and their needs and expectations regarding cybersecurity risk management are understood and considered"
+    },
+    {
+      "id": "GV.OC-02-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-02"
+      ],
+      "questionText": "Are stakeholder needs prioritized and addressed in our cybersecurity strategy?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Internal and external stakeholders are understood, and their needs and expectations regarding cybersecurity risk management are understood and considered"
+    },
+    {
+      "id": "GV.OC-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-03"
+      ],
+      "questionText": "Have we identified all applicable laws and regulations (GDPR, HIPAA, PCI-DSS, SOX, etc.)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Legal, regulatory, and contractual requirements regarding cybersecurity \u2014 including privacy and civil liberties obligations \u2014 are understood and managed"
+    },
+    {
+      "id": "GV.OC-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-03"
+      ],
+      "questionText": "Do we maintain a compliance requirements register?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Legal, regulatory, and contractual requirements regarding cybersecurity \u2014 including privacy and civil liberties obligations \u2014 are understood and managed"
+    },
+    {
+      "id": "GV.OC-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-03"
+      ],
+      "questionText": "How do we track changes to regulatory requirements?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Legal, regulatory, and contractual requirements regarding cybersecurity \u2014 including privacy and civil liberties obligations \u2014 are understood and managed"
+    },
+    {
+      "id": "GV.OC-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-03"
+      ],
+      "questionText": "Are contractual cybersecurity obligations documented and tracked?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Legal, regulatory, and contractual requirements regarding cybersecurity \u2014 including privacy and civil liberties obligations \u2014 are understood and managed"
+    },
+    {
+      "id": "GV.OC-03-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-03"
+      ],
+      "questionText": "Do we have a process to ensure ongoing compliance?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Legal, regulatory, and contractual requirements regarding cybersecurity \u2014 including privacy and civil liberties obligations \u2014 are understood and managed"
+    },
+    {
+      "id": "GV.OC-03-Q6",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-03"
+      ],
+      "questionText": "Have we identified jurisdictional differences in privacy requirements?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Legal, regulatory, and contractual requirements regarding cybersecurity \u2014 including privacy and civil liberties obligations \u2014 are understood and managed"
+    },
+    {
+      "id": "GV.OC-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-04"
+      ],
+      "questionText": "Have we identified services that external stakeholders depend on?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Critical objectives, capabilities, and services that external stakeholders depend on or expect from the organization are understood and communicated"
+    },
+    {
+      "id": "GV.OC-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-04"
+      ],
+      "questionText": "What are our commitments to service availability and security?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Critical objectives, capabilities, and services that external stakeholders depend on or expect from the organization are understood and communicated"
+    },
+    {
+      "id": "GV.OC-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-04"
+      ],
+      "questionText": "How do we communicate service security posture to customers/partners?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Critical objectives, capabilities, and services that external stakeholders depend on or expect from the organization are understood and communicated"
+    },
+    {
+      "id": "GV.OC-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-04"
+      ],
+      "questionText": "Do we have SLAs that include security commitments?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Critical objectives, capabilities, and services that external stakeholders depend on or expect from the organization are understood and communicated"
+    },
+    {
+      "id": "GV.OC-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-05"
+      ],
+      "questionText": "Have we identified critical dependencies on external services (cloud, vendors, utilities)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Outcomes, capabilities, and services that the organization depends on are understood and communicated"
+    },
+    {
+      "id": "GV.OC-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-05"
+      ],
+      "questionText": "Do we understand the cybersecurity posture of our dependencies?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Outcomes, capabilities, and services that the organization depends on are understood and communicated"
+    },
+    {
+      "id": "GV.OC-05-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-05"
+      ],
+      "questionText": "How do we assess the risk of dependency failures?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Outcomes, capabilities, and services that the organization depends on are understood and communicated"
+    },
+    {
+      "id": "GV.OC-05-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OC",
+      "familyName": "Organizational Context",
+      "controlRefs": [
+        "GV.OC-05"
+      ],
+      "questionText": "Are single points of failure identified and mitigated?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Outcomes, capabilities, and services that the organization depends on are understood and communicated"
+    },
+    {
+      "id": "GV.RM-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-01"
+      ],
+      "questionText": "Have we defined clear risk management objectives?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Risk management objectives are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.RM-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-01"
+      ],
+      "questionText": "Are objectives documented and approved by senior leadership?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Risk management objectives are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.RM-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-01"
+      ],
+      "questionText": "Do objectives align with business strategy?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Risk management objectives are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.RM-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-01"
+      ],
+      "questionText": "How often are risk management objectives reviewed?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Risk management objectives are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.RM-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-03"
+      ],
+      "questionText": "Is cybersecurity risk integrated into enterprise risk management (ERM)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management activities and outcomes are included in enterprise risk management processes"
+    },
+    {
+      "id": "GV.RM-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-03"
+      ],
+      "questionText": "Are cyber risks reported alongside operational, financial, and strategic risks?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management activities and outcomes are included in enterprise risk management processes"
+    },
+    {
+      "id": "GV.RM-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-03"
+      ],
+      "questionText": "Do we use a common risk taxonomy across the organization?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management activities and outcomes are included in enterprise risk management processes"
+    },
+    {
+      "id": "GV.RM-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-03"
+      ],
+      "questionText": "Are cyber risks considered in strategic planning?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management activities and outcomes are included in enterprise risk management processes"
+    },
+    {
+      "id": "GV.RM-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-04"
+      ],
+      "questionText": "Do we have defined risk response strategies (accept, mitigate, transfer, avoid)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Strategic direction that describes appropriate risk response options is established and communicated"
+    },
+    {
+      "id": "GV.RM-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-04"
+      ],
+      "questionText": "Are criteria for risk response decisions documented?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Strategic direction that describes appropriate risk response options is established and communicated"
+    },
+    {
+      "id": "GV.RM-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-04"
+      ],
+      "questionText": "Who has authority to accept different levels of risk?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Strategic direction that describes appropriate risk response options is established and communicated"
+    },
+    {
+      "id": "GV.RM-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-04"
+      ],
+      "questionText": "How do we document risk decisions and rationale?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Strategic direction that describes appropriate risk response options is established and communicated"
+    },
+    {
+      "id": "GV.RM-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-05"
+      ],
+      "questionText": "Are communication channels for reporting cyber risks clearly defined?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Lines of communication across the organization are established for cybersecurity risks, including escalation processes for cybersecurity incidents"
+    },
+    {
+      "id": "GV.RM-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-05"
+      ],
+      "questionText": "Do we have an escalation matrix for different risk/incident severity levels?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Lines of communication across the organization are established for cybersecurity risks, including escalation processes for cybersecurity incidents"
+    },
+    {
+      "id": "GV.RM-05-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-05"
+      ],
+      "questionText": "How quickly do critical risks reach senior leadership?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Lines of communication across the organization are established for cybersecurity risks, including escalation processes for cybersecurity incidents"
+    },
+    {
+      "id": "GV.RM-05-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-05"
+      ],
+      "questionText": "Are there regular cybersecurity risk briefings to executives?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Lines of communication across the organization are established for cybersecurity risks, including escalation processes for cybersecurity incidents"
+    },
+    {
+      "id": "GV.RM-06-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-06"
+      ],
+      "questionText": "Do we use a standardized risk calculation methodology (qualitative/quantitative)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A standardized method for calculating, documenting, categorizing, and prioritizing cybersecurity risks is established and communicated"
+    },
+    {
+      "id": "GV.RM-06-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-06"
+      ],
+      "questionText": "How do we calculate risk (likelihood \u00d7 impact, risk scoring matrix, etc.)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A standardized method for calculating, documenting, categorizing, and prioritizing cybersecurity risks is established and communicated"
+    },
+    {
+      "id": "GV.RM-06-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-06"
+      ],
+      "questionText": "Are risk categories defined (e.g., by asset type, threat type, business function)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A standardized method for calculating, documenting, categorizing, and prioritizing cybersecurity risks is established and communicated"
+    },
+    {
+      "id": "GV.RM-06-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-06"
+      ],
+      "questionText": "Is the risk methodology documented and understood by stakeholders?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A standardized method for calculating, documenting, categorizing, and prioritizing cybersecurity risks is established and communicated"
+    },
+    {
+      "id": "GV.RM-06-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-06"
+      ],
+      "questionText": "How do we prioritize risks for treatment?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A standardized method for calculating, documenting, categorizing, and prioritizing cybersecurity risks is established and communicated"
+    },
+    {
+      "id": "GV.RM-07-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-07"
+      ],
+      "questionText": "Do we identify opportunities enabled by cybersecurity investments?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Strategic opportunities (i.e., positive risks) are characterized and are included in organizational cybersecurity risk discussions"
+    },
+    {
+      "id": "GV.RM-07-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-07"
+      ],
+      "questionText": "Are positive outcomes of security initiatives communicated (competitive advantage, trust)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Strategic opportunities (i.e., positive risks) are characterized and are included in organizational cybersecurity risk discussions"
+    },
+    {
+      "id": "GV.RM-07-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RM",
+      "familyName": "Risk Management Strategy",
+      "controlRefs": [
+        "GV.RM-07"
+      ],
+      "questionText": "Do we balance risk reduction with innovation/growth opportunities?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Strategic opportunities (i.e., positive risks) are characterized and are included in organizational cybersecurity risk discussions"
+    },
+    {
+      "id": "GV.RR-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-01"
+      ],
+      "questionText": "Does the CEO/board explicitly own cybersecurity risk?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational leadership is responsible and accountable for cybersecurity risk and fosters a culture that is risk-aware, ethical, and continually improving"
+    },
+    {
+      "id": "GV.RR-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-01"
+      ],
+      "questionText": "Is cybersecurity accountability in executive job descriptions and performance reviews?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational leadership is responsible and accountable for cybersecurity risk and fosters a culture that is risk-aware, ethical, and continually improving"
+    },
+    {
+      "id": "GV.RR-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-01"
+      ],
+      "questionText": "How does leadership demonstrate commitment to cybersecurity?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational leadership is responsible and accountable for cybersecurity risk and fosters a culture that is risk-aware, ethical, and continually improving"
+    },
+    {
+      "id": "GV.RR-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-01"
+      ],
+      "questionText": "Are ethics and responsible disclosure encouraged?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational leadership is responsible and accountable for cybersecurity risk and fosters a culture that is risk-aware, ethical, and continually improving"
+    },
+    {
+      "id": "GV.RR-01-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-01"
+      ],
+      "questionText": "Is there a culture of continuous improvement and learning from incidents?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational leadership is responsible and accountable for cybersecurity risk and fosters a culture that is risk-aware, ethical, and continually improving"
+    },
+    {
+      "id": "GV.RR-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-02"
+      ],
+      "questionText": "Are cybersecurity roles documented in a RACI matrix (Responsible, Accountable, Consulted, Informed)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced"
+    },
+    {
+      "id": "GV.RR-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-02"
+      ],
+      "questionText": "Do all employees understand their cybersecurity responsibilities?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced"
+    },
+    {
+      "id": "GV.RR-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-02"
+      ],
+      "questionText": "Are roles communicated during onboarding and training?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced"
+    },
+    {
+      "id": "GV.RR-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-02"
+      ],
+      "questionText": "How do we enforce accountability for cybersecurity duties?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced"
+    },
+    {
+      "id": "GV.RR-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-03"
+      ],
+      "questionText": "Is the cybersecurity budget aligned with identified risks?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Adequate resources are allocated commensurate with the cybersecurity risk strategy, roles, responsibilities, and policies"
+    },
+    {
+      "id": "GV.RR-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-03"
+      ],
+      "questionText": "Do we have sufficient staffing for cybersecurity functions?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Adequate resources are allocated commensurate with the cybersecurity risk strategy, roles, responsibilities, and policies"
+    },
+    {
+      "id": "GV.RR-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-03"
+      ],
+      "questionText": "Are tools and technologies funded appropriately?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Adequate resources are allocated commensurate with the cybersecurity risk strategy, roles, responsibilities, and policies"
+    },
+    {
+      "id": "GV.RR-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-03"
+      ],
+      "questionText": "How do we justify cybersecurity investments to leadership?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Adequate resources are allocated commensurate with the cybersecurity risk strategy, roles, responsibilities, and policies"
+    },
+    {
+      "id": "GV.RR-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-04"
+      ],
+      "questionText": "Are background checks conducted for sensitive positions?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity is included in human resources practices"
+    },
+    {
+      "id": "GV.RR-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-04"
+      ],
+      "questionText": "Do employment agreements include cybersecurity responsibilities and NDAs?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity is included in human resources practices"
+    },
+    {
+      "id": "GV.RR-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-04"
+      ],
+      "questionText": "Is cybersecurity included in job descriptions?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity is included in human resources practices"
+    },
+    {
+      "id": "GV.RR-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-04"
+      ],
+      "questionText": "Do we have consequences for policy violations?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity is included in human resources practices"
+    },
+    {
+      "id": "GV.RR-04-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.RR",
+      "familyName": "Roles, Responsibilities, and Authorities",
+      "controlRefs": [
+        "GV.RR-04"
+      ],
+      "questionText": "Are exit procedures secure (access revocation, equipment return)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity is included in human resources practices"
+    },
+    {
+      "id": "GV.PO-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-01"
+      ],
+      "questionText": "Do we have a comprehensive cybersecurity policy framework?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is established based on organizational context, cybersecurity strategy, and priorities and is communicated and enforced"
+    },
+    {
+      "id": "GV.PO-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-01"
+      ],
+      "questionText": "Are policies based on risk assessment and organizational context?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is established based on organizational context, cybersecurity strategy, and priorities and is communicated and enforced"
+    },
+    {
+      "id": "GV.PO-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-01"
+      ],
+      "questionText": "How are policies communicated to all relevant personnel?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is established based on organizational context, cybersecurity strategy, and priorities and is communicated and enforced"
+    },
+    {
+      "id": "GV.PO-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-01"
+      ],
+      "questionText": "Do we track policy acknowledgment/acceptance?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is established based on organizational context, cybersecurity strategy, and priorities and is communicated and enforced"
+    },
+    {
+      "id": "GV.PO-01-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-01"
+      ],
+      "questionText": "Are policy violations investigated and enforced?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is established based on organizational context, cybersecurity strategy, and priorities and is communicated and enforced"
+    },
+    {
+      "id": "GV.PO-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-02"
+      ],
+      "questionText": "How often are policies reviewed (at least annually)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is reviewed, updated, communicated, and enforced to reflect changes in requirements, threats, technology, and organizational mission"
+    },
+    {
+      "id": "GV.PO-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-02"
+      ],
+      "questionText": "Do we update policies when regulations or threats change?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is reviewed, updated, communicated, and enforced to reflect changes in requirements, threats, technology, and organizational mission"
+    },
+    {
+      "id": "GV.PO-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-02"
+      ],
+      "questionText": "Is there a policy version control and approval process?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is reviewed, updated, communicated, and enforced to reflect changes in requirements, threats, technology, and organizational mission"
+    },
+    {
+      "id": "GV.PO-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.PO",
+      "familyName": "Policy",
+      "controlRefs": [
+        "GV.PO-02"
+      ],
+      "questionText": "How do we communicate policy updates to stakeholders?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Policy for managing cybersecurity risks is reviewed, updated, communicated, and enforced to reflect changes in requirements, threats, technology, and organizational mission"
+    },
+    {
+      "id": "GV.OV-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-01"
+      ],
+      "questionText": "Are risk management outcomes measured against objectives?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management strategy outcomes are reviewed to inform and adjust strategy and direction"
+    },
+    {
+      "id": "GV.OV-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-01"
+      ],
+      "questionText": "Do we conduct regular strategy reviews (quarterly, annually)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management strategy outcomes are reviewed to inform and adjust strategy and direction"
+    },
+    {
+      "id": "GV.OV-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-01"
+      ],
+      "questionText": "Are adjustments made based on changing threat landscape or business priorities?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management strategy outcomes are reviewed to inform and adjust strategy and direction"
+    },
+    {
+      "id": "GV.OV-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-01"
+      ],
+      "questionText": "Who reviews and approves strategy changes?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity risk management strategy outcomes are reviewed to inform and adjust strategy and direction"
+    },
+    {
+      "id": "GV.OV-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-02"
+      ],
+      "questionText": "Do we monitor the external threat environment and adjust strategy accordingly?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The cybersecurity risk management strategy is reviewed and adjusted to account for changes to the risk environment and to changes from communicating with organizational stakeholders"
+    },
+    {
+      "id": "GV.OV-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-02"
+      ],
+      "questionText": "Are lessons from incidents incorporated into strategy?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The cybersecurity risk management strategy is reviewed and adjusted to account for changes to the risk environment and to changes from communicating with organizational stakeholders"
+    },
+    {
+      "id": "GV.OV-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-02"
+      ],
+      "questionText": "Do we adjust strategy based on stakeholder feedback?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The cybersecurity risk management strategy is reviewed and adjusted to account for changes to the risk environment and to changes from communicating with organizational stakeholders"
+    },
+    {
+      "id": "GV.OV-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-02"
+      ],
+      "questionText": "How do we track emerging risks and technologies?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The cybersecurity risk management strategy is reviewed and adjusted to account for changes to the risk environment and to changes from communicating with organizational stakeholders"
+    },
+    {
+      "id": "GV.OV-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-03"
+      ],
+      "questionText": "Do we have defined KPIs/KRIs for cybersecurity performance?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational cybersecurity risk management performance is evaluated and reviewed for adjustments needed"
+    },
+    {
+      "id": "GV.OV-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-03"
+      ],
+      "questionText": "Are metrics reported to leadership regularly?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational cybersecurity risk management performance is evaluated and reviewed for adjustments needed"
+    },
+    {
+      "id": "GV.OV-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-03"
+      ],
+      "questionText": "Do we benchmark against industry peers?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational cybersecurity risk management performance is evaluated and reviewed for adjustments needed"
+    },
+    {
+      "id": "GV.OV-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.OV",
+      "familyName": "Oversight",
+      "controlRefs": [
+        "GV.OV-03"
+      ],
+      "questionText": "Are performance gaps addressed with action plans?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Organizational cybersecurity risk management performance is evaluated and reviewed for adjustments needed"
+    },
+    {
+      "id": "GV.SC-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-01"
+      ],
+      "questionText": "Do we have a formal supply chain risk management (SCRM) program?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A cybersecurity supply chain risk management program, strategy, objectives, policies, and processes are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.SC-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-01"
+      ],
+      "questionText": "Are third-party risk requirements documented in policy?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A cybersecurity supply chain risk management program, strategy, objectives, policies, and processes are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.SC-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-01"
+      ],
+      "questionText": "Have we defined risk tolerance for supplier risks?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A cybersecurity supply chain risk management program, strategy, objectives, policies, and processes are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.SC-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-01"
+      ],
+      "questionText": "Are SCRM objectives aligned with overall cybersecurity strategy?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "A cybersecurity supply chain risk management program, strategy, objectives, policies, and processes are established and agreed to by organizational stakeholders"
+    },
+    {
+      "id": "GV.SC-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-02"
+      ],
+      "questionText": "Are supplier cybersecurity responsibilities defined in contracts?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity roles and responsibilities for suppliers, customers, and partners are established, communicated, and coordinated internally and externally"
+    },
+    {
+      "id": "GV.SC-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-02"
+      ],
+      "questionText": "Do we have SLAs with security requirements?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity roles and responsibilities for suppliers, customers, and partners are established, communicated, and coordinated internally and externally"
+    },
+    {
+      "id": "GV.SC-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-02"
+      ],
+      "questionText": "Are security roles clear for shared responsibility models (e.g., cloud)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity roles and responsibilities for suppliers, customers, and partners are established, communicated, and coordinated internally and externally"
+    },
+    {
+      "id": "GV.SC-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-02"
+      ],
+      "questionText": "How do we coordinate incident response with third parties?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity roles and responsibilities for suppliers, customers, and partners are established, communicated, and coordinated internally and externally"
+    },
+    {
+      "id": "GV.SC-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-03"
+      ],
+      "questionText": "Are third-party risks included in enterprise risk assessments?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes"
+    },
+    {
+      "id": "GV.SC-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-03"
+      ],
+      "questionText": "Do we evaluate supplier risks before onboarding?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes"
+    },
+    {
+      "id": "GV.SC-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-03"
+      ],
+      "questionText": "Are supplier risks monitored continuously?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes"
+    },
+    {
+      "id": "GV.SC-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-03"
+      ],
+      "questionText": "How do we handle supplier risk changes over time?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes"
+    },
+    {
+      "id": "GV.SC-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-04"
+      ],
+      "questionText": "Do we maintain an inventory of all suppliers/vendors?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Suppliers are known and prioritized by criticality"
+    },
+    {
+      "id": "GV.SC-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-04"
+      ],
+      "questionText": "Have we classified suppliers by criticality (critical, high, medium, low)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Suppliers are known and prioritized by criticality"
+    },
+    {
+      "id": "GV.SC-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-04"
+      ],
+      "questionText": "Do we know which suppliers have access to sensitive data or critical systems?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Suppliers are known and prioritized by criticality"
+    },
+    {
+      "id": "GV.SC-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-04"
+      ],
+      "questionText": "Are critical suppliers subject to enhanced due diligence?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Suppliers are known and prioritized by criticality"
+    },
+    {
+      "id": "GV.SC-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-05"
+      ],
+      "questionText": "Are cybersecurity requirements included in procurement processes?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Requirements to address cybersecurity risks in supply chains are established, prioritized, and integrated into contracts and other types of agreements with suppliers and other relevant third parties"
+    },
+    {
+      "id": "GV.SC-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-05"
+      ],
+      "questionText": "Do contracts include security clauses (data protection, incident notification, audit rights)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Requirements to address cybersecurity risks in supply chains are established, prioritized, and integrated into contracts and other types of agreements with suppliers and other relevant third parties"
+    },
+    {
+      "id": "GV.SC-05-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-05"
+      ],
+      "questionText": "Do we require suppliers to meet specific standards (ISO 27001, SOC 2)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Requirements to address cybersecurity risks in supply chains are established, prioritized, and integrated into contracts and other types of agreements with suppliers and other relevant third parties"
+    },
+    {
+      "id": "GV.SC-05-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-05"
+      ],
+      "questionText": "Are insurance requirements included in contracts?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Requirements to address cybersecurity risks in supply chains are established, prioritized, and integrated into contracts and other types of agreements with suppliers and other relevant third parties"
+    },
+    {
+      "id": "GV.SC-06-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-06"
+      ],
+      "questionText": "Do we conduct security assessments before onboarding suppliers?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Planning and due diligence are performed to reduce risks before entering into formal supplier or other third-party relationships"
+    },
+    {
+      "id": "GV.SC-06-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-06"
+      ],
+      "questionText": "Are security questionnaires used to evaluate supplier posture?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Planning and due diligence are performed to reduce risks before entering into formal supplier or other third-party relationships"
+    },
+    {
+      "id": "GV.SC-06-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-06"
+      ],
+      "questionText": "Do we review supplier certifications and audit reports?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Planning and due diligence are performed to reduce risks before entering into formal supplier or other third-party relationships"
+    },
+    {
+      "id": "GV.SC-06-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-06"
+      ],
+      "questionText": "Are high-risk suppliers subject to on-site assessments?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Planning and due diligence are performed to reduce risks before entering into formal supplier or other third-party relationships"
+    },
+    {
+      "id": "GV.SC-07-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-07"
+      ],
+      "questionText": "Do we reassess supplier risks periodically (annually at minimum)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The risks posed by a supplier, their products and services, and other third parties are understood, recorded, prioritized, assessed, responded to, and monitored over the course of the relationship"
+    },
+    {
+      "id": "GV.SC-07-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-07"
+      ],
+      "questionText": "Are supplier security incidents tracked and evaluated?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The risks posed by a supplier, their products and services, and other third parties are understood, recorded, prioritized, assessed, responded to, and monitored over the course of the relationship"
+    },
+    {
+      "id": "GV.SC-07-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-07"
+      ],
+      "questionText": "Do we monitor for changes in supplier risk (M&A, breaches, financial instability)?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The risks posed by a supplier, their products and services, and other third parties are understood, recorded, prioritized, assessed, responded to, and monitored over the course of the relationship"
+    },
+    {
+      "id": "GV.SC-07-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-07"
+      ],
+      "questionText": "Is there a process to off-board or replace high-risk suppliers?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "The risks posed by a supplier, their products and services, and other third parties are understood, recorded, prioritized, assessed, responded to, and monitored over the course of the relationship"
+    },
+    {
+      "id": "GV.SC-08-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-08"
+      ],
+      "questionText": "Are critical suppliers included in incident response plans?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Relevant suppliers and other third parties are included in incident planning, response, and recovery activities"
+    },
+    {
+      "id": "GV.SC-08-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-08"
+      ],
+      "questionText": "Do we have contact information for supplier security teams?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Relevant suppliers and other third parties are included in incident planning, response, and recovery activities"
+    },
+    {
+      "id": "GV.SC-08-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-08"
+      ],
+      "questionText": "Are joint incident response exercises conducted?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Relevant suppliers and other third parties are included in incident planning, response, and recovery activities"
+    },
+    {
+      "id": "GV.SC-08-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-08"
+      ],
+      "questionText": "Do contracts require suppliers to notify us of breaches?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Relevant suppliers and other third parties are included in incident planning, response, and recovery activities"
+    },
+    {
+      "id": "GV.SC-09-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-09"
+      ],
+      "questionText": "Do we track the lifecycle of supplier products/services?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Supply chain security practices are integrated into cybersecurity and enterprise risk management programs, and their performance is monitored throughout the technology product and service life cycle"
+    },
+    {
+      "id": "GV.SC-09-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-09"
+      ],
+      "questionText": "Are end-of-life/end-of-support dates monitored?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Supply chain security practices are integrated into cybersecurity and enterprise risk management programs, and their performance is monitored throughout the technology product and service life cycle"
+    },
+    {
+      "id": "GV.SC-09-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-09"
+      ],
+      "questionText": "Do we have transition plans for critical supplier changes?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Supply chain security practices are integrated into cybersecurity and enterprise risk management programs, and their performance is monitored throughout the technology product and service life cycle"
+    },
+    {
+      "id": "GV.SC-09-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-09"
+      ],
+      "questionText": "Are supply chain risks reviewed during technology refresh cycles?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Supply chain security practices are integrated into cybersecurity and enterprise risk management programs, and their performance is monitored throughout the technology product and service life cycle"
+    },
+    {
+      "id": "GV.SC-10-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-10"
+      ],
+      "questionText": "Do we have off-boarding procedures for suppliers?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management plans include provisions for activities that occur after the conclusion of a partnership or service agreement"
+    },
+    {
+      "id": "GV.SC-10-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-10"
+      ],
+      "questionText": "Are data return/destruction requirements in contracts?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management plans include provisions for activities that occur after the conclusion of a partnership or service agreement"
+    },
+    {
+      "id": "GV.SC-10-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-10"
+      ],
+      "questionText": "Do we revoke supplier access promptly at contract end?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management plans include provisions for activities that occur after the conclusion of a partnership or service agreement"
+    },
+    {
+      "id": "GV.SC-10-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "GV.SC",
+      "familyName": "Cybersecurity Supply Chain Risk Management",
+      "controlRefs": [
+        "GV.SC-10"
+      ],
+      "questionText": "Are lessons learned from supplier relationships documented?",
+      "stakeholderRoleId": "EXEC",
+      "answerType": "text",
+      "criticality": "Medium",
+      "functionId": "GV",
+      "functionName": "GOVERN",
+      "subcategoryText": "Cybersecurity supply chain risk management plans include provisions for activities that occur after the conclusion of a partnership or service agreement"
+    },
+    {
+      "id": "ID.AM-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-01"
+      ],
+      "questionText": "Do we have a complete inventory of all hardware assets (servers, workstations, laptops, mobile devices, network equipment, IoT)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of hardware managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-01"
+      ],
+      "questionText": "Is the inventory automatically updated or manually maintained?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of hardware managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-01"
+      ],
+      "questionText": "Do we track asset location, owner, and status?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of hardware managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-01"
+      ],
+      "questionText": "How do we discover shadow IT or rogue devices?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of hardware managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-01-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-01"
+      ],
+      "questionText": "Is inventory reconciled regularly?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of hardware managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-02"
+      ],
+      "questionText": "Do we have a complete inventory of all software applications and licenses?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of software, services, and systems managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-02"
+      ],
+      "questionText": "Are SaaS applications tracked?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of software, services, and systems managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-02"
+      ],
+      "questionText": "Do we know which software versions are deployed where?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of software, services, and systems managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-02"
+      ],
+      "questionText": "Is unauthorized software detected and addressed?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of software, services, and systems managed by the organization are maintained"
+    },
+    {
+      "id": "ID.AM-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-03"
+      ],
+      "questionText": "Do we have network diagrams showing all connections?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Representations of the organization's authorized network communication and internal and external network data flows are maintained"
+    },
+    {
+      "id": "ID.AM-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-03"
+      ],
+      "questionText": "Are data flows documented (what data moves where)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Representations of the organization's authorized network communication and internal and external network data flows are maintained"
+    },
+    {
+      "id": "ID.AM-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-03"
+      ],
+      "questionText": "Do we understand traffic patterns (normal vs. anomalous)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Representations of the organization's authorized network communication and internal and external network data flows are maintained"
+    },
+    {
+      "id": "ID.AM-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-03"
+      ],
+      "questionText": "Are network zones and segmentation documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Representations of the organization's authorized network communication and internal and external network data flows are maintained"
+    },
+    {
+      "id": "ID.AM-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-04"
+      ],
+      "questionText": "Do we track all services provided by third parties?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of services provided by suppliers are maintained"
+    },
+    {
+      "id": "ID.AM-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-04"
+      ],
+      "questionText": "Are cloud services (IaaS, PaaS, SaaS) inventoried?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of services provided by suppliers are maintained"
+    },
+    {
+      "id": "ID.AM-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-04"
+      ],
+      "questionText": "Do we know what data each supplier has access to?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of services provided by suppliers are maintained"
+    },
+    {
+      "id": "ID.AM-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-04"
+      ],
+      "questionText": "Are supplier services categorized by criticality?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of services provided by suppliers are maintained"
+    },
+    {
+      "id": "ID.AM-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-05"
+      ],
+      "questionText": "Have we classified assets by sensitivity (public, internal, confidential, restricted)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Assets are prioritized based on classification, criticality, resources, and impact on the mission"
+    },
+    {
+      "id": "ID.AM-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-05"
+      ],
+      "questionText": "Are assets rated by business criticality?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Assets are prioritized based on classification, criticality, resources, and impact on the mission"
+    },
+    {
+      "id": "ID.AM-05-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-05"
+      ],
+      "questionText": "Do we know which assets support critical business processes?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Assets are prioritized based on classification, criticality, resources, and impact on the mission"
+    },
+    {
+      "id": "ID.AM-05-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-05"
+      ],
+      "questionText": "Is asset prioritization used to focus security efforts?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Assets are prioritized based on classification, criticality, resources, and impact on the mission"
+    },
+    {
+      "id": "ID.AM-07-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-07"
+      ],
+      "questionText": "Do we have a data inventory (databases, file shares, data lakes)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of data and corresponding metadata for designated data types are maintained"
+    },
+    {
+      "id": "ID.AM-07-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-07"
+      ],
+      "questionText": "Is data classified by type and sensitivity?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of data and corresponding metadata for designated data types are maintained"
+    },
+    {
+      "id": "ID.AM-07-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-07"
+      ],
+      "questionText": "Do we know where personal data (PII), payment data (PCI), health data (PHI) resides?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of data and corresponding metadata for designated data types are maintained"
+    },
+    {
+      "id": "ID.AM-07-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-07"
+      ],
+      "questionText": "Are data owners assigned?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Inventories of data and corresponding metadata for designated data types are maintained"
+    },
+    {
+      "id": "ID.AM-08-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-08"
+      ],
+      "questionText": "Do we have lifecycle management processes (procurement, deployment, maintenance, retirement)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Systems, hardware, software, services, and data are managed throughout their life cycles"
+    },
+    {
+      "id": "ID.AM-08-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-08"
+      ],
+      "questionText": "Are end-of-life dates tracked?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Systems, hardware, software, services, and data are managed throughout their life cycles"
+    },
+    {
+      "id": "ID.AM-08-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-08"
+      ],
+      "questionText": "Is there a secure decommissioning process?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Systems, hardware, software, services, and data are managed throughout their life cycles"
+    },
+    {
+      "id": "ID.AM-08-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.AM",
+      "familyName": "Asset Management",
+      "controlRefs": [
+        "ID.AM-08"
+      ],
+      "questionText": "Are legacy/unsupported systems identified and mitigated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Systems, hardware, software, services, and data are managed throughout their life cycles"
+    },
+    {
+      "id": "ID.RA-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-01"
+      ],
+      "questionText": "Do we conduct regular vulnerability scans (weekly/monthly)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Vulnerabilities in assets are identified, validated, and recorded"
+    },
+    {
+      "id": "ID.RA-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-01"
+      ],
+      "questionText": "Are vulnerabilities validated to reduce false positives?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Vulnerabilities in assets are identified, validated, and recorded"
+    },
+    {
+      "id": "ID.RA-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-01"
+      ],
+      "questionText": "Do we maintain a vulnerability register?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Vulnerabilities in assets are identified, validated, and recorded"
+    },
+    {
+      "id": "ID.RA-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-01"
+      ],
+      "questionText": "Are vulnerabilities tracked to remediation?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Vulnerabilities in assets are identified, validated, and recorded"
+    },
+    {
+      "id": "ID.RA-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-02"
+      ],
+      "questionText": "Do we subscribe to threat intelligence feeds (commercial, open-source, ISACs)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Cyber threat intelligence is received from information sharing forums and sources"
+    },
+    {
+      "id": "ID.RA-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-02"
+      ],
+      "questionText": "Are threat bulletins reviewed and actioned?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Cyber threat intelligence is received from information sharing forums and sources"
+    },
+    {
+      "id": "ID.RA-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-02"
+      ],
+      "questionText": "Do we participate in industry information sharing groups?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Cyber threat intelligence is received from information sharing forums and sources"
+    },
+    {
+      "id": "ID.RA-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-02"
+      ],
+      "questionText": "How do we validate and prioritize threat intelligence?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Cyber threat intelligence is received from information sharing forums and sources"
+    },
+    {
+      "id": "ID.RA-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-03"
+      ],
+      "questionText": "Have we identified likely threat actors (nation-states, cybercriminals, insiders, hacktivists)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Internal and external threats to the organization are identified and recorded"
+    },
+    {
+      "id": "ID.RA-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-03"
+      ],
+      "questionText": "Are threat scenarios documented (ransomware, data breach, DDoS)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Internal and external threats to the organization are identified and recorded"
+    },
+    {
+      "id": "ID.RA-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-03"
+      ],
+      "questionText": "Do we understand attacker motivations and capabilities?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Internal and external threats to the organization are identified and recorded"
+    },
+    {
+      "id": "ID.RA-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-03"
+      ],
+      "questionText": "Are insider threats considered?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Internal and external threats to the organization are identified and recorded"
+    },
+    {
+      "id": "ID.RA-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-04"
+      ],
+      "questionText": "Do we assess the likelihood of each threat scenario?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Potential impacts and likelihoods of threats exploiting vulnerabilities are identified and recorded"
+    },
+    {
+      "id": "ID.RA-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-04"
+      ],
+      "questionText": "Have we estimated potential impacts (financial, operational, reputational)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Potential impacts and likelihoods of threats exploiting vulnerabilities are identified and recorded"
+    },
+    {
+      "id": "ID.RA-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-04"
+      ],
+      "questionText": "Are risks quantified where possible (Annual Loss Expectancy)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Potential impacts and likelihoods of threats exploiting vulnerabilities are identified and recorded"
+    },
+    {
+      "id": "ID.RA-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-04"
+      ],
+      "questionText": "Do we use risk matrices or heat maps?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Potential impacts and likelihoods of threats exploiting vulnerabilities are identified and recorded"
+    },
+    {
+      "id": "ID.RA-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-05"
+      ],
+      "questionText": "Do we calculate inherent risk (risk before controls)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Threats, vulnerabilities, likelihoods, and impacts are used to understand inherent risk and inform risk response decisions"
+    },
+    {
+      "id": "ID.RA-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-05"
+      ],
+      "questionText": "Are risk response decisions documented (accept, mitigate, transfer, avoid)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Threats, vulnerabilities, likelihoods, and impacts are used to understand inherent risk and inform risk response decisions"
+    },
+    {
+      "id": "ID.RA-05-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-05"
+      ],
+      "questionText": "Who approves risk acceptances?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Threats, vulnerabilities, likelihoods, and impacts are used to understand inherent risk and inform risk response decisions"
+    },
+    {
+      "id": "ID.RA-05-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-05"
+      ],
+      "questionText": "Are residual risks (after controls) tracked?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Threats, vulnerabilities, likelihoods, and impacts are used to understand inherent risk and inform risk response decisions"
+    },
+    {
+      "id": "ID.RA-06-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-06"
+      ],
+      "questionText": "Do we have risk treatment plans with owners and deadlines?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Risk responses are chosen, prioritized, planned, tracked, and communicated"
+    },
+    {
+      "id": "ID.RA-06-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-06"
+      ],
+      "questionText": "Are risks prioritized for remediation?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Risk responses are chosen, prioritized, planned, tracked, and communicated"
+    },
+    {
+      "id": "ID.RA-06-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-06"
+      ],
+      "questionText": "How do we track remediation progress?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Risk responses are chosen, prioritized, planned, tracked, and communicated"
+    },
+    {
+      "id": "ID.RA-06-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-06"
+      ],
+      "questionText": "Are risk decisions communicated to stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Risk responses are chosen, prioritized, planned, tracked, and communicated"
+    },
+    {
+      "id": "ID.RA-07-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-07"
+      ],
+      "questionText": "Is there a formal change management process with risk assessment?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Changes and exceptions are managed, assessed for risk impact, recorded, and tracked"
+    },
+    {
+      "id": "ID.RA-07-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-07"
+      ],
+      "questionText": "Are emergency changes assessed for risk?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Changes and exceptions are managed, assessed for risk impact, recorded, and tracked"
+    },
+    {
+      "id": "ID.RA-07-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-07"
+      ],
+      "questionText": "Do we track exceptions to policy with expiration dates and compensating controls?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Changes and exceptions are managed, assessed for risk impact, recorded, and tracked"
+    },
+    {
+      "id": "ID.RA-07-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-07"
+      ],
+      "questionText": "Are changes tested before production deployment?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Changes and exceptions are managed, assessed for risk impact, recorded, and tracked"
+    },
+    {
+      "id": "ID.RA-08-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-08"
+      ],
+      "questionText": "Do we have a vulnerability disclosure policy (responsible disclosure)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Processes for receiving, analyzing, and responding to vulnerability disclosures are established"
+    },
+    {
+      "id": "ID.RA-08-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-08"
+      ],
+      "questionText": "Is there a security contact email/portal for researchers?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Processes for receiving, analyzing, and responding to vulnerability disclosures are established"
+    },
+    {
+      "id": "ID.RA-08-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-08"
+      ],
+      "questionText": "Do we have an SLA for responding to disclosures?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Processes for receiving, analyzing, and responding to vulnerability disclosures are established"
+    },
+    {
+      "id": "ID.RA-08-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-08"
+      ],
+      "questionText": "Are reported vulnerabilities triaged and remediated?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Processes for receiving, analyzing, and responding to vulnerability disclosures are established"
+    },
+    {
+      "id": "ID.RA-08-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-08"
+      ],
+      "questionText": "Do we acknowledge and credit researchers?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Processes for receiving, analyzing, and responding to vulnerability disclosures are established"
+    },
+    {
+      "id": "ID.RA-09-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-09"
+      ],
+      "questionText": "Do we verify software integrity (code signing, checksums)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "The authenticity and integrity of hardware and software are assessed prior to acquisition and use"
+    },
+    {
+      "id": "ID.RA-09-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-09"
+      ],
+      "questionText": "Are hardware components inspected for tampering?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "The authenticity and integrity of hardware and software are assessed prior to acquisition and use"
+    },
+    {
+      "id": "ID.RA-09-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-09"
+      ],
+      "questionText": "Do we use trusted suppliers and authorized distributors?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "The authenticity and integrity of hardware and software are assessed prior to acquisition and use"
+    },
+    {
+      "id": "ID.RA-09-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.RA",
+      "familyName": "Risk Assessment",
+      "controlRefs": [
+        "ID.RA-09"
+      ],
+      "questionText": "Is software scanned for malware before deployment?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "The authenticity and integrity of hardware and software are assessed prior to acquisition and use"
+    },
+    {
+      "id": "ID.IM-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-01"
+      ],
+      "questionText": "Do we conduct regular program assessments (self-assessment, audits)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from evaluations of the cybersecurity risk management program"
+    },
+    {
+      "id": "ID.IM-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-01"
+      ],
+      "questionText": "Are improvement opportunities documented?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from evaluations of the cybersecurity risk management program"
+    },
+    {
+      "id": "ID.IM-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-01"
+      ],
+      "questionText": "Do we track improvement initiatives to completion?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from evaluations of the cybersecurity risk management program"
+    },
+    {
+      "id": "ID.IM-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-01"
+      ],
+      "questionText": "Is there a continuous improvement culture?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from evaluations of the cybersecurity risk management program"
+    },
+    {
+      "id": "ID.IM-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-02"
+      ],
+      "questionText": "Do we conduct penetration tests, red team exercises, tabletop exercises?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties"
+    },
+    {
+      "id": "ID.IM-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-02"
+      ],
+      "questionText": "Are lessons learned documented and acted upon?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties"
+    },
+    {
+      "id": "ID.IM-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-02"
+      ],
+      "questionText": "Do we test with critical suppliers?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties"
+    },
+    {
+      "id": "ID.IM-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-02"
+      ],
+      "questionText": "Are findings incorporated into security improvements?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties"
+    },
+    {
+      "id": "ID.IM-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-03"
+      ],
+      "questionText": "Do we collect feedback from operational teams?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from execution of operational processes, procedures, and activities"
+    },
+    {
+      "id": "ID.IM-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-03"
+      ],
+      "questionText": "Are process inefficiencies identified and addressed?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from execution of operational processes, procedures, and activities"
+    },
+    {
+      "id": "ID.IM-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-03"
+      ],
+      "questionText": "Do we measure process effectiveness?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from execution of operational processes, procedures, and activities"
+    },
+    {
+      "id": "ID.IM-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-03"
+      ],
+      "questionText": "Are workarounds documented and resolved?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Improvements are identified from execution of operational processes, procedures, and activities"
+    },
+    {
+      "id": "ID.IM-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-04"
+      ],
+      "questionText": "Are all cybersecurity plans reviewed and updated regularly?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved"
+    },
+    {
+      "id": "ID.IM-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-04"
+      ],
+      "questionText": "Do plans reflect current threats and organizational changes?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved"
+    },
+    {
+      "id": "ID.IM-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-04"
+      ],
+      "questionText": "Are plans tested and refined based on test results?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved"
+    },
+    {
+      "id": "ID.IM-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.IM",
+      "familyName": "Improvement",
+      "controlRefs": [
+        "ID.IM-04"
+      ],
+      "questionText": "Are plans communicated to relevant stakeholders?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved"
+    },
+    {
+      "id": "ID.SC-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-01"
+      ],
+      "questionText": "Do we identify all tiers of suppliers (direct and indirect)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers in the supply chain are identified, prioritized, and assessed using a cyber supply chain risk assessment process"
+    },
+    {
+      "id": "ID.SC-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-01"
+      ],
+      "questionText": "Are suppliers assessed for cyber risk using standardized criteria?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers in the supply chain are identified, prioritized, and assessed using a cyber supply chain risk assessment process"
+    },
+    {
+      "id": "ID.SC-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-01"
+      ],
+      "questionText": "Do we prioritize suppliers based on data access and criticality?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers in the supply chain are identified, prioritized, and assessed using a cyber supply chain risk assessment process"
+    },
+    {
+      "id": "ID.SC-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-01"
+      ],
+      "questionText": "Are assessments repeated periodically?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers in the supply chain are identified, prioritized, and assessed using a cyber supply chain risk assessment process"
+    },
+    {
+      "id": "ID.SC-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-02"
+      ],
+      "questionText": "Do suppliers report vulnerabilities in their products/services?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are included in vulnerability management planning and activities"
+    },
+    {
+      "id": "ID.SC-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-02"
+      ],
+      "questionText": "Are supplier vulnerabilities tracked in our vulnerability management program?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are included in vulnerability management planning and activities"
+    },
+    {
+      "id": "ID.SC-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-02"
+      ],
+      "questionText": "Do we require suppliers to patch critical vulnerabilities within defined timeframes?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are included in vulnerability management planning and activities"
+    },
+    {
+      "id": "ID.SC-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-02"
+      ],
+      "questionText": "Are we notified of vulnerabilities affecting supplier services we use?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are included in vulnerability management planning and activities"
+    },
+    {
+      "id": "ID.SC-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-03"
+      ],
+      "questionText": "Do contracts mandate security standards (ISO 27001, SOC 2, NIST)?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Contracts with suppliers and other third parties include security requirements"
+    },
+    {
+      "id": "ID.SC-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-03"
+      ],
+      "questionText": "Are data protection requirements specified?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Contracts with suppliers and other third parties include security requirements"
+    },
+    {
+      "id": "ID.SC-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-03"
+      ],
+      "questionText": "Do contracts include incident notification obligations?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Contracts with suppliers and other third parties include security requirements"
+    },
+    {
+      "id": "ID.SC-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-03"
+      ],
+      "questionText": "Are right-to-audit clauses included?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Contracts with suppliers and other third parties include security requirements"
+    },
+    {
+      "id": "ID.SC-03-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-03"
+      ],
+      "questionText": "Are subcontracting restrictions in place?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Contracts with suppliers and other third parties include security requirements"
+    },
+    {
+      "id": "ID.SC-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-04"
+      ],
+      "questionText": "Are security questionnaires completed before vendor selection?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are assessed prior to acquisition"
+    },
+    {
+      "id": "ID.SC-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-04"
+      ],
+      "questionText": "Do we review SOC 2/ISO 27001 reports?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are assessed prior to acquisition"
+    },
+    {
+      "id": "ID.SC-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-04"
+      ],
+      "questionText": "Are references checked with security focus?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are assessed prior to acquisition"
+    },
+    {
+      "id": "ID.SC-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-04"
+      ],
+      "questionText": "Are proof-of-concept/pilot tests conducted with security evaluation?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers are assessed prior to acquisition"
+    },
+    {
+      "id": "ID.SC-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-05"
+      ],
+      "questionText": "Do we conduct periodic supplier audits?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers and other third parties are routinely assessed using audits, test results, or other forms of evaluations to confirm they are meeting their contractual obligations"
+    },
+    {
+      "id": "ID.SC-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-05"
+      ],
+      "questionText": "Are penetration test results reviewed?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers and other third parties are routinely assessed using audits, test results, or other forms of evaluations to confirm they are meeting their contractual obligations"
+    },
+    {
+      "id": "ID.SC-05-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-05"
+      ],
+      "questionText": "Do we validate supplier compliance with SLAs?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers and other third parties are routinely assessed using audits, test results, or other forms of evaluations to confirm they are meeting their contractual obligations"
+    },
+    {
+      "id": "ID.SC-05-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "ID.SC",
+      "familyName": "Supply Chain Risk Management",
+      "controlRefs": [
+        "ID.SC-05"
+      ],
+      "questionText": "Are supplier certifications verified annually?",
+      "stakeholderRoleId": "SECURITY",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "ID",
+      "functionName": "IDENTIFY",
+      "subcategoryText": "Suppliers and other third parties are routinely assessed using audits, test results, or other forms of evaluations to confirm they are meeting their contractual obligations"
+    },
+    {
+      "id": "PR.AA-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-01"
+      ],
+      "questionText": "Do we have a centralized identity management system (Active Directory, Azure AD, Okta)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities and credentials for authorized users, services, and hardware are managed by the organization"
+    },
+    {
+      "id": "PR.AA-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-01"
+      ],
+      "questionText": "Are user accounts created/modified/deleted through a formal process?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities and credentials for authorized users, services, and hardware are managed by the organization"
+    },
+    {
+      "id": "PR.AA-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-01"
+      ],
+      "questionText": "Are service accounts inventoried and managed?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities and credentials for authorized users, services, and hardware are managed by the organization"
+    },
+    {
+      "id": "PR.AA-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-01"
+      ],
+      "questionText": "Are default credentials changed on all systems?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities and credentials for authorized users, services, and hardware are managed by the organization"
+    },
+    {
+      "id": "PR.AA-01-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-01"
+      ],
+      "questionText": "Do we enforce password complexity and expiration policies?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities and credentials for authorized users, services, and hardware are managed by the organization"
+    },
+    {
+      "id": "PR.AA-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-02"
+      ],
+      "questionText": "Do we verify user identity during onboarding (background checks, ID verification)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities are proofed and bound to credentials based on the context of interactions"
+    },
+    {
+      "id": "PR.AA-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-02"
+      ],
+      "questionText": "Are multi-factor authentication (MFA) factors appropriate to risk level?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities are proofed and bound to credentials based on the context of interactions"
+    },
+    {
+      "id": "PR.AA-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-02"
+      ],
+      "questionText": "Do we re-authenticate for high-risk transactions?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities are proofed and bound to credentials based on the context of interactions"
+    },
+    {
+      "id": "PR.AA-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-02"
+      ],
+      "questionText": "Are privileged access credentials separately managed?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identities are proofed and bound to credentials based on the context of interactions"
+    },
+    {
+      "id": "PR.AA-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-03"
+      ],
+      "questionText": "Are passwordless authentication methods (biometrics, FIDO2) used where appropriate?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Users, services, and hardware are authenticated"
+    },
+    {
+      "id": "PR.AA-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-03"
+      ],
+      "questionText": "Do we authenticate devices before network access (NAC, certificates)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Users, services, and hardware are authenticated"
+    },
+    {
+      "id": "PR.AA-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-03"
+      ],
+      "questionText": "Are service-to-service authentications secured (API keys, mutual TLS)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Users, services, and hardware are authenticated"
+    },
+    {
+      "id": "PR.AA-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-04"
+      ],
+      "questionText": "Are authentication tokens (SAML, OAuth, JWT) encrypted and signed?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identity assertions are protected, conveyed, and verified"
+    },
+    {
+      "id": "PR.AA-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-04"
+      ],
+      "questionText": "Do we validate token integrity and expiration?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identity assertions are protected, conveyed, and verified"
+    },
+    {
+      "id": "PR.AA-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-04"
+      ],
+      "questionText": "Are single sign-on (SSO) sessions secured and monitored?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identity assertions are protected, conveyed, and verified"
+    },
+    {
+      "id": "PR.AA-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-04"
+      ],
+      "questionText": "Are federated identities properly validated?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Identity assertions are protected, conveyed, and verified"
+    },
+    {
+      "id": "PR.AA-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-05"
+      ],
+      "questionText": "Do we enforce least privilege (users have only necessary permissions)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties"
+    },
+    {
+      "id": "PR.AA-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-05"
+      ],
+      "questionText": "Are permissions based on roles (RBAC) or attributes (ABAC)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties"
+    },
+    {
+      "id": "PR.AA-05-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-05"
+      ],
+      "questionText": "Is separation of duties enforced for sensitive functions?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties"
+    },
+    {
+      "id": "PR.AA-05-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-05"
+      ],
+      "questionText": "Are access rights reviewed periodically (quarterly/annually)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties"
+    },
+    {
+      "id": "PR.AA-05-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-05"
+      ],
+      "questionText": "Are orphaned accounts and excessive permissions identified and removed?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties"
+    },
+    {
+      "id": "PR.AA-06-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-06"
+      ],
+      "questionText": "Are data centers and server rooms access-controlled (badge, biometric)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Physical access to assets is secured, managed, and enforced commensurate with risk"
+    },
+    {
+      "id": "PR.AA-06-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-06"
+      ],
+      "questionText": "Are access logs reviewed?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Physical access to assets is secured, managed, and enforced commensurate with risk"
+    },
+    {
+      "id": "PR.AA-06-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-06"
+      ],
+      "questionText": "Is visitor access escorted and logged?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Physical access to assets is secured, managed, and enforced commensurate with risk"
+    },
+    {
+      "id": "PR.AA-06-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AA",
+      "familyName": "Identity Management, Authentication and Access Control",
+      "controlRefs": [
+        "PR.AA-06"
+      ],
+      "questionText": "Are endpoints (laptops) physically secured (locks, tracking)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Physical access to assets is secured, managed, and enforced commensurate with risk"
+    },
+    {
+      "id": "PR.AT-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-01"
+      ],
+      "questionText": "Do all employees receive security awareness training upon hire?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Personnel are provided with cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-01"
+      ],
+      "questionText": "Is annual refresher training required?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Personnel are provided with cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-01"
+      ],
+      "questionText": "Does training cover phishing, social engineering, password security, data handling?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Personnel are provided with cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-01"
+      ],
+      "questionText": "Are completion rates tracked?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Personnel are provided with cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-02"
+      ],
+      "questionText": "Do developers receive secure coding training?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Individuals in specialized roles are provided with role-specific cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-02"
+      ],
+      "questionText": "Do privileged users receive additional training?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Individuals in specialized roles are provided with role-specific cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-02"
+      ],
+      "questionText": "Do managers receive training on security responsibilities?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Individuals in specialized roles are provided with role-specific cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-02"
+      ],
+      "questionText": "Are security team members provided with advanced training and certifications?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Individuals in specialized roles are provided with role-specific cybersecurity awareness and training so that they can perform their cybersecurity-related duties and responsibilities"
+    },
+    {
+      "id": "PR.AT-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-03"
+      ],
+      "questionText": "Do we conduct phishing simulations to measure effectiveness?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Cybersecurity awareness and training are monitored, measured, and reviewed to ensure effectiveness"
+    },
+    {
+      "id": "PR.AT-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-03"
+      ],
+      "questionText": "Are training metrics reported to leadership?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Cybersecurity awareness and training are monitored, measured, and reviewed to ensure effectiveness"
+    },
+    {
+      "id": "PR.AT-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-03"
+      ],
+      "questionText": "Do we track incident rates related to user behavior?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Cybersecurity awareness and training are monitored, measured, and reviewed to ensure effectiveness"
+    },
+    {
+      "id": "PR.AT-03-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.AT",
+      "familyName": "Awareness and Training",
+      "controlRefs": [
+        "PR.AT-03"
+      ],
+      "questionText": "Is training content updated based on effectiveness and threats?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Cybersecurity awareness and training are monitored, measured, and reviewed to ensure effectiveness"
+    },
+    {
+      "id": "PR.DS-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-01"
+      ],
+      "questionText": "Is sensitive data encrypted at rest (databases, file systems, backups)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-at-rest are protected"
+    },
+    {
+      "id": "PR.DS-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-01"
+      ],
+      "questionText": "Are encryption keys managed securely (key rotation, HSM/KMS)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-at-rest are protected"
+    },
+    {
+      "id": "PR.DS-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-01"
+      ],
+      "questionText": "Are access controls enforced on data stores?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-at-rest are protected"
+    },
+    {
+      "id": "PR.DS-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-01"
+      ],
+      "questionText": "Are data integrity mechanisms (checksums, hashing) used?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-at-rest are protected"
+    },
+    {
+      "id": "PR.DS-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-02"
+      ],
+      "questionText": "Is data encrypted in transit (TLS 1.2+, VPN, SSH)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-in-transit are protected"
+    },
+    {
+      "id": "PR.DS-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-02"
+      ],
+      "questionText": "Are weak protocols (FTP, Telnet, HTTP) blocked?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-in-transit are protected"
+    },
+    {
+      "id": "PR.DS-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-02"
+      ],
+      "questionText": "Are certificates validated and managed?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-in-transit are protected"
+    },
+    {
+      "id": "PR.DS-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-02"
+      ],
+      "questionText": "Is email encrypted when sending sensitive data?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-in-transit are protected"
+    },
+    {
+      "id": "PR.DS-10-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-10"
+      ],
+      "questionText": "Are memory encryption technologies used where appropriate?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-in-use are protected"
+    },
+    {
+      "id": "PR.DS-10-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-10"
+      ],
+      "questionText": "Is sensitive data masked in non-production environments?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-in-use are protected"
+    },
+    {
+      "id": "PR.DS-10-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-10"
+      ],
+      "questionText": "Are secure enclaves or confidential computing used for highly sensitive processing?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The confidentiality, integrity, and availability of data-in-use are protected"
+    },
+    {
+      "id": "PR.DS-11-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-11"
+      ],
+      "questionText": "Are backups performed regularly (daily, weekly)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Backups of data are created, protected, maintained, and tested"
+    },
+    {
+      "id": "PR.DS-11-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-11"
+      ],
+      "questionText": "Are backups tested for restoration?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Backups of data are created, protected, maintained, and tested"
+    },
+    {
+      "id": "PR.DS-11-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-11"
+      ],
+      "questionText": "Are backups encrypted and access-controlled?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Backups of data are created, protected, maintained, and tested"
+    },
+    {
+      "id": "PR.DS-11-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-11"
+      ],
+      "questionText": "Are backups stored offline or immutable (air-gapped, write-once media)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Backups of data are created, protected, maintained, and tested"
+    },
+    {
+      "id": "PR.DS-11-Q5",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-11"
+      ],
+      "questionText": "Do we have offsite/geo-redundant backups?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Backups of data are created, protected, maintained, and tested"
+    },
+    {
+      "id": "PR.DS-11-Q6",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.DS",
+      "familyName": "Data Security",
+      "controlRefs": [
+        "PR.DS-11"
+      ],
+      "questionText": "Are backup retention policies defined and enforced?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Backups of data are created, protected, maintained, and tested"
+    },
+    {
+      "id": "PR.IR-01-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-01"
+      ],
+      "questionText": "Do we have secure baseline configurations (CIS Benchmarks, DISA STIGs)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "A baseline configuration of information technology and operational technology is created and maintained"
+    },
+    {
+      "id": "PR.IR-01-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-01"
+      ],
+      "questionText": "Are baselines documented and version-controlled?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "A baseline configuration of information technology and operational technology is created and maintained"
+    },
+    {
+      "id": "PR.IR-01-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-01"
+      ],
+      "questionText": "Are systems deployed from approved baseline images?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "A baseline configuration of information technology and operational technology is created and maintained"
+    },
+    {
+      "id": "PR.IR-01-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-01"
+      ],
+      "questionText": "Are configuration deviations detected and remediated?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "A baseline configuration of information technology and operational technology is created and maintained"
+    },
+    {
+      "id": "PR.IR-02-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-02"
+      ],
+      "questionText": "Do we use configuration management tools (SCCM, Ansible, Puppet)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The environment is monitored to validate secure configurations and detect unauthorized or risky activities"
+    },
+    {
+      "id": "PR.IR-02-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-02"
+      ],
+      "questionText": "Are configuration changes monitored and alerted?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The environment is monitored to validate secure configurations and detect unauthorized or risky activities"
+    },
+    {
+      "id": "PR.IR-02-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-02"
+      ],
+      "questionText": "Is configuration drift detected automatically?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The environment is monitored to validate secure configurations and detect unauthorized or risky activities"
+    },
+    {
+      "id": "PR.IR-02-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-02"
+      ],
+      "questionText": "Are unauthorized changes investigated?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "The environment is monitored to validate secure configurations and detect unauthorized or risky activities"
+    },
+    {
+      "id": "PR.IR-03-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-03"
+      ],
+      "questionText": "Are data protection technologies funded (DLP, encryption, backup)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Adequate resources are allocated to data protection"
+    },
+    {
+      "id": "PR.IR-03-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-03"
+      ],
+      "questionText": "Do we have sufficient staff for data governance?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Adequate resources are allocated to data protection"
+    },
+    {
+      "id": "PR.IR-03-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-03"
+      ],
+      "questionText": "Are data protection capabilities tested and maintained?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Adequate resources are allocated to data protection"
+    },
+    {
+      "id": "PR.IR-04-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-04"
+      ],
+      "questionText": "Do we have secure data destruction procedures (shredding, degaussing, cryptographic erasure)?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Information is securely disposed of"
+    },
+    {
+      "id": "PR.IR-04-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-04"
+      ],
+      "questionText": "Are certificates of destruction obtained?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Information is securely disposed of"
+    },
+    {
+      "id": "PR.IR-04-Q3",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-04"
+      ],
+      "questionText": "Is data sanitization verified before device disposal or reuse?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Information is securely disposed of"
+    },
+    {
+      "id": "PR.IR-04-Q4",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-04"
+      ],
+      "questionText": "Are retention policies enforced before destruction?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Information is securely disposed of"
+    },
+    {
+      "id": "PR.IR-05-Q1",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-05"
+      ],
+      "questionText": "Do we use data loss prevention (DLP) tools?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Data leaks are prevented or minimized"
+    },
+    {
+      "id": "PR.IR-05-Q2",
+      "frameworkId": "NIST-CSF-2.0",
+      "familyId": "PR.IR",
+      "familyName": "Information Protection Processes and Procedures",
+      "controlRefs": [
+        "PR.IR-05"
+      ],
+      "questionText": "Are sensitive data transfers monitored and controlled?",
+      "stakeholderRoleId": "IT",
+      "answerType": "text",
+      "criticality": "High",
+      "functionId": "PR",
+      "functionName": "PROTECT",
+      "subcategoryText": "Data leaks are prevented or minimized"
+    }
+  ]
+}

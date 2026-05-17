@@ -28,8 +28,41 @@ print_warning() {
 case "$1" in
     "start")
         echo "🚀 Starting ClearComply Services..."
-        cd "$PROJECT_DIR"
-        ./dev.sh local
+
+        # Kill any existing processes on these ports
+        lsof -ti:8000 | xargs kill -9 2>/dev/null; true
+        lsof -ti:5173 | xargs kill -9 2>/dev/null; true
+        sleep 1
+
+        # Activate venv
+        source "$PROJECT_DIR/.venv/bin/activate" 2>/dev/null || true
+
+        # Install any missing backend deps silently
+        pip install -r "$PROJECT_DIR/Service/requirements.txt" -q 2>/dev/null || true
+
+        # Start backend — disown so it survives terminal/session changes
+        nohup bash -c "source '$PROJECT_DIR/.venv/bin/activate' && cd '$PROJECT_DIR/Service' && python main.py" > /tmp/clearcomply-backend.log 2>&1 &
+        disown $!
+
+        # Start frontend — disown so it survives terminal/session changes
+        nohup bash -c "cd '$PROJECT_DIR/UI' && npm run dev" > /tmp/clearcomply-frontend.log 2>&1 &
+        disown $!
+
+        # Wait and verify
+        sleep 5
+        if lsof -iTCP:8000 -sTCP:LISTEN >/dev/null 2>&1; then
+            print_status "Backend running at http://localhost:8000"
+        else
+            print_error "Backend failed to start. Check /tmp/clearcomply-backend.log"
+            cat /tmp/clearcomply-backend.log
+        fi
+
+        if lsof -iTCP:5173 -sTCP:LISTEN >/dev/null 2>&1; then
+            print_status "Frontend running at http://localhost:5173"
+        else
+            print_error "Frontend failed to start. Check /tmp/clearcomply-frontend.log"
+            cat /tmp/clearcomply-frontend.log
+        fi
         ;;
     "start-backend")
         echo "🔧 Starting Backend Only..."

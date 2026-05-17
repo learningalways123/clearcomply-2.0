@@ -1,169 +1,167 @@
-import React from 'react';
+import { useState } from 'react';
 import type { ReactNode } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemButton,
-  Box,
-  useTheme,
-} from '@mui/material';
-import {
-  Assessment as AssessmentIcon,
-  Add as AddIcon,
-  List as ListIcon,
-} from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Drawer from '@mui/material/Drawer';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
+
+import { useAuth } from '../../contexts/AuthContext';
 
 const DRAWER_WIDTH = 240;
 
-interface AppLayoutProps {
-  children: ReactNode;
-}
+const NAV_ITEMS = [
+  { label: 'Assessments', path: '/assessments', icon: <ListAltIcon /> },
+  { label: 'New Assessment', path: '/new-assessment', icon: <AddCircleOutlineIcon /> },
+];
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
-  const theme = useTheme();
+export default function AppLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
+  const { user, logout } = useAuth();
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
-  const menuItems = [
-    {
-      text: 'New Assessment',
-      icon: <AddIcon />,
-      path: '/new-assessment',
-    },
-    {
-      text: 'Assessments Overview',
-      icon: <ListIcon />,
-      path: '/assessments',
-    },
-  ];
-
-  const handleMenuClick = (path: string) => {
-    navigate(path);
+  const handleLogout = () => {
+    setMenuAnchor(null);
+    logout();
+    navigate('/login', { replace: true });
   };
 
   return (
-    <Box sx={{ display: 'flex', width: '100%' }}>
-      {/* App Bar */}
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      {/* ── Top bar ── */}
       <AppBar
         position="fixed"
         sx={{
           width: `calc(100% - ${DRAWER_WIDTH}px)`,
           ml: `${DRAWER_WIDTH}px`,
-          zIndex: theme.zIndex.drawer + 1,
-          backgroundColor: '#ffffff',
-          color: '#333',
-          borderBottom: '1px solid #e0e0e0',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          bgcolor: '#ffffff',
+          color: 'text.primary',
+          borderBottom: '1px solid #e5e7eb',
         }}
       >
         <Toolbar>
-          <AssessmentIcon sx={{ mr: 2, color: theme.palette.primary.main }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              fontWeight: 600,
-              color: theme.palette.primary.main,
-              fontSize: '1.5rem',
-            }}
-          >
+          <AssessmentIcon sx={{ mr: 1.5, color: 'primary.main' }} />
+          <Typography variant="h6" fontWeight={700} color="primary.main" sx={{ mr: 1 }}>
             ClearComply
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              ml: 2,
-              color: '#666',
-              fontSize: '0.875rem',
-            }}
-          >
+          <Typography variant="body2" color="text.secondary">
             Compliance Assessment Platform
           </Typography>
+
+          <Box sx={{ flexGrow: 1 }} />
+
+          <Tooltip title="Account">
+            <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} size="small">
+              <Avatar
+                src={user?.picture}
+                sx={{ width: 34, height: 34, bgcolor: 'primary.main', fontSize: 14 }}
+              >
+                {!user?.picture && <PersonIcon fontSize="small" />}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+
+          <Menu
+            anchorEl={menuAnchor}
+            open={Boolean(menuAnchor)}
+            onClose={() => setMenuAnchor(null)}
+            slotProps={{ paper: { elevation: 3, sx: { mt: 1, minWidth: 200 } } }}
+          >
+            <MenuItem disabled>
+              <Typography variant="body2" fontWeight={600}>{user?.name}</Typography>
+            </MenuItem>
+            <MenuItem disabled>
+              <Typography variant="body2" color="text.secondary" fontSize={12}>{user?.email}</Typography>
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleLogout}>
+              <LogoutIcon fontSize="small" sx={{ mr: 1.5 }} />
+              Sign out
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
 
-      {/* Side Navigation Drawer */}
+      {/* ── Sidebar ── */}
       <Drawer
+        variant="permanent"
         sx={{
           width: DRAWER_WIDTH,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: DRAWER_WIDTH,
             boxSizing: 'border-box',
-            borderRight: '1px solid #e0e0e0',
-            backgroundColor: '#fafafa',
+            borderRight: '1px solid #e5e7eb',
+            bgcolor: '#fafafa',
           },
         }}
-        variant="permanent"
-        anchor="left"
       >
+        {/* Spacer to sit below AppBar */}
         <Toolbar />
-        <Box sx={{ overflow: 'auto', mt: 2 }}>
-          <List>
-            {menuItems.map((item) => (
-              <ListItem key={item.text} disablePadding sx={{ mb: 1, px: 2 }}>
-                <ListItemButton
-                  onClick={() => handleMenuClick(item.path)}
-                  selected={location.pathname === item.path}
-                  sx={{
-                    borderRadius: 2,
-                    '&.Mui-selected': {
-                      backgroundColor: theme.palette.primary.light + '20',
-                      color: theme.palette.primary.main,
-                      '& .MuiListItemIcon-root': {
-                        color: theme.palette.primary.main,
-                      },
-                    },
-                    '&:hover': {
-                      backgroundColor: theme.palette.primary.light + '10',
-                    },
-                  }}
-                >
-                  <ListItemIcon
+
+        <Box sx={{ px: 1, pt: 2 }}>
+          <List disablePadding>
+            {NAV_ITEMS.map((item) => {
+              const active = pathname === item.path || pathname.startsWith(item.path + '/');
+              return (
+                <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+                  <ListItemButton
+                    onClick={() => navigate(item.path)}
+                    selected={active}
                     sx={{
-                      color: location.pathname === item.path 
-                        ? theme.palette.primary.main 
-                        : '#666',
+                      borderRadius: 2,
+                      '&.Mui-selected': {
+                        bgcolor: 'primary.main',
+                        color: '#fff',
+                        '&:hover': { bgcolor: 'primary.dark' },
+                        '& .MuiListItemIcon-root': { color: '#fff' },
+                      },
                     }}
                   >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary={item.text}
-                    primaryTypographyProps={{
-                      fontWeight: location.pathname === item.path ? 600 : 400,
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 36,
+                        color: active ? 'inherit' : 'text.secondary',
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.label}
+                      slotProps={{ primary: { fontSize: 14, fontWeight: active ? 600 : 400 } }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </List>
         </Box>
       </Drawer>
 
-      {/* Main Content */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: theme.palette.background.default,
-          p: 3,
-          mt: 8, // Account for AppBar height
-          minHeight: 'calc(100vh - 64px)',
-        }}
-      >
+      {/* ── Main content ── */}
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
         {children}
       </Box>
     </Box>
   );
-};
-
-export default AppLayout;
+}

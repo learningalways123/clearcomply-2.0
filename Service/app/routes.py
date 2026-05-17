@@ -61,6 +61,89 @@ async def get_controls(frameworkId: Optional[str] = Query(None, description="Fil
         return data_store.get_all_controls()
 
 
+@router.get("/frameworks/{frameworkId}/modules", response_model=List[dict])
+async def get_framework_modules(frameworkId: str):
+    """
+    Get all modules for a framework (CSF 2.0 only)
+    
+    Args:
+        frameworkId (str): Framework ID (must be NIST-CSF-2.0)
+        
+    Returns:
+        List[dict]: List of modules with questionCount
+        
+    Raises:
+        HTTPException: 404 if framework doesn't exist or doesn't support modules
+    """
+    framework = data_store.get_framework_by_id(frameworkId)
+    if not framework:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Framework with id '{frameworkId}' not found"
+        )
+    
+    if frameworkId != "NIST-CSF-2.0":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Framework '{frameworkId}' does not support modules. Modules are only available for NIST-CSF-2.0"
+        )
+    
+    modules = data_store.get_csf_modules(frameworkId)
+    return modules
+
+
+@router.get("/frameworks/{frameworkId}/modules/{moduleId}/questions", response_model=List[Question])
+async def get_module_questions(frameworkId: str, moduleId: str):
+    """
+    Get all questions for a specific CSF module
+    
+    Args:
+        frameworkId (str): Framework ID (must be NIST-CSF-2.0)
+        moduleId (str): Module ID (e.g., GV, ID, PR, DE, RS, RC)
+        
+    Returns:
+        List[Question]: List of questions for the module
+    """
+    if frameworkId != "NIST-CSF-2.0":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Framework '{frameworkId}' does not support modules"
+        )
+    
+    questions = data_store.get_questions_by_modules(frameworkId, [moduleId])
+    return questions
+
+
+@router.get("/frameworks/{frameworkId}/questions", response_model=List[Question])
+async def get_framework_questions_by_modules(
+    frameworkId: str,
+    moduleIds: Optional[str] = Query(None, description="Comma-separated list of module IDs")
+):
+    """
+    Get questions for multiple CSF modules
+    
+    Args:
+        frameworkId (str): Framework ID (must be NIST-CSF-2.0)
+        moduleIds (str): Comma-separated module IDs (e.g., "DE,PR")
+        
+    Returns:
+        List[Question]: Combined list of questions from all specified modules
+    """
+    if frameworkId != "NIST-CSF-2.0":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Framework '{frameworkId}' does not support modules"
+        )
+    
+    if not moduleIds:
+        # Return all questions for the framework
+        return data_store.get_questions_by_framework(frameworkId)
+    
+    module_id_list = [mid.strip() for mid in moduleIds.split(",")]
+    questions = data_store.get_questions_by_modules(frameworkId, module_id_list)
+    return questions
+
+
 @router.post("/assessments", response_model=AssessmentResponse)
 async def create_assessment(request: CreateAssessmentRequest):
     """
@@ -108,13 +191,29 @@ async def create_assessment(request: CreateAssessmentRequest):
     selected_controls = len(request.selectedControlIds)
     coverage_percent = round((selected_controls / total_controls * 100) if total_controls > 0 else 0, 2)
     
+    # If no specific questions are selected, automatically select questions based on moduleIds or familyIds
+    selected_question_ids = request.selectedQuestionIds or []
+    if not selected_question_ids:
+        # Check if this is a CSF assessment with module selection
+        if "NIST-CSF-2.0" in request.frameworkIds and request.moduleIds:
+            # Get questions for selected CSF modules
+            csf_questions = data_store.get_questions_by_modules("NIST-CSF-2.0", request.moduleIds)
+            selected_question_ids.extend([q.id for q in csf_questions])
+        else:
+            # Default: Get all questions for the specified frameworks
+            for framework_id in request.frameworkIds:
+                framework_questions = data_store.get_questions_by_framework(framework_id)
+                selected_question_ids.extend([q.id for q in framework_questions])
+    
     # Create assessment
     assessment = Assessment(
         id=str(uuid.uuid4()),
         name=request.name,
         frameworkIds=request.frameworkIds,
         selectedControlIds=request.selectedControlIds,
-        selectedQuestionIds=request.selectedQuestionIds,
+        selectedQuestionIds=selected_question_ids,
+        moduleIds=request.moduleIds,
+        familyIds=request.familyIds,
         createdAt=datetime.now(),
         stats=AssessmentStats(
             totalControls=total_controls,
@@ -122,7 +221,7 @@ async def create_assessment(request: CreateAssessmentRequest):
             coveragePercent=coverage_percent
         ),
         questionStats=AssessmentQuestionStats(
-            totalQuestions=len(request.selectedQuestionIds),
+            totalQuestions=len(selected_question_ids),
             answeredQuestions=0,
             completionPercent=0.0
         )
@@ -138,6 +237,8 @@ async def create_assessment(request: CreateAssessmentRequest):
         frameworkIds=created_assessment.frameworkIds,
         selectedControlIds=created_assessment.selectedControlIds,
         selectedQuestionIds=created_assessment.selectedQuestionIds,
+        moduleIds=created_assessment.moduleIds,
+        familyIds=created_assessment.familyIds,
         createdAt=created_assessment.createdAt.isoformat(),
         stats=created_assessment.stats,
         questionStats=created_assessment.questionStats
@@ -171,6 +272,8 @@ async def get_assessment(assessment_id: str):
         frameworkIds=assessment.frameworkIds,
         selectedControlIds=assessment.selectedControlIds,
         selectedQuestionIds=assessment.selectedQuestionIds,
+        moduleIds=assessment.moduleIds,
+        familyIds=assessment.familyIds,
         createdAt=assessment.createdAt.isoformat(),
         stats=assessment.stats,
         questionStats=assessment.questionStats
@@ -193,6 +296,8 @@ async def get_assessments():
             frameworkIds=assessment.frameworkIds,
             selectedControlIds=assessment.selectedControlIds,
             selectedQuestionIds=assessment.selectedQuestionIds,
+            moduleIds=assessment.moduleIds,
+            familyIds=assessment.familyIds,
             createdAt=assessment.createdAt.isoformat(),
             stats=assessment.stats,
             questionStats=assessment.questionStats
@@ -349,11 +454,19 @@ async def submit_assessment_answers(assessment_id: str, request: SubmitAnswersRe
                 detail=f"Assessment with ID '{assessment_id}' not found"
             )
         
-        # Convert answers to dict format
-        answers_dict = {answer.questionId: answer.value for answer in request.answers}
+        # Check if we have new-style answer submissions (with yesNo/justification)
+        has_new_format = any(
+            hasattr(answer, 'yesNo') and answer.yesNo is not None 
+            for answer in request.answers
+        )
         
-        # Update assessment with new answers
-        updated_assessment = data_store.update_assessment_answers(assessment_id, answers_dict)
+        if has_new_format:
+            # Use new format handler
+            updated_assessment = data_store.update_assessment_answers_v2(assessment_id, request.answers)
+        else:
+            # Convert to legacy format for backward compatibility
+            answers_dict = {answer.questionId: answer.value or "" for answer in request.answers}
+            updated_assessment = data_store.update_assessment_answers(assessment_id, answers_dict)
         
         # Return summary response
         return AssessmentSummaryResponse(

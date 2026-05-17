@@ -6,3 +6,7 @@ python-dotenv==1.0.0
 httpx==0.25.2
 pytest==7.4.3
 pytest-asyncio==0.21.1
+# Authentication dependencies
+google-auth==2.25.2
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4

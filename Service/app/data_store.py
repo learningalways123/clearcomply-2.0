@@ -46,6 +46,11 @@ class DataStore:
                 "description": "NIST Special Publication 800-53 - Security and Privacy Controls for Federal Information Systems and Organizations."
             },
             {
+                "id": "NIST-CSF-2.0",
+                "name": "NIST Cybersecurity Framework 2.0",
+                "description": "NIST Cybersecurity Framework 2.0 - A risk-based approach to managing cybersecurity risk."
+            },
+            {
                 "id": "ISO27001",
                 "name": "ISO 27001",
                 "description": "ISO/IEC 27001 - International standard for information security management systems (ISMS)."
@@ -294,7 +299,7 @@ class DataStore:
         return list(self.assessments.values())
 
     def update_assessment_answers(self, assessment_id: str, answers: Dict[str, str]) -> Assessment:
-        """Update answers for an assessment and recalculate completion stats"""
+        """Update answers for an assessment and recalculate completion stats (legacy method)"""
         assessment = self.assessments.get(assessment_id)
         if not assessment:
             raise ValueError(f"Assessment with ID {assessment_id} not found")
@@ -318,14 +323,66 @@ class DataStore:
         # Save the updated assessment
         self.assessments[assessment_id] = assessment
         return assessment
+    
+    def update_assessment_answers_v2(self, assessment_id: str, answer_submissions: List) -> Assessment:
+        """Update answers for an assessment with new answer format and recalculate completion stats"""
+        from app.models import AnswerSubmission
+        
+        assessment = self.assessments.get(assessment_id)
+        if not assessment:
+            raise ValueError(f"Assessment with ID {assessment_id} not found")
+        
+        # Update answers
+        now = datetime.now()
+        for submission in answer_submissions:
+            question_id = submission.questionId
+            
+            # Validate that the question is part of this assessment
+            if question_id not in assessment.selectedQuestionIds:
+                raise ValueError(f"Question {question_id} is not part of this assessment")
+            
+            # Update or create the answer based on submission type
+            if hasattr(submission, 'yesNo') and submission.yesNo is not None:
+                # Yes/No/Justification answer
+                assessment.answers[question_id] = QuestionAnswer(
+                    value="",
+                    yesNo=submission.yesNo,
+                    justification=submission.justification or "",
+                    lastUpdated=now
+                )
+            else:
+                # Traditional text/yes_no answer
+                assessment.answers[question_id] = QuestionAnswer(
+                    value=submission.value or "",
+                    lastUpdated=now
+                )
+        
+        # Recalculate completion stats
+        self._recalculate_question_stats(assessment)
+        
+        # Save the updated assessment
+        self.assessments[assessment_id] = assessment
+        return assessment
 
     def _recalculate_question_stats(self, assessment: Assessment) -> None:
         """Recalculate question statistics for an assessment"""
         total_questions = len(assessment.selectedQuestionIds)
-        answered_questions = len([
-            answer for answer in assessment.answers.values() 
-            if answer.value.strip()  # Non-empty string check
-        ])
+        answered_questions = 0
+        
+        for answer in assessment.answers.values():
+            # Check if question is answered based on answer type
+            is_answered = False
+            
+            if answer.yesNo and answer.yesNo.strip():
+                # Yes/No/Justification questions are answered if yesNo is set
+                is_answered = True
+            elif answer.value and answer.value.strip():
+                # Traditional questions are answered if value is set
+                is_answered = True
+            
+            if is_answered:
+                answered_questions += 1
+        
         completion_percent = round((answered_questions / total_questions * 100) if total_questions > 0 else 0, 2)
         
         assessment.questionStats = AssessmentQuestionStats(
@@ -344,10 +401,16 @@ class DataStore:
         for question_id in assessment.selectedQuestionIds:
             question = self.questions.get(question_id)
             if question:
-                # Get answer value if it exists
+                # Get answer values if they exist
                 answer_value = None
+                answer_yes_no = None
+                answer_justification = None
+                
                 if question_id in assessment.answers:
-                    answer_value = assessment.answers[question_id].value
+                    answer = assessment.answers[question_id]
+                    answer_value = answer.value
+                    answer_yes_no = answer.yesNo
+                    answer_justification = answer.justification
                 
                 question_with_answer = QuestionWithAnswer(
                     id=question.id,
@@ -358,7 +421,12 @@ class DataStore:
                     stakeholderRoleId=question.stakeholderRoleId,
                     answerType=question.answerType,
                     criticality=question.criticality,
-                    answerValue=answer_value
+                    functionId=question.functionId,
+                    functionName=question.functionName,
+                    subcategoryText=question.subcategoryText,
+                    answerValue=answer_value,
+                    answerYesNo=answer_yes_no,
+                    answerJustification=answer_justification
                 )
                 questions_with_answers.append(question_with_answer)
         
@@ -377,31 +445,44 @@ class DataStore:
                 with open(nist_file_path, 'r') as f:
                     question_bank_data = json.load(f)
                     question_bank = QuestionBank(**question_bank_data)
-                    
-                    # Store questions individually
-                    for question in question_bank.questions:
-                        self.questions[question.id] = question
-                    
-                    # Store questions grouped by framework
-                    self.question_banks[question_bank.frameworkId] = question_bank.questions
-                    
-                    # Extract unique families from questions
-                    families_dict = {}
-                    for question in question_bank.questions:
-                        family_key = f"{question_bank.frameworkId}-{question.familyId}"
-                        if family_key not in families_dict:
-                            families_dict[family_key] = Family(
-                                id=family_key,
-                                familyId=question.familyId,
-                                familyName=question.familyName,
-                                frameworkId=question_bank.frameworkId
-                            )
-                    
-                    # Store families
-                    self.families.update(families_dict)
+                    self._process_question_bank(question_bank)
+            
+            # Load NIST CSF 2.0 question bank (all questions - 493 total)
+            csf_file_path = os.path.join(data_dir, 'csf_2_0_questions_all.json')
+            if os.path.exists(csf_file_path):
+                with open(csf_file_path, 'r') as f:
+                    question_bank_data = json.load(f)
+                    question_bank = QuestionBank(**question_bank_data)
+                    self._process_question_bank(question_bank)
                     
         except Exception as e:
             print(f"Error loading question banks: {e}")
+            import traceback
+            traceback.print_exc()
+    
+    def _process_question_bank(self, question_bank: QuestionBank):
+        """Process a question bank and store questions and families"""
+        # Store questions individually
+        for question in question_bank.questions:
+            self.questions[question.id] = question
+        
+        # Store questions grouped by framework
+        self.question_banks[question_bank.frameworkId] = question_bank.questions
+        
+        # Extract unique families from questions
+        families_dict = {}
+        for question in question_bank.questions:
+            family_key = f"{question_bank.frameworkId}-{question.familyId}"
+            if family_key not in families_dict:
+                families_dict[family_key] = Family(
+                    id=family_key,
+                    familyId=question.familyId,
+                    familyName=question.familyName,
+                    frameworkId=question_bank.frameworkId
+                )
+        
+        # Store families
+        self.families.update(families_dict)
 
     # Question and Family retrieval methods
     def get_all_families(self) -> List[Family]:
@@ -417,12 +498,45 @@ class DataStore:
         return list(self.questions.values())
     
     def get_questions_by_framework(self, framework_id: str) -> List[Question]:
-        """Get questions for a specific framework"""
-        return self.question_banks.get(framework_id, [])
+        """Get all questions for a specific framework"""
+        return [question for question in self.questions.values() if question.frameworkId == framework_id]
     
     def get_questions_by_family(self, family_id: str) -> List[Question]:
         """Get questions for a specific family"""
         return [question for question in self.questions.values() if question.familyId == family_id]
+    
+    def get_csf_modules(self, framework_id: str) -> List[dict]:
+        """Get all CSF modules for a framework with question counts"""
+        if framework_id != "NIST-CSF-2.0":
+            return []
+        
+        # Get all CSF questions
+        csf_questions = self.get_questions_by_framework(framework_id)
+        
+        # Group by functionId and count
+        module_dict = {}
+        for question in csf_questions:
+            if question.functionId and question.functionName:
+                if question.functionId not in module_dict:
+                    module_dict[question.functionId] = {
+                        "moduleId": question.functionId,
+                        "moduleName": question.functionName,
+                        "questionCount": 0
+                    }
+                module_dict[question.functionId]["questionCount"] += 1
+        
+        # Sort by moduleId
+        modules = list(module_dict.values())
+        modules.sort(key=lambda m: m["moduleId"])
+        return modules
+    
+    def get_questions_by_modules(self, framework_id: str, module_ids: List[str]) -> List[Question]:
+        """Get questions for specific CSF modules"""
+        if framework_id != "NIST-CSF-2.0":
+            return []
+        
+        csf_questions = self.get_questions_by_framework(framework_id)
+        return [q for q in csf_questions if q.functionId in module_ids]
     
     def get_question_by_id(self, question_id: str) -> Question:
         """Get question by ID"""

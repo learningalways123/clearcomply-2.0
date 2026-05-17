@@ -1,97 +1,74 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
 
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/Auth/ProtectedRoute';
+import LoginPage from './components/Auth/LoginPage';
 import AppLayout from './components/Layout/AppLayout';
-import NewAssessment from './components/NewAssessment/NewAssessment';
 import AssessmentsOverview from './components/AssessmentsOverview/AssessmentsOverview';
 import AssessmentDetail from './components/AssessmentDetail/AssessmentDetail';
-import ApiTest from './components/ApiTest';
+import NewAssessment from './components/NewAssessment/NewAssessment';
 
-// Create Material UI theme
 const theme = createTheme({
   palette: {
     mode: 'light',
-    primary: {
-      main: '#646cff',
-      light: '#7c84ff',
-      dark: '#4c54cc',
-    },
-    secondary: {
-      main: '#f50057',
-    },
-    background: {
-      default: '#f8f9fa',
-      paper: '#ffffff',
-    },
-    grey: {
-      50: '#fafafa',
-      100: '#f5f5f5',
-      200: '#eeeeee',
-      300: '#e0e0e0',
-      400: '#bdbdbd',
-      500: '#9e9e9e',
-      600: '#757575',
-      700: '#616161',
-      800: '#424242',
-      900: '#212121',
-    },
+    primary: { main: '#4f46e5', light: '#818cf8', dark: '#3730a3' },
+    secondary: { main: '#06b6d4' },
+    background: { default: '#f8f9fa', paper: '#ffffff' },
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h4: {
-      fontWeight: 600,
-    },
-    h5: {
-      fontWeight: 600,
-    },
-    h6: {
-      fontWeight: 600,
-    },
+    h4: { fontWeight: 700 },
+    h5: { fontWeight: 700 },
+    h6: { fontWeight: 600 },
   },
-  shape: {
-    borderRadius: 8,
-  },
+  shape: { borderRadius: 10 },
   components: {
     MuiCard: {
       styleOverrides: {
-        root: {
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          border: '1px solid #e0e0e0',
-        },
+        root: { boxShadow: '0 1px 4px rgba(0,0,0,0.08)', border: '1px solid #e5e7eb' },
       },
     },
     MuiButton: {
       styleOverrides: {
-        root: {
-          textTransform: 'none',
-          fontWeight: 500,
-        },
+        root: { textTransform: 'none', fontWeight: 500 },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: { boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
       },
     },
   },
 });
 
-function App() {
+export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-          <AppLayout>
-            <Routes>
-              <Route path="/" element={<Navigate to="/assessments" replace />} />
-              <Route path="/api-test" element={<ApiTest />} />
-              <Route path="/new-assessment" element={<NewAssessment />} />
-              <Route path="/assessments" element={<AssessmentsOverview />} />
-              <Route path="/assessments/:id" element={<AssessmentDetail />} />
-            </Routes>
-          </AppLayout>
-        </Box>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <Routes>
+                      <Route path="/" element={<Navigate to="/assessments" replace />} />
+                      <Route path="/assessments" element={<AssessmentsOverview />} />
+                      <Route path="/assessments/:id" element={<AssessmentDetail />} />
+                      <Route path="/new-assessment" element={<NewAssessment />} />
+                    </Routes>
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
-
-export default App

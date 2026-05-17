@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 
 # Import our routes
 from app.routes import router as api_router
+from app.auth_routes import auth_router
 
 # Load environment variables
 load_dotenv()
@@ -32,6 +33,7 @@ app.add_middleware(
         "http://localhost:3000",   # React default port
         "http://localhost:5173",   # Vite default port
         "http://localhost:5174",   # Vite alternative port
+        "http://localhost:6000",   # Custom Vite port
         "http://localhost:8080",   # Alternative development port
     ],
     allow_credentials=True,
@@ -40,6 +42,7 @@ app.add_middleware(
 )
 
 # Include API routes
+app.include_router(auth_router)
 app.include_router(api_router)
 
 # Pydantic models for existing endpoints
