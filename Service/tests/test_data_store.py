@@ -198,3 +198,159 @@ def test_get_assessment_questions_with_answers(store):
     assert len(result) == len(qids)
     answered = [r for r in result if r.answerYesNo == "Yes"]
     assert len(answered) == 1
+
+
+# ── Status transitions (SQLite) ───────────────────────────────────────────────
+
+def test_assessment_default_status_is_in_progress(store):
+    created, _ = _make_assessment(store)
+    assert created.status == "in_progress"
+
+
+def test_update_assessment_status_valid_transition(store):
+    created, _ = _make_assessment(store)
+    updated = store.update_assessment_status(created.id, "submitted")
+    assert updated.status == "submitted"
+
+
+def test_update_assessment_status_persisted(store):
+    created, _ = _make_assessment(store)
+    store.update_assessment_status(created.id, "submitted")
+    fetched = store.get_assessment_by_id(created.id)
+    assert fetched.status == "submitted"
+
+
+def test_update_assessment_status_unknown_id_returns_none(store):
+    # data_store raises ValueError when assessment not found
+    with pytest.raises(ValueError, match="not found"):
+        store.update_assessment_status("no-such-id", "submitted")
+
+
+# ── Risk scoring ──────────────────────────────────────────────────────────────
+
+def test_risk_score_none_when_no_answers(store):
+    created, _ = _make_assessment(store)
+    fetched = store.get_assessment_by_id(created.id)
+    assert fetched.riskScore is None
+
+
+def test_risk_score_computed_after_yes_answers(store):
+    created, qids = _make_assessment(store)
+    from app.models import AnswerSubmission
+    subs = [AnswerSubmission(questionId=q, yesNo="Yes") for q in qids]
+    store.update_assessment_answers_v2(created.id, subs)
+    fetched = store.get_assessment_by_id(created.id)
+    assert fetched.riskScore is not None
+    assert 0.0 <= fetched.riskScore <= 100.0
+
+
+def test_risk_score_all_no_is_zero(store):
+    created, qids = _make_assessment(store)
+    from app.models import AnswerSubmission
+    subs = [AnswerSubmission(questionId=q, yesNo="No") for q in qids]
+    store.update_assessment_answers_v2(created.id, subs)
+    fetched = store.get_assessment_by_id(created.id)
+    assert fetched.riskScore == 0.0
+
+
+def test_risk_score_all_yes_is_100(store):
+    created, qids = _make_assessment(store)
+    from app.models import AnswerSubmission
+    subs = [AnswerSubmission(questionId=q, yesNo="Yes") for q in qids]
+    store.update_assessment_answers_v2(created.id, subs)
+    fetched = store.get_assessment_by_id(created.id)
+    assert fetched.riskScore == 100.0
+
+
+# ── POA&M CRUD (SQLite) ───────────────────────────────────────────────────────
+
+def _make_poam(store, assessment_id, title="Fix gap", priority="high"):
+    from app.models import CreatePoamRequest
+    req = CreatePoamRequest(
+        assessmentId=assessment_id,
+        title=title,
+        description="Needs remediation",
+        priority=priority,
+        dueDate="2026-12-31",
+        owner="security-team",
+    )
+    return store.create_poam_item(req)
+
+
+def test_create_poam_item(store):
+    created, _ = _make_assessment(store)
+    item = _make_poam(store, created.id)
+    assert item.id is not None
+    assert item.title == "Fix gap"
+    assert item.status == "open"
+    assert item.priority == "high"
+    assert item.assessmentId == created.id
+
+
+def test_get_all_poam_items(store):
+    created, _ = _make_assessment(store)
+    _make_poam(store, created.id, "Item 1")
+    _make_poam(store, created.id, "Item 2")
+    items = store.get_all_poam_items()
+    assert len(items) == 2
+
+
+def test_get_poam_items_filter_by_assessment(store):
+    a1, _ = _make_assessment(store, "A1")
+    a2, _ = _make_assessment(store, "A2")
+    _make_poam(store, a1.id, "A1 item")
+    _make_poam(store, a2.id, "A2 item")
+    items = store.get_all_poam_items(assessment_id=a1.id)
+    assert len(items) == 1
+    assert items[0].assessmentId == a1.id
+
+
+def test_get_poam_items_filter_by_status(store):
+    created, _ = _make_assessment(store)
+    _make_poam(store, created.id, "Open item")
+    item2 = _make_poam(store, created.id, "Will close")
+    from app.models import UpdatePoamRequest
+    store.update_poam_item(item2.id, UpdatePoamRequest(status="closed"))
+    open_items = store.get_all_poam_items(status="open")
+    assert len(open_items) == 1
+    assert open_items[0].title == "Open item"
+
+
+def test_update_poam_item_status_transition(store):
+    created, _ = _make_assessment(store)
+    item = _make_poam(store, created.id)
+    from app.models import UpdatePoamRequest
+    updated = store.update_poam_item(item.id, UpdatePoamRequest(status="in_remediation"))
+    assert updated.status == "in_remediation"
+    assert updated.closedAt is None
+
+
+def test_update_poam_item_closed_sets_closed_at(store):
+    created, _ = _make_assessment(store)
+    item = _make_poam(store, created.id)
+    from app.models import UpdatePoamRequest
+    updated = store.update_poam_item(item.id, UpdatePoamRequest(status="closed"))
+    assert updated.status == "closed"
+    assert updated.closedAt is not None
+
+
+def test_update_poam_item_partial_fields(store):
+    created, _ = _make_assessment(store)
+    item = _make_poam(store, created.id)
+    from app.models import UpdatePoamRequest
+    updated = store.update_poam_item(item.id, UpdatePoamRequest(owner="new-owner", priority="low"))
+    assert updated.owner == "new-owner"
+    assert updated.priority == "low"
+    assert updated.status == "open"  # unchanged
+
+
+def test_delete_poam_item(store):
+    created, _ = _make_assessment(store)
+    item = _make_poam(store, created.id)
+    assert store.delete_poam_item(item.id) is None  # returns None on success
+    assert store.get_all_poam_items() == []
+
+
+def test_delete_poam_item_unknown_raises(store):
+    with pytest.raises(ValueError, match="not found"):
+        store.delete_poam_item("no-such-id")

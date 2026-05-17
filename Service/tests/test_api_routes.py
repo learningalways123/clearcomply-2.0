@@ -268,3 +268,166 @@ def test_health_check(client):
     resp = client.get("/api/status")
     assert resp.status_code == 200
     assert resp.json().get("status") in ("healthy", "operational")
+
+
+# ── /api/assessments/{id}/status ─────────────────────────────────────────────
+
+def test_assessment_response_has_status_and_risk_score(client):
+    data = _create_nist_assessment(client).json()
+    assert "status" in data
+    assert data["status"] == "in_progress"
+    assert "riskScore" in data
+
+
+def test_patch_status_valid_transition(client):
+    created = _create_nist_assessment(client).json()
+    resp = client.patch(f"/api/assessments/{created['id']}/status", json={"status": "submitted"})
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "submitted"
+
+
+def test_patch_status_invalid_transition_400(client):
+    created = _create_nist_assessment(client).json()
+    # draft is not a valid forward transition from in_progress
+    resp = client.patch(f"/api/assessments/{created['id']}/status", json={"status": "draft"})
+    assert resp.status_code == 400
+
+
+def test_patch_status_unknown_assessment_404(client):
+    resp = client.patch("/api/assessments/no-such-id/status", json={"status": "submitted"})
+    assert resp.status_code == 404
+
+
+def test_patch_status_unknown_status_400(client):
+    created = _create_nist_assessment(client).json()
+    resp = client.patch(f"/api/assessments/{created['id']}/status", json={"status": "nonsense"})
+    assert resp.status_code == 400
+
+
+def test_patch_status_persists(client):
+    created = _create_nist_assessment(client).json()
+    client.patch(f"/api/assessments/{created['id']}/status", json={"status": "submitted"})
+    fetched = client.get(f"/api/assessments/{created['id']}").json()
+    assert fetched["status"] == "submitted"
+
+
+# ── /api/poam ─────────────────────────────────────────────────────────────────
+
+def _create_poam(client, assessment_id, title="Fix gap", priority="high"):
+    return client.post("/api/poam", json={
+        "assessmentId": assessment_id,
+        "title": title,
+        "description": "Needs remediation",
+        "priority": priority,
+        "dueDate": "2026-12-31",
+        "owner": "security-team",
+    })
+
+
+def test_create_poam_item_success(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    resp = _create_poam(client, aid)
+    assert resp.status_code in (200, 201)
+    data = resp.json()
+    assert data["title"] == "Fix gap"
+    assert data["status"] == "open"
+    assert data["assessmentId"] == aid
+
+
+def test_create_poam_unknown_assessment_404(client):
+    resp = client.post("/api/poam", json={
+        "assessmentId": "no-such-id",
+        "title": "Bad",
+        "priority": "low",
+    })
+    assert resp.status_code == 404
+
+
+def test_get_poam_items_empty(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    # Filter by this assessment — should have none since we just created it
+    resp = client.get(f"/api/poam?assessment_id={aid}")
+    assert resp.status_code == 200
+    assert resp.json() == []
+
+
+def test_get_poam_items_returns_created(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    _create_poam(client, aid, "Item A")
+    _create_poam(client, aid, "Item B")
+    resp = client.get("/api/poam")
+    titles = {i["title"] for i in resp.json()}
+    assert "Item A" in titles and "Item B" in titles
+
+
+def test_get_poam_filter_by_assessment(client):
+    a1 = _create_nist_assessment(client, "A1").json()["id"]
+    a2 = _create_nist_assessment(client, "A2").json()["id"]
+    _create_poam(client, a1, "A1 item")
+    _create_poam(client, a2, "A2 item")
+    resp = client.get(f"/api/poam?assessment_id={a1}")
+    items = resp.json()
+    assert len(items) == 1
+    assert items[0]["title"] == "A1 item"
+
+
+def test_get_poam_filter_by_status(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    item = _create_poam(client, aid, "To close").json()
+    client.patch(f"/api/poam/{item['id']}", json={"status": "closed"})
+    _create_poam(client, aid, "Still open")
+    # Filter by assessment + status
+    open_items = client.get(f"/api/poam?assessment_id={aid}&status=open").json()
+    assert len(open_items) == 1
+    assert open_items[0]["title"] == "Still open"
+
+
+def test_patch_poam_item_status(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    item = _create_poam(client, aid).json()
+    resp = client.patch(f"/api/poam/{item['id']}", json={"status": "in_remediation"})
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "in_remediation"
+
+
+def test_patch_poam_item_closed_sets_closed_at(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    item = _create_poam(client, aid).json()
+    resp = client.patch(f"/api/poam/{item['id']}", json={"status": "closed"})
+    assert resp.status_code == 200
+    assert resp.json()["closedAt"] is not None
+
+
+def test_patch_poam_unknown_item_404(client):
+    resp = client.patch("/api/poam/no-such-id", json={"status": "closed"})
+    assert resp.status_code == 404
+
+
+def test_delete_poam_item(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    item = _create_poam(client, aid).json()
+    resp = client.delete(f"/api/poam/{item['id']}")
+    assert resp.status_code == 204
+    # No items remain for this specific assessment
+    assert client.get(f"/api/poam?assessment_id={aid}").json() == []
+
+
+def test_delete_poam_unknown_item_404(client):
+    resp = client.delete("/api/poam/no-such-id")
+    assert resp.status_code == 404
+
+
+def test_poam_audit_logged_on_create(client):
+    aid = _create_nist_assessment(client).json()["id"]
+    _create_poam(client, aid)
+    entries = client.get("/api/audit-log").json()["entries"]
+    actions = [e["action"] for e in entries]
+    assert "CREATE_POAM" in actions
+
+
+def test_status_update_audit_logged(client):
+    created = _create_nist_assessment(client).json()
+    client.patch(f"/api/assessments/{created['id']}/status", json={"status": "submitted"})
+    entries = client.get("/api/audit-log").json()["entries"]
+    actions = [e["action"] for e in entries]
+    assert "UPDATE_STATUS" in actions
