@@ -2,17 +2,19 @@
 SQLAlchemy ORM table definitions for Clear Comply.
 
 Tables:
-  users        — authenticated users with roles
+  users        — authenticated users with roles (Google OAuth + email/password)
   assessments  — assessment metadata + aggregated stats
   answers      — one row per (assessment, question) with yes/no + narrative
   audit_log    — append-only log of every user action
+  poam_items   — Plan of Action & Milestones
+  evidence     — uploaded evidence files linked to assessments/controls
 """
 
 import json
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -26,12 +28,17 @@ class UserRecord(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True, default=_new_id)
-    google_id = Column(String, unique=True, nullable=False, index=True)
+    google_id = Column(String, unique=True, nullable=True, index=True)   # nullable for email/pass users
     email = Column(String, unique=True, nullable=False, index=True)
     name = Column(String, nullable=False)
     picture = Column(String, nullable=True)
     # Roles: platform_admin | org_admin | lead_assessor | assessor | reviewer | auditor
     role = Column(String, nullable=False, default="assessor")
+    # Email/password auth
+    password_hash = Column(String, nullable=True)
+    # TOTP/MFA
+    totp_secret = Column(String, nullable=True)
+    mfa_enabled = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     last_login = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -141,3 +148,31 @@ class PoamRecord(Base):
     closed_at = Column(DateTime, nullable=True)
 
     assessment = relationship("AssessmentRecord", backref="poam_items")
+
+
+class EvidenceRecord(Base):
+    __tablename__ = "evidence"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    # Optional link to a specific question/control
+    question_id = Column(String, nullable=True, index=True)
+    control_ref = Column(String, nullable=True)
+
+    # File metadata
+    filename = Column(String, nullable=False)
+    original_filename = Column(String, nullable=False)
+    file_size = Column(Integer, nullable=False)     # bytes
+    mime_type = Column(String, nullable=True)
+    storage_path = Column(String, nullable=False)   # path on disk
+
+    # Expiry / validity tracking
+    as_of_date = Column(String, nullable=True)       # ISO date "YYYY-MM-DD"
+    expiry_date = Column(String, nullable=True)      # ISO date "YYYY-MM-DD"
+    description = Column(Text, nullable=True)
+    tags = Column(Text, nullable=True)               # JSON array of tag strings
+
+    uploaded_by_email = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    assessment = relationship("AssessmentRecord", backref="evidence_files")

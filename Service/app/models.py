@@ -117,12 +117,12 @@ class Assessment(BaseModel):
 
 # Request/Response Models
 class CreateAssessmentRequest(BaseModel):
-    name: str = Field(..., min_length=1, description="Assessment name")
-    frameworkIds: List[str] = Field(..., min_items=1, description="List of framework IDs")
-    selectedControlIds: List[str] = Field(default=[], description="List of selected control IDs")
-    selectedQuestionIds: List[str] = Field(default=[], description="List of selected question IDs")
-    moduleIds: List[str] = Field(default=[], description="List of selected CSF module IDs")
-    familyIds: List[str] = Field(default=[], description="List of selected NIST family IDs")
+    name: str = Field(..., min_length=1, max_length=200, description="Assessment name")
+    frameworkIds: List[str] = Field(..., min_items=1, max_items=20, description="List of framework IDs")
+    selectedControlIds: List[str] = Field(default=[], max_items=1000, description="List of selected control IDs")
+    selectedQuestionIds: List[str] = Field(default=[], max_items=2000, description="List of selected question IDs")
+    moduleIds: List[str] = Field(default=[], max_items=20, description="List of selected CSF module IDs")
+    familyIds: List[str] = Field(default=[], max_items=100, description="List of selected NIST family IDs")
 
 
 class AssessmentResponse(BaseModel):
@@ -141,10 +141,10 @@ class AssessmentResponse(BaseModel):
 
 
 class AnswerSubmission(BaseModel):
-    questionId: str
-    value: Optional[str] = None  # For text/yes_no questions
-    yesNo: Optional[str] = None  # For yes_no_justification questions
-    justification: Optional[str] = None  # For yes_no_justification questions
+    questionId: str = Field(..., min_length=1, max_length=200)
+    value: Optional[str] = Field(default=None, max_length=10000)
+    yesNo: Optional[str] = Field(default=None, pattern=r'^(yes|no|Yes|No|YES|NO)$')
+    justification: Optional[str] = Field(default=None, max_length=5000)
 
 
 class SubmitAnswersRequest(BaseModel):
@@ -152,7 +152,8 @@ class SubmitAnswersRequest(BaseModel):
 
 
 class UpdateStatusRequest(BaseModel):
-    status: str = Field(..., description="New status: draft | in_progress | submitted | reviewed")
+    status: str = Field(..., pattern=r'^(draft|in_progress|submitted|reviewed|closed)$',
+                        description="New status: draft | in_progress | submitted | reviewed | closed")
 
 
 class AssessmentSummaryResponse(BaseModel):
@@ -210,22 +211,22 @@ class PoamItem(BaseModel):
 
 
 class CreatePoamRequest(BaseModel):
-    assessmentId: str
-    questionId: Optional[str] = None
-    title: str = Field(..., min_length=1)
-    description: Optional[str] = None
-    priority: str = "medium"
-    dueDate: Optional[str] = None
-    owner: Optional[str] = None
+    assessmentId: str = Field(..., min_length=1, max_length=100)
+    questionId: Optional[str] = Field(default=None, max_length=200)
+    title: str = Field(..., min_length=1, max_length=300)
+    description: Optional[str] = Field(default=None, max_length=5000)
+    priority: str = Field(default="medium", pattern=r'^(high|medium|low)$')
+    dueDate: Optional[str] = Field(default=None, pattern=r'^\d{4}-\d{2}-\d{2}$')
+    owner: Optional[str] = Field(default=None, max_length=200)
 
 
 class UpdatePoamRequest(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    status: Optional[str] = None
-    priority: Optional[str] = None
-    dueDate: Optional[str] = None
-    owner: Optional[str] = None
+    title: Optional[str] = Field(default=None, min_length=1, max_length=300)
+    description: Optional[str] = Field(default=None, max_length=5000)
+    status: Optional[str] = Field(default=None, pattern=r'^(open|in_remediation|closed)$')
+    priority: Optional[str] = Field(default=None, pattern=r'^(high|medium|low)$')
+    dueDate: Optional[str] = Field(default=None, pattern=r'^\d{4}-\d{2}-\d{2}$')
+    owner: Optional[str] = Field(default=None, max_length=200)
 
 
 # CSF Module Model

@@ -205,6 +205,23 @@ export interface DashboardData {
   frameworkBreakdown: DashboardFramework[];
 }
 
+export interface EvidenceRecord {
+  id: string;
+  assessmentId: string;
+  questionId?: string | null;
+  controlRef?: string | null;
+  filename: string;
+  originalFilename: string;
+  fileSize: number;
+  mimeType: string;
+  asOfDate?: string | null;
+  expiryDate?: string | null;
+  description?: string | null;
+  tags: string[];
+  uploadedByEmail: string;
+  createdAt: string;
+}
+
 export interface CreateAssessmentRequest {
   name: string;
   frameworkIds: string[];
@@ -286,6 +303,23 @@ export const api = {
   // Assessment status transition
   updateAssessmentStatus: (id: string, status: string) =>
     apiClient.patch<AssessmentSummary>(`/assessments/${id}/status`, { status }).then(r => r.data),
+
+  // Evidence
+  uploadEvidence: (formData: FormData) =>
+    apiClient.post<EvidenceRecord>('/evidence', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }).then(r => r.data),
+
+  listEvidence: (assessmentId?: string) => {
+    const params = assessmentId ? { assessment_id: assessmentId } : {};
+    return apiClient.get<EvidenceRecord[]>('/evidence', { params }).then(r => r.data);
+  },
+
+  downloadEvidence: (id: string) =>
+    apiClient.get(`/evidence/${id}/download`, { responseType: 'blob' }).then(r => r.data as Blob),
+
+  deleteEvidence: (id: string) =>
+    apiClient.delete(`/evidence/${id}`),
 
   // POA&M
   getPoamItems: (params?: { assessment_id?: string; status?: string }) =>

@@ -53,20 +53,20 @@ This roadmap transforms Clear Comply from a functional prototype (30-40% complet
 - Support multiple users per organization
 
 **Tasks:**
-- [ ] **User Management:**
+- [x] **User Management:**
   - User registration/login with email verification
   - Password hashing (bcrypt/argon2)
   - JWT token-based session management
   - MFA via TOTP (Google Authenticator compatible)
   - Session timeout (configurable, default 4 hours)
-- [ ] **Role System:**
+- [x] **Role System:**
   - Define roles: Platform Admin, Org Admin, Lead Assessor, Assessor, Reviewer, Auditor
   - Implement role-based permissions on API endpoints
   - Create authorization middleware
-- [ ] **Multi-Tenancy:**
-  - Organization entity with data scoping
-  - User-to-organization relationships
-  - Data isolation enforced at query level
+- [ ] **Multi-Tenancy:** *(skipped — app is single-organization)*
+  - ~~Organization entity with data scoping~~
+  - ~~User-to-organization relationships~~
+  - ~~Data isolation enforced at query level~~
 - [ ] **SSO Planning:**
   - Design OAuth2/SAML integration points for Phase 2
 
@@ -85,13 +85,13 @@ This roadmap transforms Clear Comply from a functional prototype (30-40% complet
 - Track all user actions for compliance
 
 **Tasks:**
-- [ ] **Immutable Logging:**
+- [x] **Immutable Logging:**
   - Create AuditLog table with append-only writes
   - Log every CRUD operation: who, what, when, old_value, new_value
   - Track assessment state transitions
   - Track evidence uploads/deletions
   - Track user login/logout events
-- [ ] **Audit Log UI:**
+- [x] **Audit Log UI:**
   - View audit trail per assessment
   - Filter by user, date range, action type
   - Export audit log to CSV
@@ -112,27 +112,27 @@ This roadmap transforms Clear Comply from a functional prototype (30-40% complet
 - Support evidence reuse across assessments
 
 **Tasks:**
-- [ ] **File Storage:**
-  - Set up S3-compatible object storage (AWS S3 or MinIO)
-  - Implement per-organization storage buckets
+- [x] **File Storage:** *(local filesystem; S3/MinIO deferred to Phase 2)*
+  - ~~Set up S3-compatible object storage (AWS S3 or MinIO)~~
+  - ~~Implement per-organization storage buckets~~
   - Enforce 25MB file size limit
-  - Integrate virus scanning on upload (ClamAV)
-- [ ] **Evidence Entity:**
+  - ~~Integrate virus scanning on upload (ClamAV)~~
+- [x] **Evidence Entity:**
   - File metadata (filename, size, type, upload date, uploader)
   - Many-to-many relationship: evidence ↔ controls
   - Evidence expiry date tracking
   - Tags/categories for searchability
   - As-of date for evidence validity
-- [ ] **Evidence UI:**
+- [x] **Evidence UI:**
   - Drag-and-drop file upload component
   - Evidence thumbnail preview (images/PDFs)
   - Link existing evidence from repository
   - Evidence repository view with search/filter
   - Visual indicator for expired evidence
-- [ ] **Evidence Reuse:**
-  - When creating new assessment, suggest carryover evidence from prior period
-  - Bulk link evidence to multiple controls
-  - Show "used in X assessments" indicator
+- [ ] **Evidence Reuse:** *(deferred to Phase 2)*
+  - ~~When creating new assessment, suggest carryover evidence from prior period~~
+  - ~~Bulk link evidence to multiple controls~~
+  - ~~Show "used in X assessments" indicator~~
 
 **Success Criteria:**
 - ✅ Upload 10 files of various types
@@ -151,21 +151,21 @@ This roadmap transforms Clear Comply from a functional prototype (30-40% complet
 - Prepare for SOC 2 compliance
 
 **Tasks:**
-- [ ] **Encryption:**
+- [ ] **Encryption:** *(TLS via Nginx configured; DB/file encryption deferred)*
   - TLS 1.3 for all API traffic (configure Nginx reverse proxy)
-  - Database encryption at rest (PostgreSQL transparent data encryption)
-  - Evidence file encryption in S3 (AES-256)
-- [ ] **Input Validation:**
+  - ~~Database encryption at rest~~
+  - ~~Evidence file encryption in S3~~
+- [x] **Input Validation:**
   - Strengthen Pydantic models with strict validation
   - Ensure parameterized queries via ORM (SQL injection prevention)
   - Sanitize user inputs (XSS protection)
   - Implement Content Security Policy headers
   - Add CSRF protection (SameSite cookies, CSRF tokens)
-- [ ] **Rate Limiting:**
+- [x] **Rate Limiting:**
   - API rate limits per user (100 requests/minute)
   - Brute-force protection on login (lock after 5 failed attempts)
   - Implement request throttling
-- [ ] **Vulnerability Assessment:**
+- [ ] **Vulnerability Assessment:** *(deferred)*
   - Run OWASP ZAP automated scan
   - Perform dependency vulnerability check (npm audit, pip-audit)
   - Fix all Critical/High severity issues

@@ -3,12 +3,17 @@ Clear Comply - FastAPI Backend Service
 Main application entry point
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict, Any
 import os
 from dotenv import load_dotenv
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 # Import our routes
 from app.routes import router as api_router
@@ -17,6 +22,9 @@ from app.database import init_db
 
 # Load environment variables
 load_dotenv()
+
+# Rate limiter — keyed on client IP
+limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
 
 # Create FastAPI instance
 app = FastAPI(
@@ -27,22 +35,42 @@ app = FastAPI(
     redoc_url="/api/redoc",
 )
 
-# Configure CORS - Updated to include localhost:3000
+# ── Rate limiting ─────────────────────────────────────────────────────────────
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
+# ── CORS ──────────────────────────────────────────────────────────────────────
+ALLOWED_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",   # React default port
-        "http://localhost:5173",   # Vite default port
-        "http://localhost:5174",   # Vite alternative port
-        "http://localhost:6000",   # Custom Vite port
-        "http://localhost:8080",   # Alternative development port
-    ],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 
-# Include API routes
+# ── Security headers middleware ───────────────────────────────────────────────
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://accounts.google.com; "
+        "style-src 'self' 'unsafe-inline'; "
+        "img-src 'self' data: https:; "
+        "connect-src 'self' https://accounts.google.com; "
+        "frame-ancestors 'none';"
+    )
+    return response
+
+# ── Routes ────────────────────────────────────────────────────────────────────
 app.include_router(auth_router)
 app.include_router(api_router)
 
@@ -54,70 +82,43 @@ async def startup():
     from app.seed_data import seed_demo_data
     seed_demo_data()
 
-# Pydantic models for existing endpoints
+
+# ── Health / utility endpoints ────────────────────────────────────────────────
 class HealthResponse(BaseModel):
     status: str
     message: str
     version: str
 
-class MessageRequest(BaseModel):
-    message: str
 
-class MessageResponse(BaseModel):
-    response: str
-    timestamp: str
-
-# Existing routes
 @app.get("/")
 async def root():
-    """Root endpoint"""
     return {"message": "Clear Comply API is running!", "docs": "/api/docs"}
+
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
-    """Health check endpoint"""
-    return HealthResponse(
-        status="healthy",
-        message="Clear Comply API is running smoothly",
-        version="1.0.0"
-    )
+    return HealthResponse(status="healthy", message="Clear Comply API is running smoothly", version="1.0.0")
+
 
 @app.get("/api/status")
 async def api_status():
-    """API status endpoint"""
     return {
         "api": "Clear Comply",
         "status": "operational",
         "environment": os.getenv("ENVIRONMENT", "development"),
         "features": [
-            "Frameworks Management",
-            "Controls Management", 
-            "Assessment Creation",
-            "Assessment History"
-        ]
+            "Frameworks Management", "Controls Management",
+            "Assessment Creation", "Assessment History",
+            "Evidence Management", "POA&M Tracking",
+            "Audit Trail", "Role-Based Access Control",
+            "MFA / TOTP",
+        ],
     }
 
-@app.post("/api/message", response_model=MessageResponse)
-async def process_message(request: MessageRequest):
-    """Example endpoint to process messages"""
-    from datetime import datetime
-    
-    return MessageResponse(
-        response=f"Received: {request.message}",
-        timestamp=datetime.now().isoformat()
-    )
 
 if __name__ == "__main__":
     import uvicorn
-    
-    # Get configuration from environment variables
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", "8000"))
     reload = os.getenv("RELOAD", "True").lower() == "true"
-    
-    uvicorn.run(
-        "main:app",
-        host=host,
-        port=port,
-        reload=reload
-    )
+    uvicorn.run("main:app", host=host, port=port, reload=reload)

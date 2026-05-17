@@ -2,7 +2,7 @@
 API routes for Clear Comply Service Layer
 """
 
-from fastapi import APIRouter, HTTPException, Query, Depends
+from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File, Form
 from typing import List, Optional
 from datetime import datetime
 import uuid
@@ -16,8 +16,10 @@ from app.models import (
     PoamItem, CreatePoamRequest, UpdatePoamRequest, STATUS_TRANSITIONS,
 )
 from app.data_store import data_store
-from app.auth import get_current_user, User
+from app.auth import get_current_user, require_role, User
 from app import audit_service
+from app import evidence_service
+from fastapi.responses import FileResponse
 
 # Create router instance
 router = APIRouter(prefix="/api", tags=["Clear Comply API"])
@@ -148,7 +150,7 @@ async def get_framework_questions_by_modules(
 
 
 @router.post("/assessments", response_model=AssessmentResponse)
-async def create_assessment(request: CreateAssessmentRequest):
+async def create_assessment(request: CreateAssessmentRequest, current_user: User = Depends(get_current_user)):
     """
     Create a new assessment
     
@@ -236,6 +238,8 @@ async def create_assessment(request: CreateAssessmentRequest):
     # Audit log (best-effort, no auth required on this endpoint)
     audit_service.log_action(
         action="CREATE_ASSESSMENT",
+        user_email=current_user.email,
+        user_name=current_user.name,
         entity_type="assessment",
         entity_id=created_assessment.id,
         detail={"name": created_assessment.name, "frameworks": created_assessment.frameworkIds},
@@ -459,7 +463,7 @@ async def get_assessment_questions(assessment_id: str):
 
 
 @router.post("/assessments/{assessment_id}/answers", response_model=AssessmentSummaryResponse, summary="Submit answers for assessment")
-async def submit_assessment_answers(assessment_id: str, request: SubmitAnswersRequest):
+async def submit_assessment_answers(assessment_id: str, request: SubmitAnswersRequest, current_user: User = Depends(get_current_user)):
     """
     Submit or update answers for assessment questions.
     
@@ -487,6 +491,8 @@ async def submit_assessment_answers(assessment_id: str, request: SubmitAnswersRe
 
         audit_service.log_action(
             action="SUBMIT_ANSWERS",
+            user_email=current_user.email,
+            user_name=current_user.name,
             entity_type="assessment",
             entity_id=assessment_id,
             detail={"answersCount": len(request.answers)},
@@ -518,6 +524,7 @@ async def get_audit_log(
     user_email: Optional[str] = Query(None),
     entity_id: Optional[str] = Query(None),
     action: Optional[str] = Query(None),
+    current_user: User = Depends(get_current_user),
 ):
     """Return audit log entries, newest first. Accessible without auth for now."""
     entries = audit_service.get_audit_log(
@@ -545,7 +552,7 @@ async def get_dashboard():
 # ===== ASSESSMENT STATUS ENDPOINT =====
 
 @router.patch("/assessments/{assessment_id}/status", response_model=AssessmentSummaryResponse)
-async def update_assessment_status(assessment_id: str, request: UpdateStatusRequest):
+async def update_assessment_status(assessment_id: str, request: UpdateStatusRequest, current_user: User = Depends(get_current_user)):
     """Advance or revert assessment status through the state machine."""
     assessment = data_store.get_assessment_by_id(assessment_id)
     if not assessment:
@@ -559,6 +566,8 @@ async def update_assessment_status(assessment_id: str, request: UpdateStatusRequ
     updated = data_store.update_assessment_status(assessment_id, request.status)
     audit_service.log_action(
         action="UPDATE_STATUS",
+        user_email=current_user.email,
+        user_name=current_user.name,
         entity_type="assessment",
         entity_id=assessment_id,
         detail={"from": assessment.status, "to": request.status},
@@ -584,7 +593,7 @@ async def list_poam_items(
 
 
 @router.post("/poam", response_model=PoamItem, status_code=201)
-async def create_poam_item(request: CreatePoamRequest):
+async def create_poam_item(request: CreatePoamRequest, current_user: User = Depends(get_current_user)):
     """Create a new POA&M remediation item."""
     assessment = data_store.get_assessment_by_id(request.assessmentId)
     if not assessment:
@@ -592,6 +601,8 @@ async def create_poam_item(request: CreatePoamRequest):
     item = data_store.create_poam_item(request)
     audit_service.log_action(
         action="CREATE_POAM",
+        user_email=current_user.email,
+        user_name=current_user.name,
         entity_type="poam",
         entity_id=item.id,
         detail={"assessmentId": request.assessmentId, "title": request.title, "priority": request.priority},
@@ -600,12 +611,14 @@ async def create_poam_item(request: CreatePoamRequest):
 
 
 @router.patch("/poam/{item_id}", response_model=PoamItem)
-async def update_poam_item(item_id: str, request: UpdatePoamRequest):
+async def update_poam_item(item_id: str, request: UpdatePoamRequest, current_user: User = Depends(get_current_user)):
     """Update an existing POA&M item."""
     try:
         item = data_store.update_poam_item(item_id, request)
         audit_service.log_action(
             action="UPDATE_POAM",
+            user_email=current_user.email,
+            user_name=current_user.name,
             entity_type="poam",
             entity_id=item_id,
             detail={"status": request.status, "priority": request.priority},
@@ -616,9 +629,86 @@ async def update_poam_item(item_id: str, request: UpdatePoamRequest):
 
 
 @router.delete("/poam/{item_id}", status_code=204)
-async def delete_poam_item(item_id: str):
+async def delete_poam_item(item_id: str, current_user: User = Depends(get_current_user)):
     """Delete a POA&M item."""
     try:
         data_store.delete_poam_item(item_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+
+# ===== EVIDENCE ENDPOINTS =====
+
+@router.post("/evidence", status_code=201, summary="Upload an evidence file")
+async def upload_evidence(
+    file: UploadFile = File(...),
+    assessment_id: str = Form(...),
+    question_id: Optional[str] = Form(None),
+    control_ref: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    as_of_date: Optional[str] = Form(None),
+    expiry_date: Optional[str] = Form(None),
+    tags: Optional[str] = Form(None),
+    current_user: User = Depends(get_current_user),
+):
+    """Upload a file as evidence linked to an assessment (and optionally a question/control)."""
+    # Verify assessment exists
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+
+    result = await evidence_service.upload_evidence(
+        file=file,
+        assessment_id=assessment_id,
+        question_id=question_id,
+        control_ref=control_ref,
+        description=description,
+        as_of_date=as_of_date,
+        expiry_date=expiry_date,
+        tags=tags,
+        uploaded_by_email=current_user.email,
+    )
+    audit_service.log_action(
+        action="UPLOAD_EVIDENCE",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="evidence",
+        entity_id=result["id"],
+        detail={"assessmentId": assessment_id, "filename": result["filename"], "fileSize": result["fileSize"]},
+    )
+    return result
+
+
+@router.get("/evidence", summary="List evidence files")
+async def list_evidence(
+    assessment_id: Optional[str] = Query(None),
+    question_id: Optional[str] = Query(None),
+    control_ref: Optional[str] = Query(None),
+    current_user: User = Depends(get_current_user),
+):
+    """List evidence files, optionally filtered by assessment, question, or control."""
+    return evidence_service.list_evidence(
+        assessment_id=assessment_id,
+        question_id=question_id,
+        control_ref=control_ref,
+    )
+
+
+@router.get("/evidence/{evidence_id}/download", summary="Download an evidence file")
+async def download_evidence(evidence_id: str, current_user: User = Depends(get_current_user)):
+    """Download the original evidence file."""
+    path, original_filename = evidence_service.get_evidence_file_path(evidence_id)
+    return FileResponse(path=path, filename=original_filename, media_type="application/octet-stream")
+
+
+@router.delete("/evidence/{evidence_id}", status_code=204, summary="Delete an evidence file")
+async def delete_evidence(evidence_id: str, current_user: User = Depends(get_current_user)):
+    """Delete an evidence file and its metadata."""
+    evidence_service.delete_evidence(evidence_id, user_email=current_user.email)
+    audit_service.log_action(
+        action="DELETE_EVIDENCE",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="evidence",
+        entity_id=evidence_id,
+    )

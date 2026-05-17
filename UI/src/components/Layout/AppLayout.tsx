@@ -27,6 +27,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
 import PersonIcon from '@mui/icons-material/Person';
+import FolderIcon from '@mui/icons-material/Folder';
 
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -37,6 +38,7 @@ const NAV_ITEMS = [
   { label: 'Assessments', path: '/assessments', icon: <ListAltIcon /> },
   { label: 'New Assessment', path: '/new-assessment', icon: <AddCircleOutlineIcon /> },
   { label: 'POA\u0026M', path: '/poam', icon: <AssignmentLateIcon /> },
+  { label: 'Evidence', path: '/evidence', icon: <FolderIcon /> },
   { label: 'Audit Log', path: '/audit-log', icon: <HistoryIcon /> },
 ];
 

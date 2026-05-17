@@ -5,6 +5,7 @@ import {
   Alert, TablePagination, TextField, Stack, Tooltip, IconButton,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import DownloadIcon from '@mui/icons-material/Download';
 import { api } from '../../services/api';
 import type { AuditLogEntry } from '../../services/api';
 
@@ -44,10 +45,34 @@ export default function AuditLog() {
 
   useEffect(() => { load(); }, [load]);
 
+  const exportCsv = () => {
+    const header = ['timestamp', 'action', 'userEmail', 'userName', 'entityType', 'entityId', 'detail'];
+    const rows = entries.map(e => [
+      e.timestamp,
+      e.action,
+      e.userEmail ?? '',
+      e.userName ?? '',
+      e.entityType ?? '',
+      e.entityId ?? '',
+      e.detail ? JSON.stringify(e.detail) : '',
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    const csv = [header.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `audit-log-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Stack direction="row" alignItems="center" spacing={2} mb={3}>
         <Typography variant="h5" fontWeight={700} flex={1}>Audit Log</Typography>
+        <Tooltip title="Export CSV">
+          <IconButton onClick={exportCsv}><DownloadIcon /></IconButton>
+        </Tooltip>
         <Tooltip title="Refresh">
           <IconButton onClick={load}><RefreshIcon /></IconButton>
         </Tooltip>
