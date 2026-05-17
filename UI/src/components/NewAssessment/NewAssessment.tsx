@@ -243,12 +243,15 @@ export default function NewAssessment() {
               <Typography variant="h6" gutterBottom>Frameworks</Typography>
               <Autocomplete
                 multiple
-                options={frameworks}
+                options={frameworks ?? []}
                 getOptionLabel={o => o.name}
                 value={selectedFrameworks}
                 onChange={(_, v) => setSelectedFrameworks(v)}
-                renderTags={(val, props) =>
-                  val.map((o, i) => <Chip key={o.id} label={o.name} {...props({ index: i })} />)
+                renderTags={(val, getTagProps) =>
+                  val.map((o, i) => {
+                    const { key, ...tagProps } = getTagProps({ index: i });
+                    return <Chip key={key ?? o.id} label={o.name} {...tagProps} />;
+                  })
                 }
                 renderInput={params => (
                   <TextField {...params} placeholder="Choose compliance frameworks…" />

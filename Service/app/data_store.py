@@ -271,4 +271,118 @@ class DataStore:
         return result
 
 
+    # ── Dashboard ─────────────────────────────────────────────────────────────
+    def get_dashboard_data(self) -> dict:
+        import json as _json
+        with db_session() as db:
+            assessment_rows = db.query(AssessmentRecord).order_by(AssessmentRecord.created_at).all()
+            # Eagerly snapshot data we need before session closes
+            assessments = [
+                {
+                    "id": r.id,
+                    "name": r.name,
+                    "framework_ids": _json.loads(r.framework_ids or "[]"),
+                    "completion_percent": r.completion_percent or 0.0,
+                    "created_at": r.created_at,
+                }
+                for r in assessment_rows
+            ]
+            answer_rows = db.query(AnswerRecord).all()
+            answers = [
+                {"question_id": a.question_id, "yes_no": a.yes_no}
+                for a in answer_rows
+            ]
+
+        total = len(assessments)
+        avg_completion = round(
+            sum(a["completion_percent"] for a in assessments) / total, 1
+        ) if total else 0.0
+
+        # Risk gaps: yes_no == 'No'
+        risk_by_criticality: Dict[str, int] = {"High": 0, "Medium": 0, "Low": 0}
+        top_risks_counter: Dict[str, int] = {}
+
+        for a in answers:
+            if a["yes_no"] and a["yes_no"].strip().lower() == "no":
+                q = self.questions.get(a["question_id"])
+                if q:
+                    crit = q.criticality.value
+                    if crit in risk_by_criticality:
+                        risk_by_criticality[crit] += 1
+                    top_risks_counter[a["question_id"]] = top_risks_counter.get(a["question_id"], 0) + 1
+
+        top_risks = []
+        for qid, count in sorted(top_risks_counter.items(), key=lambda x: -x[1])[:20]:
+            q = self.questions.get(qid)
+            if q:
+                top_risks.append({
+                    "questionId": qid,
+                    "questionText": q.questionText,
+                    "criticality": q.criticality.value,
+                    "familyName": q.familyName,
+                    "functionName": q.functionName,
+                    "frameworkId": q.frameworkId,
+                    "assessmentCount": count,
+                })
+
+        # Sort so High criticality comes first
+        crit_order = {"High": 0, "Medium": 1, "Low": 2}
+        top_risks.sort(key=lambda r: (crit_order.get(r["criticality"], 3), -r["assessmentCount"]))
+
+        # Completion trend (chronological)
+        trend = []
+        for a in assessments:
+            trend.append({
+                "assessmentId": a["id"],
+                "name": a["name"],
+                "createdAt": a["created_at"].isoformat() if a["created_at"] else None,
+                "completionPercent": round(a["completion_percent"], 1),
+                "frameworks": a["framework_ids"],
+            })
+
+        # Framework breakdown
+        fw_map: Dict[str, dict] = {}
+        for a in assessments:
+            for fid in a["framework_ids"]:
+                if fid not in fw_map:
+                    fw = self.frameworks.get(fid)
+                    fw_map[fid] = {
+                        "frameworkId": fid,
+                        "frameworkName": fw.name if fw else fid,
+                        "assessmentCount": 0,
+                        "totalCompletion": 0.0,
+                        "riskGaps": 0,
+                    }
+                fw_map[fid]["assessmentCount"] += 1
+                fw_map[fid]["totalCompletion"] += a["completion_percent"]
+
+        for a in answers:
+            if a["yes_no"] and a["yes_no"].strip().lower() == "no":
+                q = self.questions.get(a["question_id"])
+                if q and q.frameworkId in fw_map:
+                    fw_map[q.frameworkId]["riskGaps"] += 1
+
+        framework_breakdown = []
+        for fid, fd in fw_map.items():
+            cnt = fd["assessmentCount"]
+            framework_breakdown.append({
+                "frameworkId": fid,
+                "frameworkName": fd["frameworkName"],
+                "assessmentCount": cnt,
+                "avgCompletionPercent": round(fd["totalCompletion"] / cnt, 1) if cnt else 0.0,
+                "riskGaps": fd["riskGaps"],
+            })
+
+        return {
+            "totalAssessments": total,
+            "avgCompletionPercent": avg_completion,
+            "totalRiskGaps": sum(risk_by_criticality.values()),
+            "highRiskGaps": risk_by_criticality["High"],
+            "riskGapsByCriticality": risk_by_criticality,
+            "completionTrend": trend,
+            "topRisks": top_risks,
+            "frameworkBreakdown": framework_breakdown,
+        }
+
+
 data_store = DataStore()

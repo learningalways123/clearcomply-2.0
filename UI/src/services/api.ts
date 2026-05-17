@@ -122,6 +122,51 @@ export interface AuditLogEntry {
   detail: Record<string, unknown> | null;
 }
 
+export interface AssessmentSummary {
+  id: string;
+  name: string;
+  totalQuestions: number;
+  answeredQuestions: number;
+  completionPercent: number;
+}
+
+export interface DashboardRisk {
+  questionId: string;
+  questionText: string;
+  criticality: 'High' | 'Medium' | 'Low';
+  familyName: string;
+  functionName: string | null;
+  frameworkId: string;
+  assessmentCount: number;
+}
+
+export interface DashboardTrendPoint {
+  assessmentId: string;
+  name: string;
+  createdAt: string;
+  completionPercent: number;
+  frameworks: string[];
+}
+
+export interface DashboardFramework {
+  frameworkId: string;
+  frameworkName: string;
+  assessmentCount: number;
+  avgCompletionPercent: number;
+  riskGaps: number;
+}
+
+export interface DashboardData {
+  totalAssessments: number;
+  avgCompletionPercent: number;
+  totalRiskGaps: number;
+  highRiskGaps: number;
+  riskGapsByCriticality: { High: number; Medium: number; Low: number };
+  completionTrend: DashboardTrendPoint[];
+  topRisks: DashboardRisk[];
+  frameworkBreakdown: DashboardFramework[];
+}
+
 export interface CreateAssessmentRequest {
   name: string;
   frameworkIds: string[];
@@ -186,7 +231,7 @@ export const api = {
     apiClient.post<Assessment>('/assessments', data).then(r => r.data),
 
   submitAnswers: (id: string, answers: AnswerSubmission[]) =>
-    apiClient.post<Assessment>(`/assessments/${id}/answers`, { answers }).then(r => r.data),
+    apiClient.post<AssessmentSummary>(`/assessments/${id}/answers`, { answers }).then(r => r.data),
 
   // Health
   checkHealth: () =>
@@ -195,4 +240,8 @@ export const api = {
   // Audit Log
   getAuditLog: (params?: { limit?: number; offset?: number; user_email?: string; entity_id?: string; action?: string }) =>
     apiClient.get<{ entries: AuditLogEntry[]; count: number }>('/audit-log', { params }).then(r => r.data),
+
+  // Dashboard
+  getDashboard: () =>
+    apiClient.get<DashboardData>('/dashboard').then(r => r.data),
 };

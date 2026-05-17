@@ -108,8 +108,16 @@ export default function AssessmentDetail() {
     setSaveError(null);
     try {
       const submissions = Object.entries(answers).map(([qId, val]) => toSubmission(qId, val));
-      const updated = await api.submitAnswers(assessment.id, submissions);
-      setLatestAssessment(updated);
+      const summary = await api.submitAnswers(assessment.id, submissions);
+      // Merge the updated stats into the full assessment object so frameworkIds etc. are preserved
+      setLatestAssessment(prev => ({
+        ...(prev ?? assessment),
+        questionStats: {
+          totalQuestions: summary.totalQuestions,
+          answeredQuestions: summary.answeredQuestions,
+          completionPercent: summary.completionPercent,
+        },
+      }));
       if (!auto) setToast('Progress saved!');
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Failed to save');

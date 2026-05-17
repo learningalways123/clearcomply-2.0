@@ -10,6 +10,7 @@ import AssessmentsOverview from './components/AssessmentsOverview/AssessmentsOve
 import AssessmentDetail from './components/AssessmentDetail/AssessmentDetail';
 import NewAssessment from './components/NewAssessment/NewAssessment';
 import AuditLog from './components/AuditLog/AuditLog';
+import Dashboard from './components/Dashboard/Dashboard';
 
 const theme = createTheme({
   palette: {
@@ -63,6 +64,7 @@ export default function App() {
                       <Route path="/assessments/:id" element={<AssessmentDetail />} />
                       <Route path="/new-assessment" element={<NewAssessment />} />
                       <Route path="/audit-log" element={<AuditLog />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
                     </Routes>
                   </AppLayout>
                 </ProtectedRoute>

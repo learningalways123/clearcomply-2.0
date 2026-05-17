@@ -518,3 +518,18 @@ async def get_audit_log(
         user_email=user_email, entity_id=entity_id, action=action,
     )
     return {"entries": entries, "count": len(entries)}
+
+
+# ===== DASHBOARD ENDPOINT =====
+
+@router.get("/dashboard", summary="CISO Dashboard — risk gaps & completion trends")
+async def get_dashboard():
+    """
+    Aggregated dashboard data for CISO view:
+    - Overall stats (total assessments, avg completion, risk gap counts)
+    - Risk gaps broken down by criticality (High / Medium / Low)
+    - Completion trend across assessments (chronological)
+    - Per-framework breakdown (avg completion, risk gap count)
+    - Top outstanding risks (High-crit questions answered 'No')
+    """
+    return data_store.get_dashboard_data()
