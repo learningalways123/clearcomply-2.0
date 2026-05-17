@@ -1,7 +1,28 @@
 version: '3.8'
 
 services:
-  # Backend service (FastAPI) - Development mode
+  # ── PostgreSQL database ─────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: clearcomply-db
+    environment:
+      POSTGRES_USER: clearcomply
+      POSTGRES_PASSWORD: clearcomply_dev
+      POSTGRES_DB: clearcomply
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - clearcomply-dev-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clearcomply -d clearcomply"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Backend service (FastAPI) ─────────────────────────────────────────────
   backend-dev:
     build:
       context: ./Service
@@ -12,6 +33,7 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - RELOAD=True
+      - DATABASE_URL=postgresql://clearcomply:clearcomply_dev@db:5432/clearcomply
     ports:
       - "8000:8000"
     volumes:
@@ -21,9 +43,12 @@ services:
     networks:
       - clearcomply-dev-network
     restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
     command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
-  # Frontend service (React) - Development mode
+  # ── Frontend service (React) ──────────────────────────────────────────────
   frontend-dev:
     image: node:18-alpine
     container_name: clearcomply-frontend-dev
@@ -41,6 +66,9 @@ services:
     command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
     depends_on:
       - backend-dev
+
+volumes:
+  postgres_data:
 
 networks:
   clearcomply-dev-network:

@@ -1,32 +1,43 @@
 """
-SQLite database engine, session factory, and initialisation helpers.
-SQLite is stored at Service/clearcomply.db (path configurable via DATABASE_URL env var).
+Database engine, session factory, and initialisation helpers.
+
+Default (local dev): SQLite at Service/clearcomply.db
+With Docker Postgres : set DATABASE_URL=postgresql://clearcomply:clearcomply_dev@localhost:5432/clearcomply
+                       (the docker-compose.dev.yml sets this automatically for the backend-dev container)
 """
 
 import os
 from contextlib import contextmanager
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-# Default: SQLite file next to the service root.  Override with DATABASE_URL=sqlite:///path
+# Resolve DATABASE_URL — prefer env var, fall back to local SQLite
 _raw = os.getenv("DATABASE_URL", "")
 if not _raw:
     _service_dir = os.path.dirname(os.path.dirname(__file__))
     _raw = f"sqlite:///{os.path.join(_service_dir, 'clearcomply.db')}"
 
 DATABASE_URL = _raw
+_is_sqlite = DATABASE_URL.startswith("sqlite")
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False},  # required for SQLite
-    echo=False,
-)
+# Build engine — SQLite needs check_same_thread; Postgres does not
+_engine_kwargs: dict = {}
+if _is_sqlite:
+    _engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    # Sensible pool defaults for Postgres in a single-process dev setup
+    _engine_kwargs["pool_pre_ping"] = True
+    _engine_kwargs["pool_size"] = 5
+    _engine_kwargs["max_overflow"] = 10
 
-# Enable WAL mode and foreign keys on every new connection
-@event.listens_for(engine, "connect")
-def _set_sqlite_pragma(conn, _record):
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA foreign_keys=ON")
+engine = create_engine(DATABASE_URL, echo=False, **_engine_kwargs)
+
+# SQLite-only pragmas (WAL mode + foreign key enforcement)
+if _is_sqlite:
+    @event.listens_for(engine, "connect")
+    def _set_sqlite_pragma(conn, _record):
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA foreign_keys=ON")
 
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -60,8 +71,15 @@ def db_session():
 
 
 def init_db():
-    """Create all tables if they don't exist yet.  Called once on app startup."""
-    # Import here to ensure models are registered on Base before create_all
-    import app.db_models  # noqa: F401
+    """
+    Create all tables that don't exist yet.
+
+    For SQLite (local dev without Docker) this is still the quick path.
+    For PostgreSQL the preferred workflow is `alembic upgrade head`, but
+    create_all() is kept as a safe fallback so the app starts cleanly even
+    if migrations haven't been run yet.
+    """
+    import app.db_models  # noqa: F401 — registers models on Base
     Base.metadata.create_all(bind=engine)
-    print(f"[DB] SQLite initialised at: {DATABASE_URL}")
+    db_type = "PostgreSQL" if not _is_sqlite else "SQLite"
+    print(f"[DB] {db_type} initialised at: {DATABASE_URL}")

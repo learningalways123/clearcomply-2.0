@@ -1,6 +1,6 @@
 # Clear Comply — Development Roadmap
 
-**Last Updated**: May 16, 2026  
+**Last Updated**: May 17, 2026  
 **Current Version**: v2.0 (Prototype)  
 **Target Version**: v1.0 (Production-Ready)  
 **Estimated Timeline**: 40-50 weeks with 4-person team
@@ -27,16 +27,16 @@ This roadmap transforms Clear Comply from a functional prototype (30-40% complet
 - Enable multi-user data isolation
 
 **Tasks:**
-- [ ] Select and configure PostgreSQL 15+
-- [ ] Design database schema:
+- [x] Select and configure PostgreSQL 15+ *(PostgreSQL 16 Alpine via Docker, port 5433)*
+- [x] Design database schema:
   - Users, Organizations, Assessments, Questions, Answers, Evidence, AuditLog tables
-  - Foreign key relationships, indexes, constraints
-- [ ] Integrate SQLAlchemy ORM
-- [ ] Set up Alembic for database migrations
+  - Foreign key relationships, indexes, constraints *(users, assessments, answers, audit_log, poam_items tables + all indexes)*
+- [x] Integrate SQLAlchemy ORM *(SQLAlchemy 2.0, db_models.py)*
+- [x] Set up Alembic for database migrations *(Service/migrations/, initial migration 86af2fb802af applied)*
 - [ ] Refactor `DataStore` class to use database queries
-- [ ] Configure connection pooling for 50+ concurrent users
+- [x] Configure connection pooling for 50+ concurrent users *(pool_size=5, max_overflow=10, pool_pre_ping=True)*
 - [ ] Implement automated daily backups with 30-day retention
-- [ ] Test: Create assessment, answer questions, restart server, verify data persists
+- [x] Test: Create assessment, answer questions, restart server, verify data persists *(health OK, 6 tables confirmed in Postgres after restart)*
 
 **Success Criteria:**
 - ✅ All data persists across server restarts
