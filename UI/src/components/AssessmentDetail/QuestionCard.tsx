@@ -19,6 +19,7 @@ interface QuestionCardProps {
   question: Question;
   answer: AnswerValue;
   onChange: (questionId: string, value: AnswerValue) => void;
+  readonly?: boolean;
 }
 
 const YES_NO_OPTIONS = [
@@ -32,11 +33,13 @@ function YesNoButtons({
   narrative,
   onSelect,
   onNarrativeChange,
+  readonly = false,
 }: {
   value: string;
   narrative: string;
   onSelect: (v: string) => void;
   onNarrativeChange: (v: string) => void;
+  readonly?: boolean;
 }) {
   const [showNarrative, setShowNarrative] = useState(!!narrative);
 
@@ -50,7 +53,8 @@ function YesNoButtons({
           return (
             <Button
               key={optVal}
-              onClick={() => onSelect(optVal)}
+              onClick={() => !readonly && onSelect(optVal)}
+              disabled={readonly}
               variant={selected ? 'contained' : 'outlined'}
               color={selected ? (color as 'success' | 'error' | 'inherit') : 'inherit'}
               sx={{
@@ -110,7 +114,7 @@ function YesNoButtons({
   );
 }
 
-export default function QuestionCard({ question, answer, onChange }: QuestionCardProps) {
+export default function QuestionCard({ question, answer, onChange, readonly = false }: QuestionCardProps) {
   const { id, questionText } = question;
 
   // Always use object format — every question gets Yes/No buttons + optional narrative
@@ -118,15 +122,16 @@ export default function QuestionCard({ question, answer, onChange }: QuestionCar
   const narrative = typeof answer === 'object' ? answer.justification : '';
 
   return (
-    <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 2 }}>
+    <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 2, opacity: readonly ? 0.85 : 1 }}>
       <Typography variant="body1" fontWeight={500} gutterBottom>
         {questionText}
       </Typography>
       <YesNoButtons
         value={yesNo}
         narrative={narrative}
-        onSelect={(v) => onChange(id, { yesNo: v, justification: narrative })}
-        onNarrativeChange={(v) => onChange(id, { yesNo, justification: v })}
+        onSelect={(v) => !readonly && onChange(id, { yesNo: v, justification: narrative })}
+        onNarrativeChange={(v) => !readonly && onChange(id, { yesNo, justification: v })}
+        readonly={readonly}
       />
     </Paper>
   );

@@ -97,16 +97,70 @@ class AnswerRecord(Base):
     assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
     question_id = Column(String, nullable=False, index=True)
 
-    # Yes/No questions
+    # Basic answer fields
     yes_no = Column(String, nullable=True)
     justification = Column(Text, nullable=True)
-    # Plain text questions
     value = Column(Text, nullable=True)
+
+    # Extended answer fields (Phase 2 — Answer Type Expansion)
+    # NIST 800-53: Implemented | Partially Implemented | Planned | Alternative
+    # Implementation | Not Implemented | Not Applicable | Inherited | N/A
+    implementation_status = Column(String, nullable=True)
+    # Free-form implementation description
+    implementation_description = Column(Text, nullable=True)
+    # Responsible role (e.g. "Security Operations")
+    responsible_role = Column(String, nullable=True)
+    # Assessment methods: JSON list e.g. ["examine", "interview", "test"]
+    assessment_methods = Column(Text, nullable=True)
+    # Inherited control toggle + provider
+    inherited = Column(Boolean, nullable=False, default=False)
+    inherited_from = Column(String, nullable=True)
+    # SOC 2: design / operating effectiveness
+    design_effectiveness = Column(String, nullable=True)   # Effective | Partially | Not Effective | N/A
+    operating_effectiveness = Column(String, nullable=True) # Effective | Partially | Not Effective | N/A
+    # CSF: current / target tier (1-4)
+    current_tier = Column(Integer, nullable=True)
+    target_tier = Column(Integer, nullable=True)
+    # Gap notes (CSF) / testing notes (SOC 2)
+    internal_notes = Column(Text, nullable=True)
 
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     updated_by_email = Column(String, nullable=True)
 
     assessment = relationship("AssessmentRecord", back_populates="answers")
+
+
+class AssessmentStateHistory(Base):
+    """Immutable log of every status transition for an assessment."""
+    __tablename__ = "assessment_state_history"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    from_status = Column(String, nullable=True)   # null on first transition
+    to_status = Column(String, nullable=False)
+    changed_by_email = Column(String, nullable=True)
+    changed_by_name = Column(String, nullable=True)
+    note = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    assessment = relationship("AssessmentRecord", backref="state_history")
+
+
+class CsfProfileRecord(Base):
+    """CSF 2.0 Profile: current / target tier per function per assessment."""
+    __tablename__ = "csf_profiles"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    function_id = Column(String, nullable=False)      # GV | ID | PR | DE | RS | RC
+    function_name = Column(String, nullable=True)
+    current_tier = Column(Integer, nullable=False, default=1)
+    target_tier = Column(Integer, nullable=False, default=1)
+    gap_description = Column(Text, nullable=True)
+    priority = Column(String, nullable=True)   # P1 | P2 | P3
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    assessment = relationship("AssessmentRecord", backref="csf_profiles")
 
 
 class AuditLogRecord(Base):

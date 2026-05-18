@@ -90,13 +90,18 @@ class AssessmentQuestionStats(BaseModel):
 
 
 # Valid assessment status values and their allowed forward transitions
-ASSESSMENT_STATUSES = ["draft", "in_progress", "submitted", "reviewed"]
+ASSESSMENT_STATUSES = ["draft", "in_progress", "submitted", "reviewed", "remediation", "completed", "archived"]
 STATUS_TRANSITIONS: Dict[str, List[str]] = {
-    "draft": ["in_progress"],
-    "in_progress": ["submitted"],
-    "submitted": ["reviewed", "in_progress"],
-    "reviewed": [],
+    "draft":        ["in_progress"],
+    "in_progress":  ["submitted"],
+    "submitted":    ["reviewed", "in_progress"],     # reviewer can send back
+    "reviewed":     ["completed", "remediation"],   # approve or send to remediation
+    "remediation":  ["submitted"],                   # re-submit after fixes
+    "completed":    ["archived"],
+    "archived":     [],
 }
+# Statuses where answers are locked (read-only)
+LOCKED_STATUSES = {"submitted", "reviewed", "completed", "archived"}
 
 
 class Assessment(BaseModel):
@@ -145,6 +150,18 @@ class AnswerSubmission(BaseModel):
     value: Optional[str] = Field(default=None, max_length=10000)
     yesNo: Optional[str] = Field(default=None, pattern=r'^(yes|no|Yes|No|YES|NO)$')
     justification: Optional[str] = Field(default=None, max_length=5000)
+    # Extended fields (Phase 2)
+    implementationStatus: Optional[str] = Field(default=None, max_length=100)
+    implementationDescription: Optional[str] = Field(default=None, max_length=10000)
+    responsibleRole: Optional[str] = Field(default=None, max_length=200)
+    assessmentMethods: Optional[List[str]] = Field(default=None)
+    inherited: Optional[bool] = Field(default=None)
+    inheritedFrom: Optional[str] = Field(default=None, max_length=200)
+    designEffectiveness: Optional[str] = Field(default=None, max_length=100)
+    operatingEffectiveness: Optional[str] = Field(default=None, max_length=100)
+    currentTier: Optional[int] = Field(default=None, ge=1, le=4)
+    targetTier: Optional[int] = Field(default=None, ge=1, le=4)
+    internalNotes: Optional[str] = Field(default=None, max_length=5000)
 
 
 class SubmitAnswersRequest(BaseModel):
@@ -175,12 +192,24 @@ class QuestionWithAnswer(BaseModel):
     stakeholderRoleId: str
     answerType: AnswerType
     criticality: CriticalityLevel
-    functionId: Optional[str] = None  # For CSF questions
-    functionName: Optional[str] = None  # For CSF questions
-    subcategoryText: Optional[str] = None  # For CSF questions
+    functionId: Optional[str] = None
+    functionName: Optional[str] = None
+    subcategoryText: Optional[str] = None
     answerValue: Optional[str] = None
     answerYesNo: Optional[str] = None
     answerJustification: Optional[str] = None
+    # Extended answer fields (Phase 2)
+    implementationStatus: Optional[str] = None
+    implementationDescription: Optional[str] = None
+    responsibleRole: Optional[str] = None
+    assessmentMethods: Optional[List[str]] = None
+    inherited: Optional[bool] = None
+    inheritedFrom: Optional[str] = None
+    designEffectiveness: Optional[str] = None
+    operatingEffectiveness: Optional[str] = None
+    currentTier: Optional[int] = None
+    targetTier: Optional[int] = None
+    internalNotes: Optional[str] = None
 
 
 # Error Response Models
@@ -234,3 +263,52 @@ class Module(BaseModel):
     moduleId: str
     moduleName: str
     questionCount: int
+
+
+# ─── State History ───────────────────────────────────────────────────────────
+class StateHistoryEntry(BaseModel):
+    id: str
+    assessmentId: str
+    fromStatus: Optional[str]
+    toStatus: str
+    changedByEmail: Optional[str]
+    changedByName: Optional[str]
+    note: Optional[str]
+    createdAt: str
+
+
+# ─── Risk Scoring ────────────────────────────────────────────────────────────
+class DomainRiskScore(BaseModel):
+    domainId: str
+    domainName: str
+    score: float          # 0-100
+    totalControls: int
+    implementedControls: int
+    gapCount: int
+    criticality: str      # dominant criticality level
+
+class RiskScoreResponse(BaseModel):
+    assessmentId: str
+    overallScore: float
+    riskBand: str         # Critical | High | Medium | Low | Compliant
+    domainScores: List[DomainRiskScore]
+    highGaps: int
+    mediumGaps: int
+    lowGaps: int
+
+
+# ─── CSF Profile ─────────────────────────────────────────────────────────────
+class CsfFunctionProfile(BaseModel):
+    functionId: str
+    functionName: str
+    currentTier: int
+    targetTier: int
+    gapDescription: Optional[str] = None
+    priority: Optional[str] = None   # P1 | P2 | P3
+
+class UpsertCsfProfileRequest(BaseModel):
+    profiles: List[CsfFunctionProfile]
+
+class CsfProfileResponse(BaseModel):
+    assessmentId: str
+    profiles: List[CsfFunctionProfile]

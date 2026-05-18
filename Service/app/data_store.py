@@ -248,9 +248,34 @@ class DataStore:
                     existing.yes_no = sub.yesNo
                     existing.justification = sub.justification
                     existing.value = sub.value
+                    # Extended fields (Phase 2)
+                    if hasattr(sub, 'implementationStatus') and sub.implementationStatus is not None:
+                        existing.implementation_status = sub.implementationStatus
+                    if hasattr(sub, 'implementationDescription') and sub.implementationDescription is not None:
+                        existing.implementation_description = sub.implementationDescription
+                    if hasattr(sub, 'responsibleRole') and sub.responsibleRole is not None:
+                        existing.responsible_role = sub.responsibleRole
+                    if hasattr(sub, 'assessmentMethods') and sub.assessmentMethods is not None:
+                        import json as _j
+                        existing.assessment_methods = _j.dumps(sub.assessmentMethods)
+                    if hasattr(sub, 'inherited') and sub.inherited is not None:
+                        existing.inherited = sub.inherited
+                    if hasattr(sub, 'inheritedFrom') and sub.inheritedFrom is not None:
+                        existing.inherited_from = sub.inheritedFrom
+                    if hasattr(sub, 'designEffectiveness') and sub.designEffectiveness is not None:
+                        existing.design_effectiveness = sub.designEffectiveness
+                    if hasattr(sub, 'operatingEffectiveness') and sub.operatingEffectiveness is not None:
+                        existing.operating_effectiveness = sub.operatingEffectiveness
+                    if hasattr(sub, 'currentTier') and sub.currentTier is not None:
+                        existing.current_tier = sub.currentTier
+                    if hasattr(sub, 'targetTier') and sub.targetTier is not None:
+                        existing.target_tier = sub.targetTier
+                    if hasattr(sub, 'internalNotes') and sub.internalNotes is not None:
+                        existing.internal_notes = sub.internalNotes
                     existing.updated_at = now
                     existing.updated_by_email = updated_by_email
                 else:
+                    import json as _j
                     db.add(AnswerRecord(
                         id=str(uuid.uuid4()),
                         assessment_id=assessment_id,
@@ -258,6 +283,17 @@ class DataStore:
                         yes_no=sub.yesNo,
                         justification=sub.justification,
                         value=sub.value,
+                        implementation_status=getattr(sub, 'implementationStatus', None),
+                        implementation_description=getattr(sub, 'implementationDescription', None),
+                        responsible_role=getattr(sub, 'responsibleRole', None),
+                        assessment_methods=_j.dumps(sub.assessmentMethods) if getattr(sub, 'assessmentMethods', None) else None,
+                        inherited=getattr(sub, 'inherited', False) or False,
+                        inherited_from=getattr(sub, 'inheritedFrom', None),
+                        design_effectiveness=getattr(sub, 'designEffectiveness', None),
+                        operating_effectiveness=getattr(sub, 'operatingEffectiveness', None),
+                        current_tier=getattr(sub, 'currentTier', None),
+                        target_tier=getattr(sub, 'targetTier', None),
+                        internal_notes=getattr(sub, 'internalNotes', None),
                         updated_at=now,
                         updated_by_email=updated_by_email,
                     ))
@@ -275,13 +311,148 @@ class DataStore:
         subs = [AnswerSubmission(questionId=qid, value=val) for qid, val in answers.items()]
         return self.update_assessment_answers_v2(assessment_id, subs)
 
-    def update_assessment_status(self, assessment_id: str, new_status: str) -> Assessment:
+    def update_assessment_status(
+        self,
+        assessment_id: str,
+        new_status: str,
+        changed_by_email: Optional[str] = None,
+        changed_by_name: Optional[str] = None,
+        note: Optional[str] = None,
+    ) -> Assessment:
+        from app.db_models import AssessmentStateHistory
         with db_session() as db:
             rec = db.query(AssessmentRecord).filter_by(id=assessment_id).first()
             if not rec:
                 raise ValueError(f"Assessment '{assessment_id}' not found")
+            old_status = rec.status
             rec.status = new_status
+            # Append immutable state history entry
+            db.add(AssessmentStateHistory(
+                assessment_id=assessment_id,
+                from_status=old_status,
+                to_status=new_status,
+                changed_by_email=changed_by_email,
+                changed_by_name=changed_by_name,
+                note=note,
+            ))
         return self.get_assessment_by_id(assessment_id)
+
+    def get_state_history(self, assessment_id: str) -> list:
+        from app.db_models import AssessmentStateHistory
+        with db_session() as db:
+            rows = (
+                db.query(AssessmentStateHistory)
+                .filter_by(assessment_id=assessment_id)
+                .order_by(AssessmentStateHistory.created_at.asc())
+                .all()
+            )
+            return [
+                {
+                    "id": r.id,
+                    "assessmentId": r.assessment_id,
+                    "fromStatus": r.from_status,
+                    "toStatus": r.to_status,
+                    "changedByEmail": r.changed_by_email,
+                    "changedByName": r.changed_by_name,
+                    "note": r.note,
+                    "createdAt": r.created_at.isoformat() if r.created_at else None,
+                }
+                for r in rows
+            ]
+
+    def auto_create_poam_from_answers(
+        self,
+        assessment_id: str,
+        assessment_name: str,
+    ) -> int:
+        """Create POA&M items for High/Medium answers with yes_no='no' or not_implemented.
+        Returns count of newly created items."""
+        created = 0
+        with db_session() as db:
+            existing_qids = {
+                r.question_id for r in
+                db.query(PoamRecord.question_id)
+                .filter_by(assessment_id=assessment_id)
+                .filter(PoamRecord.question_id.isnot(None))
+                .all()
+            }
+            answers = db.query(AnswerRecord).filter_by(assessment_id=assessment_id).all()
+            for ans in answers:
+                if ans.question_id in existing_qids:
+                    continue
+                is_gap = (
+                    (ans.yes_no or "").strip().lower() == "no" or
+                    (ans.implementation_status or "").strip().lower() in
+                    ("not implemented", "partially implemented", "planned")
+                )
+                if not is_gap:
+                    continue
+                q = self.questions.get(ans.question_id)
+                if not q:
+                    continue
+                crit = str(q.criticality.value if hasattr(q.criticality, 'value') else q.criticality)
+                priority = "high" if crit == "High" else ("medium" if crit == "Medium" else "low")
+                title = f"Gap: {q.questionText[:120]}"
+                desc = f"Control: {', '.join(q.controlRefs)}\nFamily: {q.familyName}\nCriticality: {crit}"
+                if ans.implementation_status:
+                    desc += f"\nImplementation Status: {ans.implementation_status}"
+                db.add(PoamRecord(
+                    id=str(uuid.uuid4()),
+                    assessment_id=assessment_id,
+                    question_id=ans.question_id,
+                    title=title,
+                    description=desc,
+                    priority=priority,
+                    status="open",
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow(),
+                ))
+                created += 1
+        return created
+
+    # ── CSF Profile ──────────────────────────────────────────────────────────
+    def upsert_csf_profile(self, assessment_id: str, profiles: list) -> list:
+        from app.db_models import CsfProfileRecord
+        with db_session() as db:
+            for p in profiles:
+                existing = (
+                    db.query(CsfProfileRecord)
+                    .filter_by(assessment_id=assessment_id, function_id=p.functionId)
+                    .first()
+                )
+                if existing:
+                    existing.function_name = p.functionName
+                    existing.current_tier = p.currentTier
+                    existing.target_tier = p.targetTier
+                    existing.gap_description = p.gapDescription
+                    existing.priority = p.priority
+                else:
+                    db.add(CsfProfileRecord(
+                        assessment_id=assessment_id,
+                        function_id=p.functionId,
+                        function_name=p.functionName,
+                        current_tier=p.currentTier,
+                        target_tier=p.targetTier,
+                        gap_description=p.gapDescription,
+                        priority=p.priority,
+                    ))
+        return self.get_csf_profile(assessment_id)
+
+    def get_csf_profile(self, assessment_id: str) -> list:
+        from app.db_models import CsfProfileRecord
+        with db_session() as db:
+            rows = db.query(CsfProfileRecord).filter_by(assessment_id=assessment_id).all()
+            return [
+                {
+                    "functionId": r.function_id,
+                    "functionName": r.function_name,
+                    "currentTier": r.current_tier,
+                    "targetTier": r.target_tier,
+                    "gapDescription": r.gap_description,
+                    "priority": r.priority,
+                }
+                for r in rows
+            ]
 
     # ── POA&M (SQLite) ───────────────────────────────────────────────────────
     def _poam_record_to_item(self, r: PoamRecord) -> PoamItem:
@@ -361,25 +532,56 @@ class DataStore:
                 raise ValueError(f"POAM item '{item_id}' not found")
             db.delete(rec)
 
-    def get_assessment_questions_with_answers(self, assessment_id: str) -> List[QuestionWithAnswer]:
+    def get_assessment_questions_with_answers_db(self, assessment_id: str) -> list:
+        """Return questions with full answer data including Phase 2 extended fields."""
+        import json as _j
         assessment = self.get_assessment_by_id(assessment_id)
         if not assessment:
             raise ValueError(f"Assessment '{assessment_id}' not found")
+        with db_session() as db:
+            answer_map = {
+                a.question_id: a
+                for a in db.query(AnswerRecord).filter_by(assessment_id=assessment_id).all()
+            }
         result = []
         for qid in assessment.selectedQuestionIds:
             q = self.questions.get(qid)
-            if q:
-                ans = assessment.answers.get(qid)
-                result.append(QuestionWithAnswer(
-                    id=q.id, familyId=q.familyId, familyName=q.familyName,
-                    controlRefs=q.controlRefs, questionText=q.questionText,
-                    stakeholderRoleId=q.stakeholderRoleId, answerType=q.answerType,
-                    criticality=q.criticality, functionId=q.functionId,
-                    functionName=q.functionName, subcategoryText=q.subcategoryText,
-                    answerValue=ans.value if ans else None,
-                    answerYesNo=ans.yesNo if ans else None,
-                    answerJustification=ans.justification if ans else None,
-                ))
+            if not q:
+                continue
+            ans = answer_map.get(qid)
+            methods = None
+            if ans and ans.assessment_methods:
+                try:
+                    methods = _j.loads(ans.assessment_methods)
+                except Exception:
+                    methods = [ans.assessment_methods]
+            result.append({
+                "id": q.id,
+                "familyId": q.familyId,
+                "familyName": q.familyName,
+                "controlRefs": q.controlRefs,
+                "questionText": q.questionText,
+                "stakeholderRoleId": q.stakeholderRoleId,
+                "answerType": q.answerType.value if hasattr(q.answerType, 'value') else q.answerType,
+                "criticality": q.criticality.value if hasattr(q.criticality, 'value') else q.criticality,
+                "functionId": q.functionId,
+                "functionName": q.functionName,
+                "subcategoryText": q.subcategoryText,
+                "answerValue": ans.value if ans else None,
+                "answerYesNo": ans.yes_no if ans else None,
+                "answerJustification": ans.justification if ans else None,
+                "implementationStatus": ans.implementation_status if ans else None,
+                "implementationDescription": ans.implementation_description if ans else None,
+                "responsibleRole": ans.responsible_role if ans else None,
+                "assessmentMethods": methods,
+                "inherited": ans.inherited if ans else False,
+                "inheritedFrom": ans.inherited_from if ans else None,
+                "designEffectiveness": ans.design_effectiveness if ans else None,
+                "operatingEffectiveness": ans.operating_effectiveness if ans else None,
+                "currentTier": ans.current_tier if ans else None,
+                "targetTier": ans.target_tier if ans else None,
+                "internalNotes": ans.internal_notes if ans else None,
+            })
         return result
 
 

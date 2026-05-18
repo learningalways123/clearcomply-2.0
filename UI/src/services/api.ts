@@ -111,7 +111,60 @@ export interface AnswerSubmission {
   value?: string;
   yesNo?: string;
   justification?: string;
+  implementationStatus?: string;
+  controlId?: string;
+  controlTitle?: string;
+  answerNarrative?: string;
 }
+
+// ─── Phase 2 Types ──────────────────────────────────────────────────────────
+
+export interface DomainRiskScore {
+  domain: string;
+  score: number;
+  totalControls: number;
+  answeredControls: number;
+  highGaps: number;
+  mediumGaps: number;
+  lowGaps: number;
+}
+
+export interface RiskScoreResponse {
+  assessmentId: string;
+  overallScore: number;
+  riskBand: 'Critical' | 'High' | 'Medium' | 'Low' | 'Minimal';
+  domainScores: DomainRiskScore[];
+  highGaps: number;
+  mediumGaps: number;
+  lowGaps: number;
+  totalControls: number;
+  answeredControls: number;
+}
+
+export interface StateHistoryEntry {
+  id: number;
+  assessmentId: string;
+  fromStatus: string;
+  toStatus: string;
+  changedByEmail?: string | null;
+  changedByName?: string | null;
+  changedAt: string;
+  note?: string | null;
+}
+
+export interface CsfFunctionProfile {
+  functionId: string;
+  functionName: string;
+  currentTier: number;
+  targetTier: number;
+  notes?: string;
+}
+
+export interface CsfProfileResponse {
+  assessmentId: string;
+  profiles: CsfFunctionProfile[];
+}
+
 
 export interface AuditLogEntry {
   id: number;
@@ -330,4 +383,39 @@ export const api = {
     apiClient.patch<PoamItem>(`/poam/${id}`, req).then(r => r.data),
   deletePoamItem: (id: string) =>
     apiClient.delete(`/poam/${id}`),
+
+  // ─── Phase 2 ──────────────────────────────────────────────────────────────
+
+  // Risk Scoring
+  getRiskScore: (id: string) =>
+    apiClient.get<RiskScoreResponse>(`/assessments/${id}/risk-score`).then(r => r.data),
+
+  // State History
+  getStateHistory: (id: string) =>
+    apiClient.get<StateHistoryEntry[]>(`/assessments/${id}/history`).then(r => r.data),
+
+  // Reports
+  downloadReport: (id: string, type: 'executive-summary' | 'technical' | 'gap-analysis', params?: { engagement_name?: string; org_name?: string }) => {
+    const mimeType = type === 'gap-analysis'
+      ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      : 'application/pdf';
+    return apiClient.get(`/assessments/${id}/reports/${type}`, {
+      params,
+      responseType: 'blob',
+    }).then(r => ({ blob: r.data as Blob, mimeType }));
+  },
+
+  // Auto-generate POA&M
+  autoGeneratePoam: (id: string) =>
+    apiClient.post<{ created: number; message: string }>(`/assessments/${id}/poam/auto-generate`).then(r => r.data),
+
+  // Export POA&M as XLSX
+  exportPoamXlsx: (id: string) =>
+    apiClient.get(`/assessments/${id}/poam/export`, { responseType: 'blob' }).then(r => r.data as Blob),
+
+  // CSF Profile
+  getCsfProfile: (id: string) =>
+    apiClient.get<CsfProfileResponse>(`/assessments/${id}/csf-profile`).then(r => r.data),
+  upsertCsfProfile: (id: string, profiles: CsfFunctionProfile[]) =>
+    apiClient.put<CsfProfileResponse>(`/assessments/${id}/csf-profile`, { profiles }).then(r => r.data),
 };

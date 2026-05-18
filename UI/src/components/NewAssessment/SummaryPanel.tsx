@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-import type { Framework, Module, Family } from '../../../services/api';
+import type { Framework, Module, Family } from '../../services/api';
 
 interface Props {
   name: string;

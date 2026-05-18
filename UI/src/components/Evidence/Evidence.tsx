@@ -231,7 +231,7 @@ export default function Evidence() {
         api.listEvidence(filterAssessmentId || undefined),
         api.getAssessments(),
       ]);
-      setFiles(evidenceList);
+      setFiles(evidenceList.map(r => ({ ...r, questionId: r.questionId ?? undefined, controlRef: r.controlRef ?? undefined, asOfDate: r.asOfDate ?? undefined, expiryDate: r.expiryDate ?? undefined, description: r.description ?? undefined })));
       setAssessments(assessmentList.map((a: any) => ({ id: a.id, name: a.name })));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load evidence');

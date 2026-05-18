@@ -6,6 +6,8 @@ from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File, 
 from typing import List, Optional
 from datetime import datetime
 import uuid
+import json
+from app.database import db_session
 
 from app.models import (
     Framework, Control, Assessment, AssessmentStats,
@@ -13,13 +15,13 @@ from app.models import (
     NotFoundResponse, ErrorResponse, Family, Question,
     SubmitAnswersRequest, AssessmentSummaryResponse, QuestionWithAnswer,
     AssessmentQuestionStats, UpdateStatusRequest,
-    PoamItem, CreatePoamRequest, UpdatePoamRequest, STATUS_TRANSITIONS,
+    PoamItem, CreatePoamRequest, UpdatePoamRequest, STATUS_TRANSITIONS, LOCKED_STATUSES,
+    RiskScoreResponse, UpsertCsfProfileRequest, CsfProfileResponse, CsfFunctionProfile,
 )
 from app.data_store import data_store
 from app.auth import get_current_user, require_role, User
-from app import audit_service
-from app import evidence_service
-from fastapi.responses import FileResponse
+from app import audit_service, evidence_service, scoring_service, report_service
+from fastapi.responses import FileResponse, Response
 
 # Create router instance
 router = APIRouter(prefix="/api", tags=["Clear Comply API"])
@@ -557,20 +559,27 @@ async def update_assessment_status(assessment_id: str, request: UpdateStatusRequ
     assessment = data_store.get_assessment_by_id(assessment_id)
     if not assessment:
         raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+    if assessment.status in LOCKED_STATUSES and request.status not in STATUS_TRANSITIONS.get(assessment.status, []):
+        raise HTTPException(status_code=403, detail=f"Assessment is locked in status '{assessment.status}'")
     allowed = STATUS_TRANSITIONS.get(assessment.status, [])
     if request.status not in allowed:
         raise HTTPException(
             status_code=400,
             detail=f"Cannot transition from '{assessment.status}' to '{request.status}'. Allowed: {allowed}"
         )
-    updated = data_store.update_assessment_status(assessment_id, request.status)
+    updated = data_store.update_assessment_status(
+        assessment_id, request.status,
+        changed_by_email=current_user.email,
+        changed_by_name=current_user.name,
+        note=request.note,
+    )
     audit_service.log_action(
         action="UPDATE_STATUS",
         user_email=current_user.email,
         user_name=current_user.name,
         entity_type="assessment",
         entity_id=assessment_id,
-        detail={"from": assessment.status, "to": request.status},
+        detail={"from": assessment.status, "to": request.status, "note": request.note},
     )
     return AssessmentSummaryResponse(
         id=updated.id, name=updated.name, status=updated.status,
@@ -635,6 +644,222 @@ async def delete_poam_item(item_id: str, current_user: User = Depends(get_curren
         data_store.delete_poam_item(item_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+
+# ===== PHASE 2: STATE HISTORY =====
+
+@router.get("/assessments/{assessment_id}/history", summary="Get state transition history")
+async def get_assessment_history(assessment_id: str, current_user: User = Depends(get_current_user)):
+    """Return the full state transition history for an assessment."""
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+    return data_store.get_state_history(assessment_id)
+
+
+# ===== PHASE 2: RISK SCORING =====
+
+@router.get("/assessments/{assessment_id}/risk-score", response_model=RiskScoreResponse)
+async def get_risk_score(assessment_id: str, current_user: User = Depends(get_current_user)):
+    """Calculate and return the risk score for an assessment."""
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+    # Build an object with answers relationship for scoring
+    class _A:
+        pass
+    a = _A()
+    a.id = assessment_id
+    # Load answers from DB
+    from app.db_models import AnswerRecord as _AR
+    with db_session() as db:
+        answers = db.query(_AR).filter_by(assessment_id=assessment_id).all()
+    class _A:
+        id = assessment_id
+        def selected_question_ids_list(self): return assessment.selectedQuestionIds
+    _a = _A()
+    _a.answers = answers
+    return scoring_service.compute_risk_score(_a, data_store)
+
+
+# ===== PHASE 2: REPORTS =====
+
+@router.get("/assessments/{assessment_id}/reports/executive-summary", summary="Download executive summary PDF")
+async def report_executive_summary(
+    assessment_id: str,
+    engagement_name: Optional[str] = Query(default=""),
+    org_name: Optional[str] = Query(default="ClearComply"),
+    current_user: User = Depends(get_current_user),
+):
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    frameworks = [data_store.get_framework_by_id(fid) for fid in assessment.frameworkIds]
+    fw_names = [f.name if f else fid for f, fid in zip(frameworks, assessment.frameworkIds)]
+    # Get risk score data
+    from app.db_models import AnswerRecord as _AR
+    with db_session() as db:
+        answers = db.query(_AR).filter_by(assessment_id=assessment_id).all()
+    class _A:
+        id = assessment_id
+        def selected_question_ids_list(self): return assessment.selectedQuestionIds
+    _a = _A()
+    _a.answers = answers
+    risk_data = scoring_service.compute_risk_score(_a, data_store)
+    risk_dict = risk_data.model_dump()
+    pdf_bytes = report_service.generate_executive_summary_pdf(
+        assessment_name=assessment.name,
+        framework_names=fw_names,
+        risk_score_data=risk_dict,
+        completion_percent=assessment.questionStats.completionPercent if assessment.questionStats else 0,
+        answered=assessment.questionStats.answeredQuestions if assessment.questionStats else 0,
+        total=assessment.questionStats.totalQuestions if assessment.questionStats else 0,
+        high_gaps=risk_dict.get("highGaps", 0),
+        created_by=current_user.name,
+        engagement_name=engagement_name or "",
+        org_name=org_name or "ClearComply",
+    )
+    safe_name = assessment.name.replace(" ", "_")[:40]
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}_executive_summary.pdf"'},
+    )
+
+
+@router.get("/assessments/{assessment_id}/reports/technical", summary="Download technical assessment report PDF")
+async def report_technical(
+    assessment_id: str,
+    engagement_name: Optional[str] = Query(default=""),
+    org_name: Optional[str] = Query(default="ClearComply"),
+    current_user: User = Depends(get_current_user),
+):
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    frameworks = [data_store.get_framework_by_id(fid) for fid in assessment.frameworkIds]
+    fw_names = [f.name if f else fid for f, fid in zip(frameworks, assessment.frameworkIds)]
+    questions_with_answers = data_store.get_assessment_questions_with_answers_db(assessment_id)
+    from app.db_models import AnswerRecord as _AR
+    with db_session() as db:
+        answers = db.query(_AR).filter_by(assessment_id=assessment_id).all()
+    class _A:
+        id = assessment_id
+        def selected_question_ids_list(self): return assessment.selectedQuestionIds
+    _a = _A()
+    _a.answers = answers
+    risk_dict = scoring_service.compute_risk_score(_a, data_store).model_dump()
+    pdf_bytes = report_service.generate_technical_report_pdf(
+        assessment_name=assessment.name,
+        framework_names=fw_names,
+        questions_with_answers=questions_with_answers,
+        risk_score_data=risk_dict,
+        completion_percent=assessment.questionStats.completionPercent if assessment.questionStats else 0,
+        created_by=current_user.name,
+        engagement_name=engagement_name or "",
+        org_name=org_name or "ClearComply",
+    )
+    safe_name = assessment.name.replace(" ", "_")[:40]
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}_technical_report.pdf"'},
+    )
+
+
+@router.get("/assessments/{assessment_id}/reports/gap-analysis", summary="Download gap analysis XLSX")
+async def report_gap_analysis(
+    assessment_id: str,
+    current_user: User = Depends(get_current_user),
+):
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    questions_with_answers = data_store.get_assessment_questions_with_answers_db(assessment_id)
+    xlsx_bytes = report_service.generate_gap_analysis_xlsx(
+        assessment_name=assessment.name,
+        questions_with_answers=questions_with_answers,
+    )
+    safe_name = assessment.name.replace(" ", "_")[:40]
+    return Response(
+        content=xlsx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}_gap_analysis.xlsx"'},
+    )
+
+
+# ===== PHASE 2: AUTO-POAM =====
+
+@router.post("/assessments/{assessment_id}/poam/auto-generate", summary="Auto-generate POA&M from gaps")
+async def auto_generate_poam(assessment_id: str, current_user: User = Depends(get_current_user)):
+    """Create POA&M items for all unanswered/not-implemented controls that don't already have one."""
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    count = data_store.auto_create_poam_from_answers(assessment_id, assessment.name)
+    audit_service.log_action(
+        action="AUTO_GENERATE_POAM",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="assessment",
+        entity_id=assessment_id,
+        detail={"createdCount": count},
+    )
+    return {"created": count, "message": f"{count} new POA&M item(s) created"}
+
+
+@router.get("/assessments/{assessment_id}/poam/export", summary="Export POA&M as XLSX")
+async def export_poam_xlsx(assessment_id: str, current_user: User = Depends(get_current_user)):
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    items = data_store.get_all_poam_items(assessment_id=assessment_id)
+    items_dict = [i.model_dump() for i in items]
+    xlsx_bytes = report_service.generate_poam_xlsx(assessment.name, items_dict)
+    safe_name = assessment.name.replace(" ", "_")[:40]
+    return Response(
+        content=xlsx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}_poam.xlsx"'},
+    )
+
+
+# ===== PHASE 2: CSF PROFILE =====
+
+@router.get("/assessments/{assessment_id}/csf-profile", response_model=CsfProfileResponse)
+async def get_csf_profile(assessment_id: str, current_user: User = Depends(get_current_user)):
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    profiles = data_store.get_csf_profile(assessment_id)
+    return CsfProfileResponse(
+        assessmentId=assessment_id,
+        profiles=[CsfFunctionProfile(**p) for p in profiles],
+    )
+
+
+@router.put("/assessments/{assessment_id}/csf-profile", response_model=CsfProfileResponse)
+async def upsert_csf_profile(
+    assessment_id: str,
+    request: UpsertCsfProfileRequest,
+    current_user: User = Depends(get_current_user),
+):
+    assessment = data_store.get_assessment_by_id(assessment_id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    profiles = data_store.upsert_csf_profile(assessment_id, request.profiles)
+    audit_service.log_action(
+        action="UPDATE_CSF_PROFILE",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="assessment",
+        entity_id=assessment_id,
+        detail={"functionCount": len(request.profiles)},
+    )
+    return CsfProfileResponse(
+        assessmentId=assessment_id,
+        profiles=[CsfFunctionProfile(**p) for p in profiles],
+    )
 
 
 # ===== EVIDENCE ENDPOINTS =====
