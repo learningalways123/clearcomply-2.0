@@ -42,8 +42,9 @@ import CsfProfile from '../CsfProfile/CsfProfile';
 const STATUS_META: Record<string, { label: string; next: string | null; nextLabel: string | null; chipColor: string; chipBg: string; locked?: boolean }> = {
   draft:       { label: 'Draft',       next: 'in_progress', nextLabel: 'Start Assessment',   chipColor: '#6b7280', chipBg: '#f3f4f6' },
   in_progress: { label: 'In Progress', next: 'submitted',   nextLabel: 'Submit for Review',  chipColor: '#2563eb', chipBg: '#eff6ff' },
-  submitted:   { label: 'Submitted',   next: 'reviewed',    nextLabel: 'Mark Reviewed',       chipColor: '#d97706', chipBg: '#fffbeb', locked: true },
-  reviewed:    { label: 'Reviewed',    next: 'completed',   nextLabel: 'Complete Assessment', chipColor: '#7c3aed', chipBg: '#f5f3ff', locked: true },
+  submitted:   { label: 'Submitted',   next: 'reviewed',      nextLabel: 'Mark Reviewed',       chipColor: '#d97706', chipBg: '#fffbeb', locked: true },
+  reviewed:    { label: 'Reviewed',    next: 'completed',     nextLabel: 'Complete Assessment', chipColor: '#7c3aed', chipBg: '#f5f3ff', locked: true },
+  remediation: { label: 'Remediation', next: 'submitted',     nextLabel: 'Re-Submit',           chipColor: '#b45309', chipBg: '#fef3c7' },
   completed:   { label: 'Completed',   next: 'archived',    nextLabel: 'Archive',             chipColor: '#059669', chipBg: '#ecfdf5', locked: true },
   archived:    { label: 'Archived',    next: null,          nextLabel: null,                  chipColor: '#374151', chipBg: '#f9fafb', locked: true },
 };
@@ -66,9 +67,14 @@ function isAnswered(answer: AnswerValue): boolean {
 }
 
 function toSubmission(questionId: string, answer: AnswerValue): AnswerSubmission {
-  if (typeof answer === 'string') return { questionId, value: answer.trim() };
+  if (typeof answer === 'string') return { questionId, value: answer.trim() || undefined };
   const a = answer as YesNoJustification;
-  return { questionId, yesNo: a.yesNo, justification: a.justification };
+  return {
+    questionId,
+    // Only send yesNo if it's a non-empty value — empty string fails backend pattern validation
+    ...(a.yesNo ? { yesNo: a.yesNo } : {}),
+    ...(a.justification ? { justification: a.justification } : {}),
+  };
 }
 
 function initAnswers(questions: Question[]): Record<string, AnswerValue> {

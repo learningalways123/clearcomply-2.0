@@ -10,6 +10,10 @@ from pydantic import BaseModel
 from typing import Dict, Any
 import os
 from dotenv import load_dotenv
+
+# Load environment variables FIRST — before any app modules read os.getenv() at import time
+load_dotenv()
+
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -19,9 +23,6 @@ from slowapi.middleware import SlowAPIMiddleware
 from app.routes import router as api_router
 from app.auth_routes import auth_router
 from app.database import init_db
-
-# Load environment variables
-load_dotenv()
 
 # Rate limiter — keyed on client IP
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])

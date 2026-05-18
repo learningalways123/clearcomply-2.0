@@ -148,7 +148,7 @@ class AssessmentResponse(BaseModel):
 class AnswerSubmission(BaseModel):
     questionId: str = Field(..., min_length=1, max_length=200)
     value: Optional[str] = Field(default=None, max_length=10000)
-    yesNo: Optional[str] = Field(default=None, pattern=r'^(yes|no|Yes|No|YES|NO)$')
+    yesNo: Optional[str] = Field(default=None, pattern=r'^(yes|no|Yes|No|YES|NO|Not applicable|N/A|na|NA)$')
     justification: Optional[str] = Field(default=None, max_length=5000)
     # Extended fields (Phase 2)
     implementationStatus: Optional[str] = Field(default=None, max_length=100)
@@ -169,8 +169,9 @@ class SubmitAnswersRequest(BaseModel):
 
 
 class UpdateStatusRequest(BaseModel):
-    status: str = Field(..., pattern=r'^(draft|in_progress|submitted|reviewed|closed)$',
-                        description="New status: draft | in_progress | submitted | reviewed | closed")
+    status: str = Field(..., pattern=r'^(draft|in_progress|submitted|reviewed|remediation|completed|archived)$',
+                        description="New status: draft | in_progress | submitted | reviewed | remediation | completed | archived")
+    note: Optional[str] = Field(default=None, max_length=1000, description="Optional note for audit log")
 
 
 class AssessmentSummaryResponse(BaseModel):

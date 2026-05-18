@@ -12,7 +12,11 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, List
 import os
+from dotenv import load_dotenv
 from pydantic import BaseModel
+
+# Ensure .env is loaded even if this module is imported before main.py calls load_dotenv()
+load_dotenv()
 
 # Security scheme
 security = HTTPBearer()
