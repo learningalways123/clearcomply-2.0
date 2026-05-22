@@ -39,8 +39,6 @@ These steps require GCP console / CLI access and cannot be done via code changes
 
 ---
 
----
-
 ## Prerequisites
 
 Install these on your local machine before starting:
