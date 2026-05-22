@@ -5,6 +5,42 @@ when first configuring the project. Steps 5–6 are what you run for every relea
 
 ---
 
+## Code Readiness Checklist
+
+These are changes to the codebase required before Cloud Run will work correctly.
+All items below are **complete** and committed.
+
+**Backend**
+- [x] `Service/Dockerfile` — updated to use `start.sh` as entrypoint, respects `$PORT`, health-check via `curl`, non-root user
+- [x] `Service/start.sh` — created: runs `alembic upgrade head` then starts `uvicorn` on `$PORT`
+- [x] `Service/app/database.py` — Postgres pool reduced to `pool_size=2 / max_overflow=3` to avoid exhausting Cloud SQL connection limits when Cloud Run scales horizontally
+- [x] `Service/migrations/env.py` — already reads `DATABASE_URL` from the environment; no change needed
+- [x] `Service/.env.example` — updated to document `DATABASE_URL` (local and Cloud SQL socket formats), `CORS_ORIGINS`, and `SESSION_TIMEOUT_MINUTES`
+
+**Frontend**
+- [x] `UI/Dockerfile` — updated: multi-stage build, accepts `VITE_API_BASE_URL` **and** `VITE_GOOGLE_CLIENT_ID` as build args (both baked into the JS bundle at build time), exposes port `8080`
+- [x] `UI/nginx.conf.template` — created: listens on `${PORT}` injected at runtime, `connect-src` CSP allows `${BACKEND_URL}` injected at runtime
+- [x] `UI/docker-entrypoint.sh` — created: substitutes `PORT` and `BACKEND_URL` into nginx config before starting nginx
+
+---
+
+## Infrastructure Checklist
+
+These steps require GCP console / CLI access and cannot be done via code changes.
+
+- [ ] Step 1 — GCP project created and APIs enabled
+- [ ] Step 2 — Artifact Registry repository created and Docker authenticated
+- [ ] Step 3 — Cloud SQL instance, database, and user created
+- [ ] Step 4 — Secrets created in Secret Manager (`jwt-secret`, `database-url`) and service account granted access
+- [ ] Step 5 — Backend built, pushed, and deployed to Cloud Run
+- [ ] Step 6 — Frontend built (with backend URL baked in), pushed, and deployed to Cloud Run
+- [ ] Step 7 — Frontend Cloud Run URL added to Google OAuth authorized origins
+- [ ] Step 8 — Backend `CORS_ORIGINS` env var updated to include frontend URL
+
+---
+
+---
+
 ## Prerequisites
 
 Install these on your local machine before starting:
