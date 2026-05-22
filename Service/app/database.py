@@ -25,10 +25,12 @@ _engine_kwargs: dict = {}
 if _is_sqlite:
     _engine_kwargs["connect_args"] = {"check_same_thread": False}
 else:
-    # Sensible pool defaults for Postgres in a single-process dev setup
+    # Small pool per instance — Cloud Run scales horizontally, so each instance
+    # should hold few connections to avoid exhausting Cloud SQL's limit.
+    # db-f1-micro allows 25 total; 2 + 3 overflow = 5 per instance → safe up to ~5 instances.
     _engine_kwargs["pool_pre_ping"] = True
-    _engine_kwargs["pool_size"] = 5
-    _engine_kwargs["max_overflow"] = 10
+    _engine_kwargs["pool_size"] = 2
+    _engine_kwargs["max_overflow"] = 3
 
 engine = create_engine(DATABASE_URL, echo=False, **_engine_kwargs)
 

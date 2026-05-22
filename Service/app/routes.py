@@ -674,6 +674,7 @@ async def get_risk_score(assessment_id: str, current_user: User = Depends(get_cu
     from app.db_models import AnswerRecord as _AR
     with db_session() as db:
         answers = db.query(_AR).filter_by(assessment_id=assessment_id).all()
+        db.expunge_all()  # detach before session commits/expires objects
     class _A:
         id = assessment_id
         def selected_question_ids_list(self): return assessment.selectedQuestionIds
@@ -700,6 +701,7 @@ async def report_executive_summary(
     from app.db_models import AnswerRecord as _AR
     with db_session() as db:
         answers = db.query(_AR).filter_by(assessment_id=assessment_id).all()
+        db.expunge_all()  # detach before session commits/expires objects
     class _A:
         id = assessment_id
         def selected_question_ids_list(self): return assessment.selectedQuestionIds
@@ -743,6 +745,7 @@ async def report_technical(
     from app.db_models import AnswerRecord as _AR
     with db_session() as db:
         answers = db.query(_AR).filter_by(assessment_id=assessment_id).all()
+        db.expunge_all()  # detach before session commits/expires objects
     class _A:
         id = assessment_id
         def selected_question_ids_list(self): return assessment.selectedQuestionIds

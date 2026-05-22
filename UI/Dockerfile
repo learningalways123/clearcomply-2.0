@@ -1,5 +1,5 @@
 # Use Node.js 18 alpine image
-FROM node:18-alpine as builder
+FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -7,30 +7,38 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install ALL dependencies (devDependencies include Vite, TypeScript, etc needed for build)
+RUN npm ci
 
-# Copy source code
+# Copy source code and build
+# VITE_API_BASE_URL must be passed as a build arg so it's baked into the JS bundle
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Production stage
+# ── Production stage ───────────────────────────────────────────────────────────
 FROM nginx:alpine
 
-# Copy built application from builder stage
+# Install envsubst (part of gettext) for runtime config templating
+RUN apk add --no-cache gettext
+
+# Copy built app
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx template (not the static conf — it gets generated at startup)
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-# Expose port
-EXPOSE 80
+# Copy startup script that injects env vars into nginx config
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Cloud Run injects PORT at runtime
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD wget -q -O /dev/null http://localhost:${PORT:-8080}/ || exit 1
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

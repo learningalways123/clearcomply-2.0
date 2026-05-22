@@ -205,8 +205,8 @@ export default function AssessmentDetail() {
       a.download = `${(latestAssessment ?? assessment)?.name ?? id}_${type}.${ext}`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch {
-      setSaveError(`Failed to download ${type} report`);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : `Failed to download ${type} report`);
     } finally {
       setDownloadingReport(null);
     }

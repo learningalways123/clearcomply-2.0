@@ -280,22 +280,24 @@ class StateHistoryEntry(BaseModel):
 
 # ─── Risk Scoring ────────────────────────────────────────────────────────────
 class DomainRiskScore(BaseModel):
-    domainId: str
-    domainName: str
+    domain: str
     score: float          # 0-100
     totalControls: int
-    implementedControls: int
-    gapCount: int
-    criticality: str      # dominant criticality level
+    answeredControls: int
+    highGaps: int
+    mediumGaps: int
+    lowGaps: int
 
 class RiskScoreResponse(BaseModel):
     assessmentId: str
     overallScore: float
-    riskBand: str         # Critical | High | Medium | Low | Compliant
+    riskBand: str         # Critical | High | Medium | Low | Minimal
     domainScores: List[DomainRiskScore]
     highGaps: int
     mediumGaps: int
     lowGaps: int
+    totalControls: int
+    answeredControls: int
 
 
 # ─── CSF Profile ─────────────────────────────────────────────────────────────

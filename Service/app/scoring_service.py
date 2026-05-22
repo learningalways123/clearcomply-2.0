@@ -115,24 +115,16 @@ def compute_risk_score(assessment, data_store) -> RiskScoreResponse:
         if not ws:
             continue
         score = round(sum(ws) / len(ws) * 100, 1)
-        implemented = sum(1 for w in ws if w >= 1.0)
-        gap_count = sum(1 for w in ws if w < 1.0)
-
-        # Dominant criticality = most frequent
-        crit_counts: Dict[str, int] = {}
-        for c in d["crits"]:
-            cs = str(c)
-            crit_counts[cs] = crit_counts.get(cs, 0) + 1
-        dominant = max(crit_counts, key=crit_counts.get) if crit_counts else "Low"
+        answered = sum(1 for w in ws if w >= 1.0)
 
         domain_scores.append(DomainRiskScore(
-            domainId=domain_id,
-            domainName=d["name"],
+            domain=d["name"],
             score=score,
             totalControls=len(ws),
-            implementedControls=implemented,
-            gapCount=gap_count,
-            criticality=dominant,
+            answeredControls=answered,
+            highGaps=d["gaps"].get("High", 0),
+            mediumGaps=d["gaps"].get("Medium", 0),
+            lowGaps=d["gaps"].get("Low", 0),
         ))
         total_weighted_sum += sum(ws)
         total_weight_count += len(ws)
@@ -146,7 +138,7 @@ def compute_risk_score(assessment, data_store) -> RiskScoreResponse:
 
     # Risk band
     if overall >= 90:
-        band = "Compliant"
+        band = "Minimal"
     elif overall >= 75:
         band = "Low"
     elif overall >= 50:
@@ -164,4 +156,6 @@ def compute_risk_score(assessment, data_store) -> RiskScoreResponse:
         highGaps=total_gaps.get("High", 0),
         mediumGaps=total_gaps.get("Medium", 0),
         lowGaps=total_gaps.get("Low", 0),
+        totalControls=total_weight_count,
+        answeredControls=sum(d.answeredControls for d in domain_scores),
     )

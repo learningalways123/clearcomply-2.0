@@ -18,11 +18,33 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Normalise error messages
+// Normalise error messages + auto-logout on 401
 apiClient.interceptors.response.use(
   (res) => res,
   (err) => {
-    const detail = err.response?.data?.detail;
+    // If the token is expired or invalid, clear auth and redirect to login
+    if (err.response?.status === 401) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+      // Only redirect if not already on the login page
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
+    // For blob responses, the error body is a Blob — parse it for a readable message
+    const responseData = err.response?.data;
+    if (responseData instanceof Blob && responseData.type === 'application/json') {
+      return responseData.text().then((text: string) => {
+        try {
+          const parsed = JSON.parse(text);
+          const msg = typeof parsed.detail === 'string' ? parsed.detail : err.message || 'Request failed';
+          return Promise.reject(new Error(msg));
+        } catch {
+          return Promise.reject(new Error(err.message || 'Request failed'));
+        }
+      });
+    }
+    const detail = responseData?.detail;
     const message =
       typeof detail === 'string'
         ? detail
