@@ -1,7 +1,45 @@
 # Deploying Clear Comply to Google Cloud Run
 
-This document covers the full deployment process. Steps 1–4 are **one-time setup** you only do
-when first configuring the project. Steps 5–6 are what you run for every release.
+---
+
+## Quick Deploy (No Database Required)
+
+The fastest path to a live deployment. Uses **SQLite** as the database — no Cloud SQL, no Secret
+Manager, no VPC setup needed.
+
+> ⚠ **SQLite on Cloud Run is ephemeral.** Data is lost when the container restarts or a new
+> instance spins up. This is intentional for a first deploy or demo. See the full guide below
+> when you are ready for persistent storage.
+
+**Prerequisites (one-time, ~2 min):**
+1. Install [gcloud CLI](https://cloud.google.com/sdk/docs/install) and run `gcloud auth login`
+2. Docker Desktop running
+3. A GCP project with billing enabled
+
+**Steps:**
+1. Open `deploy-quick.sh` and fill in the `CONFIG` section at the top (project ID + Google OAuth Client ID)
+2. Run:
+   ```bash
+   chmod +x deploy-quick.sh
+   ./deploy-quick.sh
+   ```
+3. The script will:
+   - Enable `Cloud Run` and `Artifact Registry` APIs (only these two)
+   - Create the Artifact Registry repo if it doesn't exist
+   - Build and push backend + frontend images
+   - Deploy both services to Cloud Run
+   - Auto-wire CORS between the two services
+   - Print live URLs at the end
+4. After deploy, **register the frontend URL with Google OAuth** (the script prints exact instructions)
+
+To upgrade to persistent Cloud SQL later, follow Steps 3–5 of the full guide below.
+
+---
+
+## Full Guide (Cloud SQL + Secret Manager)
+
+Steps 1–4 are **one-time setup** you only do when first configuring the project.
+Steps 5–6 are what you run for every release.
 
 ---
 
@@ -61,7 +99,9 @@ gcloud projects create clearcomply-prod --name="Clear Comply"
 # Set it as your active project
 gcloud config set project clearcomply-prod
 
-# Enable all the APIs the deployment needs (one-time)
+# Enable all the APIs the full deployment needs (one-time)
+# Note: sqladmin, secretmanager, and vpcaccess are only needed for the Cloud SQL path.
+# The quick deploy (deploy-quick.sh) only needs run.googleapis.com and artifactregistry.googleapis.com.
 gcloud services enable \
   run.googleapis.com \
   sqladmin.googleapis.com \
