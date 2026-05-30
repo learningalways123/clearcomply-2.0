@@ -43,7 +43,7 @@ GOOGLE_CLIENT_ID="440433810610-v59q0ah2d45o1fvginicsvrt7k5le76j.apps.googleuserc
 # Allowed Google account emails (comma-separated, NO spaces).
 # Only these addresses can log in or register.  Leave empty to allow any Google account.
 # Example: "alice@gmail.com,bob@company.com"
-ALLOWED_EMAILS=""
+ALLOWED_EMAILS="tafheem88@gmail.com,ashraful.alam@gmail.com"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Everything below is automatic — no edits needed.
