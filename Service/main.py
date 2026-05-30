@@ -6,6 +6,9 @@ Main application entry point
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+import logging
+
+_log = logging.getLogger(__name__)
 from pydantic import BaseModel
 from typing import Dict, Any
 import os
@@ -75,6 +78,12 @@ async def add_security_headers(request: Request, call_next):
         "frame-ancestors 'none';"
     )
     return response
+
+# ── Global exception handler — never expose stack traces to clients ─────────
+@app.exception_handler(Exception)
+async def _global_exception_handler(request: Request, exc: Exception):
+    _log.exception("Unhandled exception on %s %s", request.method, request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "An internal error occurred."})
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 app.include_router(auth_router)

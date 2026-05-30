@@ -195,6 +195,11 @@ async def register(request: RegisterRequest):
 @auth_router.post("/login")
 async def login_password(request: LoginPasswordRequest):
     """Login with email + password."""
+    if not is_email_allowed(request.email):
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied. This application is restricted to invited users only.",
+        )
     with db_session() as db:
         user_rec = db.query(UserRecord).filter_by(email=request.email).first()
         if not user_rec or not user_rec.password_hash:
@@ -266,14 +271,25 @@ async def mfa_confirm(request: MfaSetupConfirmRequest, current_user: User = Depe
     return {"message": "MFA enabled successfully"}
 
 
+class MfaDisableRequest(BaseModel):
+    totp_code: str
+
 @auth_router.post("/mfa/disable")
-async def mfa_disable(current_user: User = Depends(get_current_user)):
-    """Disable MFA for the current user."""
+async def mfa_disable(request: MfaDisableRequest, current_user: User = Depends(get_current_user)):
+    """Disable MFA — requires a valid TOTP code to confirm intent."""
+    try:
+        import pyotp
+    except ImportError:
+        raise HTTPException(status_code=500, detail="pyotp not installed")
+
     with db_session() as db:
         user_rec = db.query(UserRecord).filter_by(email=current_user.email).first()
-        if user_rec:
-            user_rec.mfa_enabled = False
-            user_rec.totp_secret = None
+        if not user_rec or not user_rec.mfa_enabled:
+            raise HTTPException(status_code=400, detail="MFA is not enabled for this account")
+        if not user_rec.totp_secret or not pyotp.TOTP(user_rec.totp_secret).verify(request.totp_code, valid_window=1):
+            raise HTTPException(status_code=400, detail="Invalid TOTP code")
+        user_rec.mfa_enabled = False
+        user_rec.totp_secret = None
     audit_service.log_action(action="MFA_DISABLED", user_email=current_user.email,
                              user_name=current_user.name, entity_type="user", entity_id=current_user.email)
     return {"message": "MFA disabled"}
@@ -286,6 +302,12 @@ async def mfa_verify(request: MfaVerifyRequest):
         import pyotp
     except ImportError:
         raise HTTPException(status_code=500, detail="pyotp not installed")
+
+    if not is_email_allowed(request.email.strip().lower()):
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied. This application is restricted to invited users only.",
+        )
 
     with db_session() as db:
         user_rec = db.query(UserRecord).filter_by(email=request.email.strip().lower()).first()

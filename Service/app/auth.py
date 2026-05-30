@@ -22,7 +22,16 @@ load_dotenv()
 security = HTTPBearer()
 
 # JWT Configuration
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change-me-in-production-use-32-char-min")
+_DEFAULT_JWT_SECRET = "change-me-in-production-use-32-char-min"
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", _DEFAULT_JWT_SECRET)
+if SECRET_KEY == _DEFAULT_JWT_SECRET:
+    import warnings
+    warnings.warn(
+        "[SECURITY] JWT_SECRET_KEY is the known default value. "
+        "Set a strong random secret via the JWT_SECRET_KEY environment variable "
+        "before deploying to production.",
+        stacklevel=2,
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("SESSION_TIMEOUT_MINUTES", "240"))  # 4 hours default
 

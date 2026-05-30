@@ -35,9 +35,7 @@ async def get_frameworks():
     Returns:
         List[Framework]: List of all frameworks
     """
-    print("GET /frameworks called")  # Debug log
     frameworks = data_store.get_all_frameworks()
-    print(f"Returning {len(frameworks)} frameworks")  # Debug log
     return frameworks
 
 
@@ -346,11 +344,8 @@ async def get_families(framework_id: Optional[str] = Query(None, description="Fi
         
         return families
     
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error while retrieving families: {str(e)}"
-        )
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 
 # ===== QUESTIONS ENDPOINTS =====
@@ -379,11 +374,8 @@ async def get_questions(
         
         return questions
     
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error while retrieving questions: {str(e)}"
-        )
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 
 @router.get("/questions/{question_id}", response_model=Question, summary="Get question by ID")
@@ -406,11 +398,8 @@ async def get_question_by_id(question_id: str):
     
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error while retrieving question: {str(e)}"
-        )
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 
 # ===== ASSESSMENT QUESTIONS AND ANSWERS ENDPOINTS =====
@@ -457,11 +446,8 @@ async def get_assessment_questions(assessment_id: str):
     
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error while retrieving assessment questions: {str(e)}"
-        )
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 
 @router.post("/assessments/{assessment_id}/answers", response_model=AssessmentSummaryResponse, summary="Submit answers for assessment")
@@ -513,8 +499,8 @@ async def submit_assessment_answers(assessment_id: str, request: SubmitAnswersRe
         raise HTTPException(status_code=400, detail=str(e))
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal server error while submitting answers: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 
 # ===== AUDIT LOG ENDPOINT =====
