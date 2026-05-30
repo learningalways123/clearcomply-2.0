@@ -29,6 +29,23 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("SESSION_TIMEOUT_MINUTES", "240"))  
 # Google OAuth Configuration
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 
+# Email allow-list — comma-separated list of Google account emails that may log in.
+# When empty (default), the app is open to any Google account (dev mode only).
+# In production, always set ALLOWED_EMAILS to restrict access.
+ALLOWED_EMAILS: set = {
+    e.strip().lower() for e in os.getenv("ALLOWED_EMAILS", "").split(",") if e.strip()
+}
+
+
+def is_email_allowed(email: str) -> bool:
+    """Return True if the email is permitted to access the application.
+    If ALLOWED_EMAILS is not configured, every address is allowed (dev mode).
+    """
+    if not ALLOWED_EMAILS:
+        return True
+    return email.strip().lower() in ALLOWED_EMAILS
+
+
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

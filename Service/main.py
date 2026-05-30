@@ -27,13 +27,17 @@ from app.database import init_db
 # Rate limiter — keyed on client IP
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
 
+# Disable interactive API docs in production to avoid exposing the full API surface.
+# Set ENABLE_API_DOCS=true (e.g. in .env) to re-enable during local development.
+_DOCS_ENABLED = os.getenv("ENABLE_API_DOCS", "false").lower() == "true"
+
 # Create FastAPI instance
 app = FastAPI(
     title="Clear Comply API",
     description="Backend service for Clear Comply compliance management application",
     version="1.0.0",
-    docs_url="/api/docs",
-    redoc_url="/api/redoc",
+    docs_url="/api/docs" if _DOCS_ENABLED else None,
+    redoc_url="/api/redoc" if _DOCS_ENABLED else None,
 )
 
 # ── Rate limiting ─────────────────────────────────────────────────────────────

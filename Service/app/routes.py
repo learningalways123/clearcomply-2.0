@@ -265,7 +265,7 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
 
 
 @router.get("/assessments/{assessment_id}", response_model=AssessmentResponse)
-async def get_assessment(assessment_id: str):
+async def get_assessment(assessment_id: str, current_user: User = Depends(get_current_user)):
     """
     Get a specific assessment by ID
     
@@ -302,7 +302,7 @@ async def get_assessment(assessment_id: str):
 
 
 @router.get("/assessments", response_model=List[AssessmentResponse])
-async def get_assessments():
+async def get_assessments(current_user: User = Depends(get_current_user)):
     """
     Get all assessments
     
@@ -539,7 +539,7 @@ async def get_audit_log(
 # ===== DASHBOARD ENDPOINT =====
 
 @router.get("/dashboard", summary="CISO Dashboard — risk gaps & completion trends")
-async def get_dashboard():
+async def get_dashboard(current_user: User = Depends(get_current_user)):
     """
     Aggregated dashboard data for CISO view:
     - Overall stats (total assessments, avg completion, risk gap counts)
@@ -596,6 +596,7 @@ async def update_assessment_status(assessment_id: str, request: UpdateStatusRequ
 async def list_poam_items(
     assessment_id: Optional[str] = Query(None),
     status: Optional[str] = Query(None),
+    current_user: User = Depends(get_current_user),
 ):
     """List all POA&M items, optionally filtered by assessment or status."""
     return data_store.get_all_poam_items(assessment_id=assessment_id, status=status)

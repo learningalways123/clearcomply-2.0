@@ -27,7 +27,7 @@ set -euo pipefail
 
 # Your GCP project ID.  Create one at https://console.cloud.google.com if needed.
 # Must be globally unique, e.g. "clearcomply-demo-2024"
-GCP_PROJECT="clearcomply-prod"
+GCP_PROJECT="start1-f4f45"
 
 # Cloud region — us-central1 is a good default
 GCP_REGION="us-central1"
@@ -38,7 +38,12 @@ ARTIFACT_REPO="clearcomply"
 # Google OAuth Client ID — find it at:
 #   https://console.cloud.google.com/apis/credentials
 # It looks like:  123456789-xxxx.apps.googleusercontent.com
-GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_ID="440433810610-v59q0ah2d45o1fvginicsvrt7k5le76j.apps.googleusercontent.com"
+
+# Allowed Google account emails (comma-separated, NO spaces).
+# Only these addresses can log in or register.  Leave empty to allow any Google account.
+# Example: "alice@gmail.com,bob@company.com"
+ALLOWED_EMAILS=""
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Everything below is automatic — no edits needed.
@@ -170,7 +175,7 @@ gcloud run deploy "$BACKEND_SERVICE" \
   --memory 512Mi \
   --cpu 1 \
   --timeout 60 \
-  --set-env-vars "CORS_ORIGINS=${CORS_ORIGINS},GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID},JWT_SECRET_KEY=${JWT_SECRET_KEY}" \
+  --set-env-vars "^|^CORS_ORIGINS=${CORS_ORIGINS}|GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}|JWT_SECRET_KEY=${JWT_SECRET_KEY}|ALLOWED_EMAILS=${ALLOWED_EMAILS}" \
   --quiet
 
 BACKEND_URL=$(gcloud run services describe "$BACKEND_SERVICE" \
@@ -241,7 +246,7 @@ CORS_ORIGINS_UPDATED="http://localhost:3000,http://localhost:5173,${FRONTEND_URL
 
 gcloud run services update "$BACKEND_SERVICE" \
   --region "$GCP_REGION" \
-  --update-env-vars "CORS_ORIGINS=${CORS_ORIGINS_UPDATED}" \
+  --update-env-vars "^|^CORS_ORIGINS=${CORS_ORIGINS_UPDATED}" \
   --quiet
 
 info "CORS updated: $CORS_ORIGINS_UPDATED"

@@ -14,6 +14,7 @@ from app.auth import (
     get_current_user,
     hash_password,
     verify_password,
+    is_email_allowed,
     VALID_ROLES,
     ADMIN_ROLES,
     User,
@@ -122,6 +123,12 @@ async def google_login(request: GoogleLoginRequest):
         if not email or not google_id:
             raise HTTPException(status_code=400, detail="Invalid Google token: missing required fields")
 
+        if not is_email_allowed(email):
+            raise HTTPException(
+                status_code=403,
+                detail="Access denied. This application is restricted to invited users only.",
+            )
+
         with db_session() as db:
             user_rec = db.query(UserRecord).filter_by(google_id=google_id).first()
             if user_rec:
@@ -155,6 +162,11 @@ async def google_login(request: GoogleLoginRequest):
 @auth_router.post("/register", status_code=201)
 async def register(request: RegisterRequest):
     """Register a new user with email + password."""
+    if not is_email_allowed(request.email):
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied. This application is restricted to invited users only.",
+        )
     with db_session() as db:
         existing = db.query(UserRecord).filter_by(email=request.email).first()
         if existing:
