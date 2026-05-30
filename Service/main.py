@@ -38,6 +38,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/api/docs" if _DOCS_ENABLED else None,
     redoc_url="/api/redoc" if _DOCS_ENABLED else None,
+    openapi_url="/openapi.json" if _DOCS_ENABLED else None,
 )
 
 # ── Rate limiting ─────────────────────────────────────────────────────────────
@@ -97,7 +98,7 @@ class HealthResponse(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "Clear Comply API is running!", "docs": "/api/docs"}
+    return {"message": "Clear Comply API is running!"}
 
 
 @app.get("/health", response_model=HealthResponse)
