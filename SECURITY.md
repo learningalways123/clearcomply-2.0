@@ -38,6 +38,7 @@ def is_email_allowed(email: str) -> bool:
 | Google OAuth login | `auth_routes.py` `/api/auth/google/login` | 403 |
 | Email/password register | `auth_routes.py` `/api/auth/register` | 403 |
 | Email/password login | `auth_routes.py` `/api/auth/login` | 403 |
+| MFA verify (TOTP completion) | `auth_routes.py` `/api/auth/mfa/verify` | 403 |
 
 ### Updating the Allow-List
 
@@ -68,6 +69,9 @@ Tokens are obtained by authenticating via:
 JWT tokens are signed with a randomly-generated 64-character key (`JWT_SECRET_KEY`)
 created at deploy time and stored only in the Cloud Run environment. The key is never
 committed to source code.
+
+At startup, if `JWT_SECRET_KEY` is not set (or is the known placeholder), a critical
+warning is emitted so the misconfiguration is visible in Cloud Run logs.
 
 ---
 
@@ -184,6 +188,28 @@ client_secret_*.json
 
 ---
 
+## MFA Security
+
+MFA (TOTP via `pyotp`) is opt-in per user. When enabled:
+
+- Disabling MFA requires supplying a valid TOTP code — a stolen JWT alone is not
+  sufficient. This prevents an attacker who captures a token from silently removing 2FA.
+- The TOTP secret is stored in the database and cleared when MFA is disabled.
+
+---
+
+## Error Handling
+
+All unhandled exceptions are caught at two layers:
+
+1. **Route-level `except` blocks** — return `{"detail": "Internal server error"}` with no
+   stack trace, SQL, or internal state included in the response body.
+2. **Global `@app.exception_handler(Exception)`** — catches anything that escapes route
+   handlers; returns the same generic 500 response and logs the full exception server-side
+   via `logging.exception()`.
+
+---
+
 ## Git Audit Trail — Security Commits
 
 | Commit | Description |
@@ -191,13 +217,14 @@ client_secret_*.json
 | `675e262` | Email allow-list on all auth entry points; protect open routes with JWT; disable `/api/docs` and `/api/redoc` in production |
 | `898167e` | Disable `openapi_url` (`/openapi.json`) in production; remove docs path hint from root endpoint |
 | `b5d1bee` | Add both allowed emails (`ashraful.alam@gmail.com`, `tafheem88@gmail.com`) to `deploy-quick.sh` |
+| `47ababb` | Add SECURITY.md with access control, route protection table, test results, and secrets audit |
+| `75fd016` | Fix allow-list bypass on password login and MFA verify; require TOTP code to disable MFA; harden JWT secret detection; sanitize 500 error responses; add global exception handler; remove debug prints |
 
 ---
 
 ## Live Security Test Results
 
-Tested against `https://clearcomply-backend-zuaomuy57q-uc.a.run.app` on **2026-05-29**
-after deploying revision `clearcomply-backend-00007-bnj`.
+### Round 3 — 2026-05-29 — revision `clearcomply-backend-00007-bnj`
 
 | # | Test | Expected | Result |
 |---|------|----------|--------|
@@ -213,6 +240,23 @@ after deploying revision `clearcomply-backend-00007-bnj`.
 | 10 | `GET /api/frameworks` — intentionally public | 200 | ✅ 200 |
 
 **All 10 tests passed.**
+
+### Round 4 — 2026-05-29 — revision `clearcomply-backend-00008-97q`
+
+Deep code review identified 6 additional vulnerabilities — all fixed in commit `75fd016`
+and verified live.
+
+| # | Vulnerability | Fix | Verified |
+|---|---------------|-----|----------|
+| 1 | Allow-list bypass: `login_password` did not call `is_email_allowed()` — a DB user not on the allow-list could log in with a password | Added `is_email_allowed()` check at start of handler; returns 403 | ✅ 403 |
+| 2 | Allow-list bypass: `mfa_verify` did not call `is_email_allowed()` — same bypass via MFA completion | Added `is_email_allowed()` check at start of handler; returns 403 | ✅ 403 |
+| 3 | MFA could be disabled with only a valid JWT — no TOTP required | `mfa_disable` now requires `totp_code` in request body, verified via `pyotp.TOTP.verify()` | ✅ 422 without code |
+| 4 | Five `except Exception as e` blocks leaked `str(e)` (SQL, paths, internal state) in HTTP 500 bodies | All replaced with generic `"Internal server error"` | ✅ No leakage |
+| 5 | Debug `print()` statements in `routes.py` exposed framework names/counts to container logs | Removed | ✅ Removed |
+| 6 | No global exception handler — unhandled exceptions could return FastAPI default error format | Added `@app.exception_handler(Exception)` logging internally and returning generic 500 | ✅ Active |
+| + | JWT default secret used silently if `JWT_SECRET_KEY` env var not set | Startup `warnings.warn()` emitted when known default key is detected | ✅ Active |
+
+**All 11 live probe tests passed on revision `clearcomply-backend-00008-97q`.**
 
 ### Test commands (reproducible)
 
