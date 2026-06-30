@@ -20,6 +20,14 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 import DownloadIcon from '@mui/icons-material/Download';
+import SearchIcon from '@mui/icons-material/Search';
+import Tooltip from '@mui/material/Tooltip';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
@@ -41,6 +49,7 @@ import AssessmentDataCategorization from './AssessmentDataCategorization';
 import AssessmentControls from './AssessmentControls';
 import AssessmentFindings from './AssessmentFindings';
 import AssessmentInventory from './AssessmentInventory';
+import GlobalSearchDialog from './GlobalSearchDialog';
 
 const DRAWER_WIDTH = 260;
 
@@ -64,6 +73,13 @@ export default function AssessmentWorkspace() {
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [loading, setLoading] = useState(true);
   const [reminding, setReminding] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // Sidebar count indicators
+  const [checklistItems, setChecklistItems] = useState<any[]>([]);
+  const [poams, setPoams] = useState<any[]>([]);
+  const [teams, setTeams] = useState<any[]>([]);
 
   const fetchAssessment = async () => {
     if (!id) return;
@@ -78,16 +94,50 @@ export default function AssessmentWorkspace() {
     }
   };
 
+  const fetchSidebarData = async () => {
+    if (!id) return;
+    try {
+      const [ck, pm, tm] = await Promise.all([
+        api.getChecklist(id),
+        api.getPoamItems({ assessment_id: id }),
+        api.getIntake(id)
+      ]);
+      setChecklistItems(ck);
+      setPoams(pm);
+      setTeams(tm);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     fetchAssessment();
+    fetchSidebarData();
   }, [id]);
 
-  const handleRemindAllOverdue = async () => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleRemindAllOverdue = () => {
+    setConfirmOpen(true);
+  };
+
+  const confirmRemindAll = async () => {
     if (!id) return;
+    setConfirmOpen(false);
     setReminding(true);
     try {
       const res = await api.remindAllOverdue(id);
       alert(res.message || 'Reminders sent successfully!');
+      fetchSidebarData();
     } catch (e) {
       console.error(e);
       alert('Failed to send reminders.');
@@ -123,16 +173,39 @@ export default function AssessmentWorkspace() {
 
   const completionPct = assessment ? Math.round(assessment.questionStats?.completionPercent ?? 0) : 0;
 
+  // Filter badge counts
+  const incompleteChecklistCount = checklistItems.filter(i => i.status !== 'complete').length;
+  const openFindingsCount = poams.filter(p => p.status === 'open').length;
+
   const NAV_ITEMS = [
     { label: 'Dashboard', path: `/assessments/${id}/dashboard`, icon: <DashboardIcon /> },
-    { label: 'Checklist', path: `/assessments/${id}/checklist`, icon: <PlaylistAddCheckIcon /> },
+    { label: 'Checklist', path: `/assessments/${id}/checklist`, icon: <PlaylistAddCheckIcon />, badge: incompleteChecklistCount, badgeColor: 'warning' as const },
     { label: 'Team Intake', path: `/assessments/${id}/intake`, icon: <PeopleIcon /> },
     { label: 'Risk Assessment', path: `/assessments/${id}/risk`, icon: <WarningAmberIcon /> },
     { label: 'Data Categorization', path: `/assessments/${id}/data-categorization`, icon: <CategoryIcon /> },
     { label: 'Controls', path: `/assessments/${id}/controls`, icon: <ShieldIcon /> },
-    { label: 'Findings', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon /> },
+    { label: 'Findings', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon />, badge: openFindingsCount, badgeColor: 'error' as const },
     { label: 'Inventory', path: `/assessments/${id}/inventory`, icon: <StorageIcon /> },
   ];
+
+  // Dynamic Countdown (Target Date: Jul 16, 2026)
+  const targetDate = new Date('2026-07-16T00:00:00');
+  const getAtoCountdown = () => {
+    const now = new Date();
+    targetDate.setHours(0,0,0,0);
+    now.setHours(0,0,0,0);
+    const diffTime = targetDate.getTime() - now.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+  const daysToAto = getAtoCountdown();
+  const getAtoStyle = (days: number) => {
+    if (days <= 7) return { color: '#ef4444', label: `${days} days left (Critical)` };
+    if (days <= 30) return { color: '#fbbf24', label: `${days} days to target` };
+    return { color: '#4ade80', label: `${days} days to target` };
+  };
+  const atoStyle = getAtoStyle(daysToAto);
+  const projectedCompletion = Math.min(100, Math.round(completionPct + (daysToAto * 1.1)));
+  const overdueTeams = teams.filter(t => t.status === 'overdue');
 
   // Map route path to page header title
   const getPageHeaderTitle = () => {
@@ -222,6 +295,21 @@ export default function AssessmentWorkspace() {
                         primary={item.label}
                         slotProps={{ primary: { fontSize: 13.5, fontWeight: active ? 650 : 500 } }}
                       />
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <Chip
+                          label={item.badge}
+                          size="small"
+                          color={item.badgeColor}
+                          sx={{ 
+                            height: 18, 
+                            minWidth: 18, 
+                            fontSize: 10, 
+                            fontWeight: 800, 
+                            borderRadius: '9px',
+                            px: 0.5 
+                          }}
+                        />
+                      )}
                     </ListItemButton>
                   </ListItem>
                 );
@@ -254,9 +342,24 @@ export default function AssessmentWorkspace() {
                     '& .MuiLinearProgress-bar': { bgcolor: '#6366f1' }
                   }} 
                 />
-                <Typography variant="caption" sx={{ color: '#64748b', display: 'block', mt: 1.5, fontWeight: 500 }}>
-                  ATO target: Jul 16, 2026
-                </Typography>
+                <Tooltip 
+                  title={`At current pace, you'll reach ${projectedCompletion}% by the target date.`} 
+                  placement="top" 
+                  arrow
+                >
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
+                      color: atoStyle.color, 
+                      display: 'block', 
+                      mt: 1.5, 
+                      fontWeight: 700,
+                      cursor: 'help'
+                    }}
+                  >
+                    ⚠️ {atoStyle.label}
+                  </Typography>
+                </Tooltip>
               </CardContent>
             </Card>
           </Box>
@@ -280,13 +383,29 @@ export default function AssessmentWorkspace() {
               <Box sx={{ flexGrow: 1 }} />
 
               {/* Actions */}
-              <Box sx={{ display: 'flex', gap: 1.5 }}>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                <Tooltip title="Global Search (Cmd+K)" arrow>
+                  <IconButton 
+                    onClick={() => setSearchOpen(true)}
+                    sx={{ 
+                      color: '#475569', 
+                      border: '1px solid #e2e8f0', 
+                      borderRadius: 2, 
+                      p: 1, 
+                      mr: 0.5,
+                      '&:hover': { bgcolor: '#f8fafc' } 
+                    }}
+                  >
+                    <SearchIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+
                 <Button 
                   variant="outlined" 
                   color="warning" 
                   size="small"
                   onClick={handleRemindAllOverdue}
-                  disabled={reminding}
+                  disabled={reminding || overdueTeams.length === 0}
                   startIcon={<NotificationImportantIcon />}
                   sx={{ borderRadius: 2, px: 2, py: 0.75, fontWeight: 650, fontSize: 13 }}
                 >
@@ -321,6 +440,54 @@ export default function AssessmentWorkspace() {
             </Routes>
           </Box>
         </Box>
+
+        {/* Global Search Dialog */}
+        {id && (
+          <GlobalSearchDialog 
+            open={searchOpen} 
+            onClose={() => setSearchOpen(false)} 
+            assessmentId={id} 
+          />
+        )}
+
+        {/* Remind All Overdue Confirmation Dialog */}
+        <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)} maxWidth="xs" fullWidth>
+          <DialogTitle sx={{ fontWeight: 800 }}>Send Overdue Reminders?</DialogTitle>
+          <DialogContent>
+            <DialogContentText sx={{ fontSize: 14, mb: 2 }}>
+              You are about to send response sweep emails to all intake teams who are currently overdue.
+            </DialogContentText>
+            {overdueTeams.length > 0 ? (
+              <Box sx={{ bgcolor: 'rgba(239, 68, 68, 0.04)', p: 2, borderRadius: 2, border: '1px solid rgba(239, 68, 68, 0.1)' }}>
+                <Typography variant="caption" fontWeight={700} color="error.main" sx={{ display: 'block', mb: 1 }}>
+                  THE FOLLOWING TEAMS WILL BE NOTIFIED:
+                </Typography>
+                <ul style={{ margin: 0, paddingLeft: 16, fontSize: 13 }}>
+                  {overdueTeams.map(t => (
+                    <li key={t.id} style={{ color: '#1e293b', fontWeight: 600, marginBottom: 4 }}>
+                      {t.name} (Lead: {t.leadName})
+                    </li>
+                  ))}
+                </ul>
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No teams are currently overdue.
+              </Typography>
+            )}
+          </DialogContent>
+          <DialogActions sx={{ p: 2.5 }}>
+            <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
+            <Button 
+              variant="contained" 
+              color="warning" 
+              onClick={confirmRemindAll} 
+              disabled={overdueTeams.length === 0}
+            >
+              Send Reminders
+            </Button>
+          </DialogActions>
+        </Dialog>
 
       </Box>
     </WorkspaceContext.Provider>

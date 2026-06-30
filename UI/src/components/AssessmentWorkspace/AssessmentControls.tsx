@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -22,8 +23,12 @@ import { useWorkspace } from './AssessmentWorkspace';
 
 export default function AssessmentControls() {
   const { assessment, refreshAssessment } = useWorkspace();
+  const [searchParams] = useSearchParams();
+  const filterFamily = searchParams.get('family');
+  
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [saving, setSaving] = useState(false);
@@ -75,6 +80,16 @@ export default function AssessmentControls() {
     };
     loadQuestions();
   }, [assessment]);
+  useEffect(() => {
+    if (questions.length > 0) {
+      const initial: Record<string, boolean> = {};
+      const uniqueFamilies = Array.from(new Set(questions.map(q => q.familyId || 'General')));
+      for (const fid of uniqueFamilies) {
+        initial[fid] = filterFamily ? fid === filterFamily : true;
+      }
+      setExpanded(initial);
+    }
+  }, [questions, filterFamily]);
 
   // Auto-save 60 s after last change
   useEffect(() => {
@@ -163,7 +178,12 @@ export default function AssessmentControls() {
           const qs = byFamily[fid];
           const answered = qs.filter(q => isAnswered(answers[q.id])).length;
           return (
-            <Accordion key={fid} defaultExpanded sx={{ border: '1px solid #e2e8f0', borderRadius: '12px !important', boxShadow: 'none', '&:before': { display: 'none' } }}>
+            <Accordion 
+              key={fid} 
+              expanded={!!expanded[fid]} 
+              onChange={(_, isExpanded) => setExpanded(prev => ({ ...prev, [fid]: isExpanded }))}
+              sx={{ border: '1px solid #e2e8f0', borderRadius: '12px !important', boxShadow: 'none', '&:before': { display: 'none' } }}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Typography fontWeight={750} color="#0f172a">

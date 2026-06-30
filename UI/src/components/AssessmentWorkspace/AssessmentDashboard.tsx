@@ -20,15 +20,49 @@ import GroupIcon from '@mui/icons-material/Group';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 
+import { useNavigate } from 'react-router-dom';
+import Tooltip from '@mui/material/Tooltip';
+
 import { api } from '../../services/api';
 import type { IntakeTeam, PoamItem } from '../../services/api';
 import { useWorkspace } from './AssessmentWorkspace';
 
 export default function AssessmentDashboard() {
   const { assessment } = useWorkspace();
+  const navigate = useNavigate();
   const [teams, setTeams] = useState<IntakeTeam[]>([]);
   const [poams, setPoams] = useState<PoamItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Urgency & days remaining helpers
+  const isNearDue = (dueDateStr?: string | null) => {
+    if (!dueDateStr) return false;
+    const due = new Date(dueDateStr);
+    const now = new Date();
+    const diffTime = due.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays >= 0 && diffDays <= 7;
+  };
+
+  const getDaysRemaining = (dueDateStr?: string | null) => {
+    if (!dueDateStr) return '—';
+    const due = new Date(dueDateStr);
+    const now = new Date();
+    due.setHours(0,0,0,0);
+    now.setHours(0,0,0,0);
+    const diffTime = due.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return `Overdue by ${Math.abs(diffDays)}d`;
+    if (diffDays === 0) return 'Due today';
+    if (diffDays === 1) return '1 day remaining';
+    return `${diffDays} days remaining`;
+  };
+
+  const getProgressColor = (pct: number) => {
+    if (pct >= 80) return '#10b981'; // Green
+    if (pct >= 50) return '#f59e0b'; // Orange
+    return '#ef4444'; // Red
+  };
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -67,13 +101,13 @@ export default function AssessmentDashboard() {
 
   const openFindings = poams.filter(p => p.status === 'open').length;
 
-  // Static/dynamic family progress data
+  // Static/dynamic family progress data with deltas
   const familyProgress = [
-    { family: 'Access Control (AC)', completed: 18, total: 22 },
-    { family: 'Identification & Auth (IA)', completed: 12, total: 15 },
-    { family: 'Audit & Accountability (AU)', completed: 9, total: 14 },
-    { family: 'Risk Assessment (RA)', completed: 5, total: 8 },
-    { family: 'Incident Response (IR)', completed: 6, total: 10 },
+    { id: 'AC', family: 'Access Control (AC)', completed: 18, total: 22, delta: '▲2' },
+    { id: 'IA', family: 'Identification & Auth (IA)', completed: 12, total: 15, delta: '—' },
+    { id: 'AU', family: 'Audit & Accountability (AU)', completed: 9, total: 14, delta: '▲1' },
+    { id: 'RA', family: 'Risk Assessment (RA)', completed: 5, total: 8, delta: '▲1' },
+    { id: 'IR', family: 'Incident Response (IR)', completed: 6, total: 10, delta: '—' },
   ];
 
   return (
@@ -173,37 +207,88 @@ export default function AssessmentDashboard() {
         <Grid size={{ xs: 12, md: 7 }}>
           <Card sx={{ borderRadius: 3, p: 1, border: '1px solid #e2e8f0' }}>
             <CardContent>
-              <Typography variant="subtitle1" fontWeight={750} color="#0f172a" sx={{ mb: 2.5 }}>
-                Controls Progress by Family
-              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="subtitle1" fontWeight={750} color="#0f172a">
+                  Controls Progress by Family
+                </Typography>
+                <Chip 
+                  label="Trend: 58% → 61% → 65% → 68%" 
+                  size="small" 
+                  sx={{ bgcolor: '#f1f5f9', color: '#475569', fontWeight: 650, fontSize: 10 }} 
+                />
+              </Box>
               
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {familyProgress.map((item) => {
                   const pct = Math.round((item.completed / item.total) * 100);
+                  const barColor = getProgressColor(pct);
                   return (
-                    <Box key={item.family}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.75 }}>
-                        <Typography variant="body2" fontWeight={600} color="#334155">
-                          {item.family}
-                        </Typography>
-                        <Typography variant="body2" fontWeight={650} color="text.secondary">
-                          {item.completed}/{item.total} ({pct}%)
-                        </Typography>
-                      </Box>
-                      <LinearProgress 
-                        variant="determinate" 
-                        value={pct} 
+                    <Tooltip key={item.id} title="Click to view and edit controls for this family" arrow>
+                      <Box 
+                        onClick={() => navigate(`/assessments/${assessment.id}/controls?family=${item.id}`)}
                         sx={{ 
-                          height: 7, 
-                          borderRadius: 3.5, 
-                          bgcolor: '#f1f5f9',
-                          '& .MuiLinearProgress-bar': { bgcolor: '#6366f1' }
-                        }} 
-                      />
-                    </Box>
+                          cursor: 'pointer', 
+                          p: 0.75, 
+                          borderRadius: 1.5,
+                          '&:hover': { bgcolor: '#f8fafc' } 
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5, alignItems: 'center' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="body2" fontWeight={600} color="#334155">
+                              {item.family}
+                            </Typography>
+                            {item.delta && item.delta !== '—' && (
+                              <Chip 
+                                label={item.delta} 
+                                size="small" 
+                                sx={{ 
+                                  height: 16, 
+                                  fontSize: 9, 
+                                  fontWeight: 800, 
+                                  ml: 1, 
+                                  bgcolor: 'rgba(16, 185, 129, 0.1)', 
+                                  color: '#10b981' 
+                                }} 
+                              />
+                            )}
+                          </Box>
+                          <Typography variant="body2" fontWeight={750} sx={{ color: barColor }}>
+                            {item.completed}/{item.total} ({pct}%)
+                          </Typography>
+                        </Box>
+                        <LinearProgress 
+                          variant="determinate" 
+                          value={pct} 
+                          sx={{ 
+                            height: 6, 
+                            borderRadius: 3, 
+                            bgcolor: '#e2e8f0',
+                            '& .MuiLinearProgress-bar': { bgcolor: barColor }
+                          }} 
+                        />
+                      </Box>
+                    </Tooltip>
                   );
                 })}
               </Box>
+
+              {/* Color Legend */}
+              <Box sx={{ display: 'flex', gap: 2.5, mt: 3, pt: 2, borderTop: '1px dashed #e2e8f0', justifyContent: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#ef4444' }} />
+                  <Typography variant="caption" color="text.secondary" fontWeight={600}>Critical (&lt;50%)</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#f59e0b' }} />
+                  <Typography variant="caption" color="text.secondary" fontWeight={600}>At Risk (50%–79%)</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#10b981' }} />
+                  <Typography variant="caption" color="text.secondary" fontWeight={600}>Complete (≥80%)</Typography>
+                </Box>
+              </Box>
+
             </CardContent>
           </Card>
         </Grid>
@@ -260,7 +345,12 @@ export default function AssessmentDashboard() {
           <Typography variant="subtitle1" fontWeight={750} color="#0f172a">
             Recent Open Findings
           </Typography>
-          <Chip label={`${openFindings} unresolved findings`} size="small" color="error" sx={{ fontWeight: 650 }} />
+          <Chip 
+            label={`Showing ${Math.min(5, poams.length)} of ${poams.length} open findings`} 
+            size="small" 
+            color="error" 
+            sx={{ fontWeight: 700 }} 
+          />
         </Box>
         <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
           <TableContainer component={Paper} elevation={0} sx={{ border: 'none', borderRadius: 0 }}>
@@ -271,37 +361,50 @@ export default function AssessmentDashboard() {
                   <TableCell sx={{ fontWeight: 700, color: '#475569' }}>Severity</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: '#475569' }}>Assigned Owner</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: '#475569' }}>Due Date</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: '#475569' }}>Days Remaining</TableCell>
                   <TableCell sx={{ fontWeight: 700, color: '#475569' }}>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {poams.slice(0, 5).map((row) => (
-                  <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell sx={{ fontWeight: 600 }}>{row.title}</TableCell>
-                    <TableCell>
-                      <Chip 
-                        label={row.priority.toUpperCase()} 
-                        size="small" 
-                        color={row.priority === 'high' ? 'error' : row.priority === 'medium' ? 'warning' : 'default'}
-                        sx={{ fontWeight: 700, fontSize: 10, borderRadius: 1.5 }}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ color: '#475569', fontSize: 13 }}>{row.owner}</TableCell>
-                    <TableCell sx={{ color: '#475569', fontSize: 13 }}>{row.dueDate}</TableCell>
-                    <TableCell>
-                      <Chip 
-                        label={row.status === 'open' ? 'Open' : 'Closed'} 
-                        size="small"
-                        color={row.status === 'open' ? 'warning' : 'success'}
-                        variant="outlined"
-                        sx={{ fontWeight: 650, fontSize: 11 }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {poams.slice(0, 5).map((row) => {
+                  const nearDue = isNearDue(row.dueDate);
+                  return (
+                    <TableRow 
+                      key={row.id} 
+                      sx={{ 
+                        '&:last-child td, &:last-child th': { border: 0 },
+                        bgcolor: nearDue ? 'rgba(245, 158, 11, 0.04)' : 'inherit'
+                      }}
+                    >
+                      <TableCell sx={{ fontWeight: 600 }}>{row.title}</TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={row.priority.toUpperCase()} 
+                          size="small" 
+                          color={row.priority === 'high' ? 'error' : row.priority === 'medium' ? 'warning' : 'default'}
+                          sx={{ fontWeight: 700, fontSize: 10, borderRadius: 1.5 }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ color: '#475569', fontSize: 13 }}>{row.owner}</TableCell>
+                      <TableCell sx={{ color: '#475569', fontSize: 13 }}>{row.dueDate}</TableCell>
+                      <TableCell sx={{ color: nearDue ? 'warning.main' : '#475569', fontWeight: nearDue ? 700 : 500, fontSize: 13 }}>
+                        {getDaysRemaining(row.dueDate)}
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={row.status === 'open' ? 'Open' : 'Closed'} 
+                          size="small"
+                          color={row.status === 'open' ? 'warning' : 'success'}
+                          variant="outlined"
+                          sx={{ fontWeight: 650, fontSize: 11 }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
                 {poams.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} align="center" sx={{ py: 4, color: '#64748b' }}>
+                    <TableCell colSpan={6} align="center" sx={{ py: 4, color: '#64748b' }}>
                       No open findings reported for this assessment.
                     </TableCell>
                   </TableRow>
