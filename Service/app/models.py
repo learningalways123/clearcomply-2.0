@@ -118,6 +118,13 @@ class Assessment(BaseModel):
     stats: AssessmentStats
     questionStats: AssessmentQuestionStats = Field(default_factory=lambda: AssessmentQuestionStats(totalQuestions=0, answeredQuestions=0, completionPercent=0.0))
     riskScore: Optional[float] = Field(default=None, description="Weighted compliance risk score 0-100 (higher = more compliant)")
+    soc2AssessmentType: Optional[str] = Field(default=None, description="SOC 2 Assessment Type: Type I | Type II")
+    soc2Categories: List[str] = Field(default=[], description="Selected SOC 2 Trust Services Categories")
+    nistConfidentiality: Optional[str] = Field(default=None, description="NIST FIPS 199 Confidentiality impact: Low | Moderate | High")
+    nistIntegrity: Optional[str] = Field(default=None, description="NIST FIPS 199 Integrity impact: Low | Moderate | High")
+    nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
+    nistBaseline: Optional[str] = Field(default=None, description="NIST Calculated Baseline: Low | Moderate | High")
+
 
 
 # Request/Response Models
@@ -128,6 +135,12 @@ class CreateAssessmentRequest(BaseModel):
     selectedQuestionIds: List[str] = Field(default=[], max_items=2000, description="List of selected question IDs")
     moduleIds: List[str] = Field(default=[], max_items=20, description="List of selected CSF module IDs")
     familyIds: List[str] = Field(default=[], max_items=100, description="List of selected NIST family IDs")
+    soc2AssessmentType: Optional[str] = Field(default=None, description="SOC 2 Assessment Type: Type I | Type II")
+    soc2Categories: List[str] = Field(default=[], description="Selected SOC 2 Trust Services Categories")
+    nistConfidentiality: Optional[str] = Field(default=None, description="NIST FIPS 199 Confidentiality impact: Low | Moderate | High")
+    nistIntegrity: Optional[str] = Field(default=None, description="NIST FIPS 199 Integrity impact: Low | Moderate | High")
+    nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
+
 
 
 class AssessmentResponse(BaseModel):
@@ -143,6 +156,13 @@ class AssessmentResponse(BaseModel):
     createdAt: str  # ISO8601 string format
     stats: AssessmentStats
     questionStats: AssessmentQuestionStats
+    soc2AssessmentType: Optional[str] = Field(default=None, description="SOC 2 Assessment Type: Type I | Type II")
+    soc2Categories: List[str] = Field(default=[], description="Selected SOC 2 Trust Services Categories")
+    nistConfidentiality: Optional[str] = Field(default=None, description="NIST FIPS 199 Confidentiality impact: Low | Moderate | High")
+    nistIntegrity: Optional[str] = Field(default=None, description="NIST FIPS 199 Integrity impact: Low | Moderate | High")
+    nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
+    nistBaseline: Optional[str] = Field(default=None, description="NIST Calculated Baseline: Low | Moderate | High")
+
 
 
 class AnswerSubmission(BaseModel):

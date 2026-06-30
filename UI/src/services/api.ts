@@ -95,7 +95,14 @@ export interface Assessment {
   stats: AssessmentStats;
   questionStats?: QuestionStats;
   riskScore?: number | null;
+  soc2AssessmentType?: string;
+  soc2Categories?: string[];
+  nistConfidentiality?: string;
+  nistIntegrity?: string;
+  nistAvailability?: string;
+  nistBaseline?: string;
 }
+
 
 export interface Family {
   id: string;
@@ -304,7 +311,13 @@ export interface CreateAssessmentRequest {
   selectedQuestionIds?: string[];
   moduleIds?: string[];
   familyIds?: string[];
+  soc2AssessmentType?: string;
+  soc2Categories?: string[];
+  nistConfidentiality?: string;
+  nistIntegrity?: string;
+  nistAvailability?: string;
 }
+
 
 // ─── API methods ──────────────────────────────────────────────────────────────
 
@@ -440,4 +453,59 @@ export const api = {
     apiClient.get<CsfProfileResponse>(`/assessments/${id}/csf-profile`).then(r => r.data),
   upsertCsfProfile: (id: string, profiles: CsfFunctionProfile[]) =>
     apiClient.put<CsfProfileResponse>(`/assessments/${id}/csf-profile`, { profiles }).then(r => r.data),
+
+  // ─── SSP Builder Redesign ──────────────────────────────────────────────────
+  getChecklist: (id: string) =>
+    apiClient.get<ChecklistItem[]>(`/assessments/${id}/checklist`).then(r => r.data),
+  getIntake: (id: string) =>
+    apiClient.get<IntakeTeam[]>(`/assessments/${id}/intake`).then(r => r.data),
+  remindTeam: (id: string, teamId: string) =>
+    apiClient.post<{ id: string; name: string; leadEmail: string; message: string }>(`/assessments/${id}/intake/${teamId}/remind`).then(r => r.data),
+  remindAllOverdue: (id: string) =>
+    apiClient.post<{ assessmentId: string; remindedTeamsCount: number; message: string }>(`/assessments/${id}/remind-overdue`).then(r => r.data),
+  getRiskQuestions: (id: string) =>
+    apiClient.get<RiskQuestion[]>(`/assessments/${id}/risk-questions`).then(r => r.data),
+  getInventory: (id: string) =>
+    apiClient.get<InventoryItem[]>(`/assessments/${id}/inventory`).then(r => r.data),
+  addInventoryItem: (id: string, name: string, type: string, owner?: string) =>
+    apiClient.post<InventoryItem>(`/assessments/${id}/inventory`, { name, type, owner }).then(r => r.data),
 };
+
+export interface ChecklistItem {
+  id: string;
+  assessmentId: string;
+  title: string;
+  status: 'complete' | 'in_progress' | 'not_started';
+  targetLink?: string;
+}
+
+export interface IntakeTeam {
+  id: string;
+  assessmentId: string;
+  name: string;
+  leadName: string;
+  leadEmail: string;
+  responseRate: number;
+  status: 'complete' | 'in_progress' | 'overdue';
+  lastActiveDaysAgo: number;
+  families?: string;
+}
+
+export interface RiskQuestion {
+  id: string;
+  assessmentId: string;
+  questionText: string;
+  mappedControl?: string;
+  response: 'Full' | 'Partial' | 'None' | 'N/A';
+  pointsMissed: number;
+}
+
+export interface InventoryItem {
+  id: string;
+  assessmentId: string;
+  name: string;
+  type: string;
+  status: string;
+  owner?: string;
+}
+

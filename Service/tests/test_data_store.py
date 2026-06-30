@@ -194,10 +194,12 @@ def test_get_assessment_questions_with_answers(store):
     created, qids = _make_assessment(store)
     from app.models import AnswerSubmission
     store.update_assessment_answers_v2(created.id, [AnswerSubmission(questionId=qids[0], yesNo="Yes")])
-    result = store.get_assessment_questions_with_answers(created.id)
+    result = store.get_assessment_questions_with_answers_db(created.id)
     assert len(result) == len(qids)
-    answered = [r for r in result if r.answerYesNo == "Yes"]
+    answered = [r for r in result if r["answerYesNo"] == "Yes"]
     assert len(answered) == 1
+
+
 
 
 # ── Status transitions (SQLite) ───────────────────────────────────────────────

@@ -25,3 +25,22 @@ def store():
     """Return a freshly constructed DataStore (in-memory questions + clean DB)."""
     from app.data_store import DataStore
     return DataStore()
+
+
+@pytest.fixture(autouse=True)
+def override_auth():
+    """Globally mock the authentication dependency for FastAPI in testing."""
+    from main import app
+    from app.auth import get_current_user, User
+    
+    mock_user = User(
+        email="demo@clearcomply.io",
+        name="Test User",
+        google_id="12345",
+        role="lead_assessor"
+    )
+
+    app.dependency_overrides[get_current_user] = lambda: mock_user
+    yield
+    app.dependency_overrides.clear()
+

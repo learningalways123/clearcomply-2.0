@@ -70,6 +70,15 @@ class AssessmentRecord(Base):
     answered_questions = Column(Integer, default=0)
     completion_percent = Column(Float, default=0.0)
 
+    # Scoping data (Phase 3 additions)
+    soc2_assessment_type = Column(String, nullable=True)
+    soc2_categories = Column(Text, nullable=True, default="[]")
+    nist_confidentiality = Column(String, nullable=True)
+    nist_integrity = Column(String, nullable=True)
+    nist_availability = Column(String, nullable=True)
+    nist_baseline = Column(String, nullable=True)
+
+
     creator = relationship("UserRecord", back_populates="assessments", foreign_keys=[created_by_email])
     answers = relationship("AnswerRecord", back_populates="assessment", cascade="all, delete-orphan")
 
@@ -230,3 +239,58 @@ class EvidenceRecord(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     assessment = relationship("AssessmentRecord", backref="evidence_files")
+
+
+class ChecklistItemRecord(Base):
+    __tablename__ = "ssp_checklist"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    title = Column(String, nullable=False)
+    status = Column(String, nullable=False, default="not_started") # complete | in_progress | not_started
+    target_link = Column(String, nullable=True)
+
+    assessment = relationship("AssessmentRecord", backref="checklist_items")
+
+
+class IntakeTeamRecord(Base):
+    __tablename__ = "ssp_intake_teams"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    name = Column(String, nullable=False)
+    lead_name = Column(String, nullable=False)
+    lead_email = Column(String, nullable=False)
+    response_rate = Column(Integer, nullable=False, default=0)
+    status = Column(String, nullable=False, default="in_progress") # complete | in_progress | overdue
+    last_active_days_ago = Column(Integer, nullable=False, default=0)
+    families = Column(Text, nullable=True)
+
+    assessment = relationship("AssessmentRecord", backref="intake_teams")
+
+
+class RiskQuestionRecord(Base):
+    __tablename__ = "ssp_risk_questions"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    question_text = Column(Text, nullable=False)
+    mapped_control = Column(String, nullable=True)
+    response = Column(String, nullable=False, default="None") # Full | Partial | None | N/A
+    points_missed = Column(Integer, nullable=False, default=0)
+
+    assessment = relationship("AssessmentRecord", backref="risk_questions")
+
+
+class InventoryItemRecord(Base):
+    __tablename__ = "ssp_inventory_items"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, index=True)
+    name = Column(String, nullable=False)
+    type = Column(String, nullable=False)
+    status = Column(String, nullable=False, default="Active")
+    owner = Column(String, nullable=True)
+
+    assessment = relationship("AssessmentRecord", backref="inventory_items")
+

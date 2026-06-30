@@ -7,7 +7,7 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 import LoginPage from './components/Auth/LoginPage';
 import AppLayout from './components/Layout/AppLayout';
 import AssessmentsOverview from './components/AssessmentsOverview/AssessmentsOverview';
-import AssessmentDetail from './components/AssessmentDetail/AssessmentDetail';
+import AssessmentWorkspace from './components/AssessmentWorkspace/AssessmentWorkspace';
 import NewAssessment from './components/NewAssessment/NewAssessment';
 import AuditLog from './components/AuditLog/AuditLog';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -59,18 +59,25 @@ export default function App() {
               path="/*"
               element={
                 <ProtectedRoute>
-                  <AppLayout>
-                    <Routes>
-                      <Route path="/" element={<Navigate to="/assessments" replace />} />
-                      <Route path="/assessments" element={<AssessmentsOverview />} />
-                      <Route path="/assessments/:id" element={<AssessmentDetail />} />
-                      <Route path="/new-assessment" element={<NewAssessment />} />
-                      <Route path="/audit-log" element={<AuditLog />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/poam" element={<Poam />} />
-                      <Route path="/evidence" element={<Evidence />} />
-                    </Routes>
-                  </AppLayout>
+                  <Routes>
+                    <Route path="/assessments/:id/*" element={<AssessmentWorkspace />} />
+                    <Route
+                      path="/*"
+                      element={
+                        <AppLayout>
+                          <Routes>
+                            <Route path="/" element={<Navigate to="/assessments" replace />} />
+                            <Route path="/assessments" element={<AssessmentsOverview />} />
+                            <Route path="/new-assessment" element={<NewAssessment />} />
+                            <Route path="/audit-log" element={<AuditLog />} />
+                            <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/poam" element={<Poam />} />
+                            <Route path="/evidence" element={<Evidence />} />
+                          </Routes>
+                        </AppLayout>
+                      }
+                    />
+                  </Routes>
                 </ProtectedRoute>
               }
             />
@@ -80,3 +87,4 @@ export default function App() {
     </ThemeProvider>
   );
 }
+

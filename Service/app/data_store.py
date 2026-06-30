@@ -17,7 +17,7 @@ from app.models import (
     QuestionBank, QuestionWithAnswer, PoamItem,
 )
 from app.database import db_session
-from app.db_models import AssessmentRecord, AnswerRecord, PoamRecord
+from app.db_models import AssessmentRecord, AnswerRecord, PoamRecord, ChecklistItemRecord, IntakeTeamRecord, RiskQuestionRecord, InventoryItemRecord
 
 
 WEIGHTS = {"High": 3, "Medium": 2, "Low": 1}
@@ -75,7 +75,14 @@ def _record_to_assessment(rec: AssessmentRecord, questions: Optional[Dict] = Non
             completionPercent=rec.completion_percent,
         ),
         riskScore=risk_score,
+        soc2AssessmentType=rec.soc2_assessment_type,
+        soc2Categories=json.loads(rec.soc2_categories or "[]"),
+        nistConfidentiality=rec.nist_confidentiality,
+        nistIntegrity=rec.nist_integrity,
+        nistAvailability=rec.nist_availability,
+        nistBaseline=rec.nist_baseline,
     )
+
 
 
 class DataStore:
@@ -210,9 +217,96 @@ class DataStore:
                 total_questions=assessment.questionStats.totalQuestions,
                 answered_questions=0,
                 completion_percent=0.0,
+                soc2_assessment_type=assessment.soc2AssessmentType,
+                soc2_categories=json.dumps(assessment.soc2Categories or []),
+                nist_confidentiality=assessment.nistConfidentiality,
+                nist_integrity=assessment.nistIntegrity,
+                nist_availability=assessment.nistAvailability,
+                nist_baseline=assessment.nistBaseline,
             )
             db.add(rec)
+
+            # Auto-populate checklist items
+            checklist_items = [
+                ("Application Inventory", "complete", "inventory"),
+                ("Step #1 — System Contacts & Data", "complete", "data-categorization"),
+                ("Application Risk Assessment", "complete", "risk"),
+                ("Vendor Risk Assessment", "in_progress", "risk"),
+                ("Data Categorization", "complete", "data-categorization"),
+                ("System Environments", "complete", "data-categorization"),
+                ("Scanning Strategy", "complete", "data-categorization"),
+                ("System Inventory", "in_progress", "inventory"),
+                ("System Diagrams", "in_progress", "inventory"),
+                ("Controls Assessment", "in_progress", "controls")
+            ]
+            for title, status, link in checklist_items:
+                db.add(ChecklistItemRecord(
+                    id=str(uuid.uuid4()),
+                    assessment_id=assessment.id,
+                    title=title,
+                    status=status,
+                    target_link=link
+                ))
+
+            # Auto-populate intake teams
+            intake_teams = [
+                ("Business / Data Owners", "Sarah Kim", "s.kim@agency.gov", 67, "in_progress", 2, "Data Categorization"),
+                ("IT Operations", "Marcus Johnson", "m.johnson@agency.gov", 69, "in_progress", 1, "Disaster Recovery Planning"),
+                ("IAM / IT Ops", "Priya Nair", "p.nair@agency.gov", 88, "complete", 0, "Identity & Access Management"),
+                ("Security Team", "Derek Walsh", "d.walsh@agency.gov", 30, "overdue", 5, "Incident Management"),
+                ("CISO Office", "Linda Torres", "l.torres@agency.gov", 100, "complete", 0, "Security Governance")
+            ]
+            for name, lead_name, lead_email, response_rate, t_status, active_days, families in intake_teams:
+                db.add(IntakeTeamRecord(
+                    id=str(uuid.uuid4()),
+                    assessment_id=assessment.id,
+                    name=name,
+                    lead_name=lead_name,
+                    lead_email=lead_email,
+                    response_rate=response_rate,
+                    status=t_status,
+                    last_active_days_ago=active_days,
+                    families=families
+                ))
+
+            # Auto-populate risk questions
+            risk_questions = [
+                ("Inventory of authorized/unauthorized devices documented?", "Secure Config 3", "Full", 0),
+                ("Installed software limited to approved and documented list?", "Secure Config 4", "Full", 0),
+                ("Secure configuration baselines applied to all systems?", "Secure Config 10", "Partial", 5),
+                ("Monthly vulnerability scanning on all servers/devices?", "TVM 2", "Full", 0),
+                ("MFA required for all administrative access?", "IAM 11", "None", 15),
+                ("Centralized log server receiving all system logs?", "SLM 1", "N/A", 0),
+                ("All technologies modern and fully supported?", "Secure Config 7", "Full", 0)
+            ]
+            for q_text, control, resp, pts in risk_questions:
+                db.add(RiskQuestionRecord(
+                    id=str(uuid.uuid4()),
+                    assessment_id=assessment.id,
+                    question_text=q_text,
+                    mapped_control=control,
+                    response=resp,
+                    points_missed=pts
+                ))
+
+            # Auto-populate inventory items
+            inventory_items = [
+                ("Server 01", "VM", "Active", "IT Operations"),
+                ("Production DB", "Database", "Active", "Business / Data Owners"),
+                ("Secure Gateway", "Network Device", "Active", "IT Operations"),
+                ("Assessor Laptop", "Workstation", "Active", "Security Team")
+            ]
+            for name, type_str, i_status, owner in inventory_items:
+                db.add(InventoryItemRecord(
+                    id=str(uuid.uuid4()),
+                    assessment_id=assessment.id,
+                    name=name,
+                    type=type_str,
+                    status=i_status,
+                    owner=owner
+                ))
         return assessment
+
 
     def get_assessment_by_id(self, assessment_id: str) -> Optional[Assessment]:
         with db_session() as db:
@@ -262,10 +356,11 @@ class DataStore:
                         existing.inherited = sub.inherited
                     if hasattr(sub, 'inheritedFrom') and sub.inheritedFrom is not None:
                         existing.inherited_from = sub.inheritedFrom
+                    is_type_i = getattr(rec, 'soc2_assessment_type', None) == "Type I"
                     if hasattr(sub, 'designEffectiveness') and sub.designEffectiveness is not None:
                         existing.design_effectiveness = sub.designEffectiveness
                     if hasattr(sub, 'operatingEffectiveness') and sub.operatingEffectiveness is not None:
-                        existing.operating_effectiveness = sub.operatingEffectiveness
+                        existing.operating_effectiveness = None if is_type_i else sub.operatingEffectiveness
                     if hasattr(sub, 'currentTier') and sub.currentTier is not None:
                         existing.current_tier = sub.currentTier
                     if hasattr(sub, 'targetTier') and sub.targetTier is not None:
@@ -276,6 +371,10 @@ class DataStore:
                     existing.updated_by_email = updated_by_email
                 else:
                     import json as _j
+                    is_type_i = getattr(rec, 'soc2_assessment_type', None) == "Type I"
+                    operating_eff = getattr(sub, 'operatingEffectiveness', None)
+                    if is_type_i:
+                        operating_eff = None
                     db.add(AnswerRecord(
                         id=str(uuid.uuid4()),
                         assessment_id=assessment_id,
@@ -290,14 +389,16 @@ class DataStore:
                         inherited=getattr(sub, 'inherited', False) or False,
                         inherited_from=getattr(sub, 'inheritedFrom', None),
                         design_effectiveness=getattr(sub, 'designEffectiveness', None),
-                        operating_effectiveness=getattr(sub, 'operatingEffectiveness', None),
+                        operating_effectiveness=operating_eff,
                         current_tier=getattr(sub, 'currentTier', None),
                         target_tier=getattr(sub, 'targetTier', None),
                         internal_notes=getattr(sub, 'internalNotes', None),
                         updated_at=now,
                         updated_by_email=updated_by_email,
                     ))
-            db.flush()  # make new rows visible to the count query below
+            db.flush()
+
+  # make new rows visible to the count query below
             total = len(selected_ids)
             all_ans = db.query(AnswerRecord).filter_by(assessment_id=assessment_id).all()
             answered = sum(1 for a in all_ans if (a.yes_no and a.yes_no.strip()) or (a.value and a.value.strip()))
@@ -538,51 +639,54 @@ class DataStore:
         assessment = self.get_assessment_by_id(assessment_id)
         if not assessment:
             raise ValueError(f"Assessment '{assessment_id}' not found")
+        result = []
         with db_session() as db:
             answer_map = {
                 a.question_id: a
                 for a in db.query(AnswerRecord).filter_by(assessment_id=assessment_id).all()
             }
-        result = []
-        for qid in assessment.selectedQuestionIds:
-            q = self.questions.get(qid)
-            if not q:
-                continue
-            ans = answer_map.get(qid)
-            methods = None
-            if ans and ans.assessment_methods:
-                try:
-                    methods = _j.loads(ans.assessment_methods)
-                except Exception:
-                    methods = [ans.assessment_methods]
-            result.append({
-                "id": q.id,
-                "familyId": q.familyId,
-                "familyName": q.familyName,
-                "controlRefs": q.controlRefs,
-                "questionText": q.questionText,
-                "stakeholderRoleId": q.stakeholderRoleId,
-                "answerType": q.answerType.value if hasattr(q.answerType, 'value') else q.answerType,
-                "criticality": q.criticality.value if hasattr(q.criticality, 'value') else q.criticality,
-                "functionId": q.functionId,
-                "functionName": q.functionName,
-                "subcategoryText": q.subcategoryText,
-                "answerValue": ans.value if ans else None,
-                "answerYesNo": ans.yes_no if ans else None,
-                "answerJustification": ans.justification if ans else None,
-                "implementationStatus": ans.implementation_status if ans else None,
-                "implementationDescription": ans.implementation_description if ans else None,
-                "responsibleRole": ans.responsible_role if ans else None,
-                "assessmentMethods": methods,
-                "inherited": ans.inherited if ans else False,
-                "inheritedFrom": ans.inherited_from if ans else None,
-                "designEffectiveness": ans.design_effectiveness if ans else None,
-                "operatingEffectiveness": ans.operating_effectiveness if ans else None,
-                "currentTier": ans.current_tier if ans else None,
-                "targetTier": ans.target_tier if ans else None,
-                "internalNotes": ans.internal_notes if ans else None,
-            })
+            for qid in assessment.selectedQuestionIds:
+
+                q = self.questions.get(qid)
+                if not q:
+                    continue
+
+                ans = answer_map.get(qid)
+                methods = None
+                if ans and ans.assessment_methods:
+                    try:
+                        methods = _j.loads(ans.assessment_methods)
+                    except Exception:
+                        methods = [ans.assessment_methods]
+                result.append({
+                    "id": q.id,
+                    "familyId": q.familyId,
+                    "familyName": q.familyName,
+                    "controlRefs": q.controlRefs,
+                    "questionText": q.questionText,
+                    "stakeholderRoleId": q.stakeholderRoleId,
+                    "answerType": q.answerType.value if hasattr(q.answerType, 'value') else q.answerType,
+                    "criticality": q.criticality.value if hasattr(q.criticality, 'value') else q.criticality,
+                    "functionId": q.functionId,
+                    "functionName": q.functionName,
+                    "subcategoryText": q.subcategoryText,
+                    "answerValue": ans.value if ans else None,
+                    "answerYesNo": ans.yes_no if ans else None,
+                    "answerJustification": ans.justification if ans else None,
+                    "implementationStatus": ans.implementation_status if ans else None,
+                    "implementationDescription": ans.implementation_description if ans else None,
+                    "responsibleRole": ans.responsible_role if ans else None,
+                    "assessmentMethods": methods,
+                    "inherited": ans.inherited if ans else False,
+                    "inheritedFrom": ans.inherited_from if ans else None,
+                    "designEffectiveness": ans.design_effectiveness if ans else None,
+                    "operatingEffectiveness": ans.operating_effectiveness if ans else None,
+                    "currentTier": ans.current_tier if ans else None,
+                    "targetTier": ans.target_tier if ans else None,
+                    "internalNotes": ans.internal_notes if ans else None,
+                })
         return result
+
 
 
     # ── Dashboard ─────────────────────────────────────────────────────────────
@@ -697,6 +801,116 @@ class DataStore:
             "topRisks": top_risks,
             "frameworkBreakdown": framework_breakdown,
         }
+
+    def get_ssp_checklist(self, assessment_id: str) -> list:
+        with db_session() as db:
+            recs = db.query(ChecklistItemRecord).filter_by(assessment_id=assessment_id).all()
+            return [
+                {
+                    "id": r.id,
+                    "assessmentId": r.assessment_id,
+                    "title": r.title,
+                    "status": r.status,
+                    "targetLink": r.target_link,
+                }
+                for r in recs
+            ]
+
+    def get_ssp_intake_teams(self, assessment_id: str) -> list:
+        with db_session() as db:
+            recs = db.query(IntakeTeamRecord).filter_by(assessment_id=assessment_id).all()
+            return [
+                {
+                    "id": r.id,
+                    "assessmentId": r.assessment_id,
+                    "name": r.name,
+                    "leadName": r.lead_name,
+                    "leadEmail": r.lead_email,
+                    "responseRate": r.response_rate,
+                    "status": r.status,
+                    "lastActiveDaysAgo": r.last_active_days_ago,
+                    "families": r.families,
+                }
+                for r in recs
+            ]
+
+    def get_ssp_risk_questions(self, assessment_id: str) -> list:
+        with db_session() as db:
+            recs = db.query(RiskQuestionRecord).filter_by(assessment_id=assessment_id).all()
+            return [
+                {
+                    "id": r.id,
+                    "assessmentId": r.assessment_id,
+                    "questionText": r.question_text,
+                    "mappedControl": r.mapped_control,
+                    "response": r.response,
+                    "pointsMissed": r.points_missed,
+                }
+                for r in recs
+            ]
+
+    def get_ssp_inventory_items(self, assessment_id: str) -> list:
+        with db_session() as db:
+            recs = db.query(InventoryItemRecord).filter_by(assessment_id=assessment_id).all()
+            return [
+                {
+                    "id": r.id,
+                    "assessmentId": r.assessment_id,
+                    "name": r.name,
+                    "type": r.type,
+                    "status": r.status,
+                    "owner": r.owner,
+                }
+                for r in recs
+            ]
+
+    def add_ssp_inventory_item(self, assessment_id: str, name: str, item_type: str, owner: Optional[str]) -> dict:
+        with db_session() as db:
+            rec = InventoryItemRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=assessment_id,
+                name=name,
+                type=item_type,
+                status="Active",
+                owner=owner or "Unassigned",
+            )
+            db.add(rec)
+            db.flush()
+            return {
+                "id": rec.id,
+                "assessmentId": rec.assessment_id,
+                "name": rec.name,
+                "type": rec.type,
+                "status": rec.status,
+                "owner": rec.owner,
+            }
+
+    def remind_intake_team(self, team_id: str) -> dict:
+        with db_session() as db:
+            rec = db.query(IntakeTeamRecord).filter_by(id=team_id).first()
+            if not rec:
+                raise ValueError(f"Intake team with ID '{team_id}' not found")
+            rec.last_active_days_ago = 0
+            db.flush()
+            return {
+                "id": rec.id,
+                "name": rec.name,
+                "leadEmail": rec.lead_email,
+                "message": f"Reminder email successfully sent to {rec.lead_name} ({rec.lead_email})"
+            }
+
+    def remind_all_overdue_teams(self, assessment_id: str) -> dict:
+        with db_session() as db:
+            recs = db.query(IntakeTeamRecord).filter_by(assessment_id=assessment_id, status="overdue").all()
+            names = [r.name for r in recs]
+            for r in recs:
+                r.last_active_days_ago = 0
+            db.flush()
+            return {
+                "assessmentId": assessment_id,
+                "remindedTeamsCount": len(recs),
+                "message": f"Reminders sent to {len(recs)} overdue teams: {', '.join(names)}" if recs else "No overdue teams to remind"
+            }
 
 
 data_store = DataStore()

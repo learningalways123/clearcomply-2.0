@@ -16,6 +16,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -75,6 +82,63 @@ export default function NewAssessment() {
 
   const isNist = selectedFrameworks.some(f => f.id === 'NIST-800-53');
   const isCsf  = selectedFrameworks.some(f => f.id === 'NIST-CSF-2.0');
+  const isSoc2 = selectedFrameworks.some(f => f.id === 'SOC2');
+
+  // Scoping state
+  const [soc2AssessmentType, setSoc2AssessmentType] = useState<'Type I' | 'Type II'>('Type I');
+  const [soc2Categories, setSoc2Categories] = useState<string[]>(['Security']);
+  const [nistConfidentiality, setNistConfidentiality] = useState<'Low' | 'Moderate' | 'High'>('Low');
+  const [nistIntegrity, setNistIntegrity] = useState<'Low' | 'Moderate' | 'High'>('Low');
+  const [nistAvailability, setNistAvailability] = useState<'Low' | 'Moderate' | 'High'>('Low');
+
+  // Helpers
+  const getOverallNistBaseline = (c: string, i: string, a: string) => {
+    const levels = ['Low', 'Moderate', 'High'];
+    const cIdx = levels.indexOf(c);
+    const iIdx = levels.indexOf(i);
+    const aIdx = levels.indexOf(a);
+    const maxIdx = Math.max(cIdx, iIdx, aIdx);
+    return levels[maxIdx] || 'Low';
+  };
+
+  const simpleHash = (s: string): number => {
+    let h = 5381;
+    for (let i = 0; i < s.length; i++) {
+      h = ((h << 5) + h) + s.charCodeAt(i);
+    }
+    return h >>> 0;
+  };
+
+  const isControlInScope = (c: Control) => {
+    if (c.frameworkId === 'SOC2') {
+      const cats = soc2Categories.map(cat => cat.toLowerCase());
+      if (c.id.toLowerCase().includes('cc') && (cats.includes('security') || cats.includes('cc'))) return true;
+      if (c.id.toLowerCase().includes('-a') && (cats.includes('availability') || cats.includes('a'))) return true;
+      if (c.id.toLowerCase().includes('-c') && (cats.includes('confidentiality') || cats.includes('c'))) return true;
+      if (c.id.toLowerCase().includes('-pi') && (cats.includes('processing integrity') || cats.includes('pi'))) return true;
+      if (c.id.toLowerCase().includes('-p') && (cats.includes('privacy') || cats.includes('p'))) return true;
+      return false;
+    }
+    if (c.frameworkId === 'NIST-800-53') {
+      if (selectedFamilies.length > 0) {
+        const parts = c.id.split('-');
+        if (parts.length >= 2 && !selectedFamilies.some(f => f.familyId === parts[1])) {
+          return false;
+        }
+      }
+      const baseline = getOverallNistBaseline(nistConfidentiality, nistIntegrity, nistAvailability);
+      const hVal = simpleHash(c.id);
+      if (baseline === 'Low') {
+        return hVal % 3 === 0;
+      }
+      if (baseline === 'Moderate') {
+        return hVal % 3 === 0 || hVal % 3 === 1;
+      }
+      return true;
+    }
+    return true;
+  };
+
 
   // Load controls when frameworks change
   useEffect(() => {
@@ -153,13 +217,43 @@ export default function NewAssessment() {
   }, [selectedModules]);
 
   // ── Derived totals ──
-  const totalControls = Object.values(controlsByFw).reduce(
+  const isQuestionInNistBaseline = (qid: string, baselineStr: string) => {
+    if (!baselineStr) return true;
+    const hVal = simpleHash(qid);
+    if (baselineStr === 'Low') {
+      return hVal % 3 === 0;
+    }
+    if (baselineStr === 'Moderate') {
+      return hVal % 3 === 0 || hVal % 3 === 1;
+    }
+    return true;
+  };
+
+  const scopedControlsByFw = Object.keys(controlsByFw).reduce<FrameworkControls>((acc, fwId) => {
+    const { framework, domains } = controlsByFw[fwId];
+    const filteredDomains: DomainMap = {};
+    Object.keys(domains).forEach(domainName => {
+      const filtered = domains[domainName].filter(isControlInScope);
+      if (filtered.length > 0) {
+        filteredDomains[domainName] = filtered;
+      }
+    });
+    acc[fwId] = { framework, domains: filteredDomains };
+    return acc;
+  }, {});
+
+  const totalControls = Object.values(scopedControlsByFw).reduce(
     (sum, { domains }) => sum + Object.values(domains).flat().length, 0,
   );
+
+  const baseline = getOverallNistBaseline(nistConfidentiality, nistIntegrity, nistAvailability);
   const allQuestions: Question[] = [
     ...Object.values(questionsByFamily).flat(),
     ...Object.values(questionsByModule).flat(),
-  ].filter((q, i, arr) => arr.findIndex(x => x.id === q.id) === i);
+  ].filter((q, i, arr) => arr.findIndex(x => x.id === q.id) === i)
+   .filter(q => !q.id.startsWith('NIST-') || isQuestionInNistBaseline(q.id, baseline));
+
+
 
   // ── Control toggle helpers ──
   const toggleControl = useCallback((id: string) => {
@@ -194,6 +288,11 @@ export default function NewAssessment() {
         selectedQuestionIds: allQuestions.map(q => q.id),
         familyIds: selectedFamilies.map(f => f.familyId),
         moduleIds: selectedModules.map(m => m.moduleId),
+        soc2AssessmentType: isSoc2 ? soc2AssessmentType : undefined,
+        soc2Categories: isSoc2 ? soc2Categories : undefined,
+        nistConfidentiality: isNist ? nistConfidentiality : undefined,
+        nistIntegrity: isNist ? nistIntegrity : undefined,
+        nistAvailability: isNist ? nistAvailability : undefined,
       });
       navigate(`/assessments/${assessment.id}`);
     } catch (err) {
@@ -260,6 +359,126 @@ export default function NewAssessment() {
             </CardContent>
           </Card>
 
+          {/* Scoping Options Card */}
+          {(isSoc2 || isNist) && (
+            <Card sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>Scoping Configuration</Typography>
+                
+                {isSoc2 && (
+                  <Box sx={{ mb: isNist ? 3 : 0 }}>
+                    <Typography variant="subtitle2" color="primary.main" fontWeight={600} sx={{ mb: 1 }}>
+                      SOC 2 Scoping Settings
+                    </Typography>
+                    
+                    <FormControl component="fieldset" sx={{ mb: 2, display: 'block' }}>
+                      <FormLabel component="legend" sx={{ fontSize: '0.85rem' }}>Assessment Type</FormLabel>
+                      <RadioGroup
+                        row
+                        value={soc2AssessmentType}
+                        onChange={e => setSoc2AssessmentType(e.target.value as 'Type I' | 'Type II')}
+                      >
+                        <FormControlLabel value="Type I" control={<Radio size="small" />} label="Type I (Design)" />
+                        <FormControlLabel value="Type II" control={<Radio size="small" />} label="Type II (Operating)" />
+                      </RadioGroup>
+                    </FormControl>
+
+                    <FormControl component="fieldset" sx={{ display: 'block' }}>
+                      <FormLabel component="legend" sx={{ mb: 1, fontSize: '0.85rem' }}>Trust Services Categories</FormLabel>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                        <FormControlLabel
+                          control={<Checkbox checked disabled size="small" />}
+                          label="Security (Common Criteria)"
+                        />
+                        {['Availability', 'Confidentiality', 'Processing Integrity', 'Privacy'].map(cat => {
+                          const checked = soc2Categories.includes(cat);
+                          return (
+                            <FormControlLabel
+                              key={cat}
+                              control={
+                                <Checkbox
+                                  checked={checked}
+                                  onChange={() => {
+                                    setSoc2Categories(prev =>
+                                      checked ? prev.filter(c => c !== cat) : [...prev, cat]
+                                    );
+                                  }}
+                                  size="small"
+                                />
+                              }
+                              label={cat}
+                            />
+                          );
+                        })}
+                      </Box>
+                    </FormControl>
+                  </Box>
+                )}
+
+                {isNist && (
+                  <Box>
+                    <Typography variant="subtitle2" color="primary.main" fontWeight={600} sx={{ mb: 2 }}>
+                      NIST 800-53 FIPS 199 Categorization
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mb: 3 }}>
+                      <FormControl sx={{ minWidth: 150 }}>
+                        <FormLabel sx={{ mb: 0.5, fontSize: '0.85rem' }}>Confidentiality</FormLabel>
+                        <Select
+                          size="small"
+                          value={nistConfidentiality}
+                          onChange={e => setNistConfidentiality(e.target.value as 'Low' | 'Moderate' | 'High')}
+                        >
+                          <MenuItem value="Low">Low</MenuItem>
+                          <MenuItem value="Moderate">Moderate</MenuItem>
+                          <MenuItem value="High">High</MenuItem>
+                        </Select>
+                      </FormControl>
+
+                      <FormControl sx={{ minWidth: 150 }}>
+                        <FormLabel sx={{ mb: 0.5, fontSize: '0.85rem' }}>Integrity</FormLabel>
+                        <Select
+                          size="small"
+                          value={nistIntegrity}
+                          onChange={e => setNistIntegrity(e.target.value as 'Low' | 'Moderate' | 'High')}
+                        >
+                          <MenuItem value="Low">Low</MenuItem>
+                          <MenuItem value="Moderate">Moderate</MenuItem>
+                          <MenuItem value="High">High</MenuItem>
+                        </Select>
+                      </FormControl>
+
+                      <FormControl sx={{ minWidth: 150 }}>
+                        <FormLabel sx={{ mb: 0.5, fontSize: '0.85rem' }}>Availability</FormLabel>
+                        <Select
+                          size="small"
+                          value={nistAvailability}
+                          onChange={e => setNistAvailability(e.target.value as 'Low' | 'Moderate' | 'High')}
+                        >
+                          <MenuItem value="Low">Low</MenuItem>
+                          <MenuItem value="Moderate">Moderate</MenuItem>
+                          <MenuItem value="High">High</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2, bgcolor: 'primary.50', borderRadius: 1 }}>
+                      <Typography variant="subtitle2" fontWeight={600}>Calculated Baseline:</Typography>
+                      <Chip
+                        label={getOverallNistBaseline(nistConfidentiality, nistIntegrity, nistAvailability)}
+                        color="primary"
+                        sx={{ fontWeight: 'bold' }}
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        (Derived from the highest watermark impact level)
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Controls */}
           {selectedFrameworks.length > 0 && (
             <Card sx={{ mb: 3 }}>
@@ -268,8 +487,9 @@ export default function NewAssessment() {
                 {controlsLoading ? (
                   <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}><CircularProgress /></Box>
                 ) : (
-                  Object.entries(controlsByFw).map(([fwId, { framework, domains }]) => (
+                  Object.entries(scopedControlsByFw).map(([fwId, { framework, domains }]) => (
                     <Box key={fwId} sx={{ mb: 2 }}>
+
                       <Typography variant="subtitle1" color="primary.main" fontWeight={600} gutterBottom>
                         {framework.name}
                       </Typography>

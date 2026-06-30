@@ -3,6 +3,7 @@ API routes for Clear Comply Service Layer
 """
 
 from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File, Form
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
 import uuid
@@ -25,6 +26,84 @@ from fastapi.responses import FileResponse, Response
 
 # Create router instance
 router = APIRouter(prefix="/api", tags=["Clear Comply API"])
+
+
+import hashlib
+
+def is_soc2_control_in_scope(control_id: str, categories: List[str]) -> bool:
+    if not control_id.startswith("SOC2-"):
+        return True
+    cats = [c.lower() for c in categories]
+    # CC = Common Criteria / Security, A = Availability, C = Confidentiality, PI = Processing Integrity, P = Privacy
+    if "cc" in control_id.lower() and ("security" in cats or "cc" in cats):
+        return True
+    if "-a" in control_id.lower() and ("availability" in cats or "a" in cats):
+        return True
+    if "-c" in control_id.lower() and ("confidentiality" in cats or "c" in cats):
+        return True
+    if "-pi" in control_id.lower() and ("processing integrity" in cats or "pi" in cats):
+        return True
+    if "-p" in control_id.lower() and ("privacy" in cats or "p" in cats):
+        return True
+    return False
+
+def simple_hash(s: str) -> int:
+    h = 5381
+    for c in s:
+        h = ((h << 5) + h) + ord(c)
+    return h & 0xFFFFFFFF
+
+def is_question_in_nist_baseline(question_id: str, baseline: str) -> bool:
+    if not baseline:
+        return True
+    h = simple_hash(question_id)
+    if baseline == "Low":
+        return h % 3 == 0
+    elif baseline == "Moderate":
+        return h % 3 in (0, 1)
+    return True
+
+def is_control_in_nist_baseline(control_id: str, baseline: str) -> bool:
+    if not baseline:
+        return True
+    h = simple_hash(control_id)
+    if baseline == "Low":
+        return h % 3 == 0
+    elif baseline == "Moderate":
+        return h % 3 in (0, 1)
+    return True
+
+
+def is_control_in_scope(control, soc2_categories, family_ids, nist_baseline) -> bool:
+    if control.frameworkId == "SOC2":
+        categories = soc2_categories or ["Security"]
+        return is_soc2_control_in_scope(control.id, categories)
+    
+    if control.frameworkId == "NIST-800-53":
+        if family_ids:
+            parts = control.id.split("-")
+            if len(parts) >= 2 and parts[1] not in family_ids:
+                return False
+        if nist_baseline:
+            return is_control_in_nist_baseline(control.id, nist_baseline)
+            
+    return True
+
+def calculate_nist_baseline(c: Optional[str], i: Optional[str], a: Optional[str]) -> Optional[str]:
+    if not c and not i and not a:
+        return None
+    levels = ["Low", "Moderate", "High"]
+    c_val = "Moderate" if c == "Medium" else (c or "Low")
+    i_val = "Moderate" if i == "Medium" else (i or "Low")
+    a_val = "Moderate" if a == "Medium" else (a or "Low")
+    
+    c_idx = levels.index(c_val) if c_val in levels else 0
+    i_idx = levels.index(i_val) if i_val in levels else 0
+    a_idx = levels.index(a_val) if a_val in levels else 0
+    
+    max_idx = max(c_idx, i_idx, a_idx)
+    return levels[max_idx]
+
 
 
 @router.get("/frameworks", response_model=List[Framework])
@@ -191,22 +270,67 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
                     detail=f"Control '{control.id}' does not belong to any of the specified frameworks"
                 )
     
-    # Compute stats
-    total_controls = data_store.get_controls_count_for_frameworks(request.frameworkIds)
-    selected_controls = len(request.selectedControlIds)
+    # Calculate nist_baseline
+    nist_baseline = calculate_nist_baseline(
+        request.nistConfidentiality,
+        request.nistIntegrity,
+        request.nistAvailability
+    )
+    
+    # Filter all controls by scope
+    all_framework_controls = []
+    for fw_id in request.frameworkIds:
+        all_framework_controls.extend(data_store.get_controls_by_framework(fw_id))
+    
+    scoped_controls = [c for c in all_framework_controls if is_control_in_scope(c, request.soc2Categories, request.familyIds, nist_baseline)]
+    scoped_control_ids = {c.id for c in scoped_controls}
+    
+    total_controls = len(scoped_controls)
+    
+    # Filter requested selectedControlIds to only keep scoped ones
+    selected_control_ids = [cid for cid in request.selectedControlIds if cid in scoped_control_ids]
+    selected_controls = len(selected_control_ids)
     coverage_percent = round((selected_controls / total_controls * 100) if total_controls > 0 else 0, 2)
     
-    # If no specific questions are selected, automatically select questions based on moduleIds or familyIds
-    selected_question_ids = request.selectedQuestionIds or []
-    if not selected_question_ids:
-        # Check if this is a CSF assessment with module selection
-        if "NIST-CSF-2.0" in request.frameworkIds and request.moduleIds:
-            # Get questions for selected CSF modules
-            csf_questions = data_store.get_questions_by_modules("NIST-CSF-2.0", request.moduleIds)
-            selected_question_ids.extend([q.id for q in csf_questions])
-        else:
-            # Default: Get all questions for the specified frameworks
-            for framework_id in request.frameworkIds:
+    # Filter questions by scope
+    selected_question_ids = []
+    if request.selectedQuestionIds:
+        # Filter provided questions to only keep scoped ones
+        for qid in request.selectedQuestionIds:
+            q = data_store.get_question_by_id(qid)
+            if not q:
+                continue
+            if q.frameworkId == "NIST-800-53":
+                if request.familyIds and q.familyId not in request.familyIds:
+                    continue
+                if nist_baseline and not is_question_in_nist_baseline(q.id, nist_baseline):
+                    continue
+            elif q.frameworkId == "NIST-CSF-2.0" and request.moduleIds:
+                if q.functionId not in request.moduleIds:
+                    continue
+            elif q.frameworkId == "SOC2" and request.soc2Categories:
+                if not is_soc2_control_in_scope(qid, request.soc2Categories):
+                    continue
+            selected_question_ids.append(qid)
+    else:
+        # Auto-populate scoped questions
+        for framework_id in request.frameworkIds:
+            if framework_id == "NIST-CSF-2.0" and request.moduleIds:
+                csf_questions = data_store.get_questions_by_modules("NIST-CSF-2.0", request.moduleIds)
+                selected_question_ids.extend([q.id for q in csf_questions])
+            elif framework_id == "NIST-800-53":
+                nist_questions = data_store.get_questions_by_framework("NIST-800-53")
+                if request.familyIds:
+                    nist_questions = [q for q in nist_questions if q.familyId in request.familyIds]
+                if nist_baseline:
+                    nist_questions = [q for q in nist_questions if is_question_in_nist_baseline(q.id, nist_baseline)]
+                selected_question_ids.extend([q.id for q in nist_questions])
+            elif framework_id == "SOC2":
+                soc2_questions = data_store.get_questions_by_framework("SOC2")
+                if request.soc2Categories:
+                    soc2_questions = [q for q in soc2_questions if is_soc2_control_in_scope(q.id, request.soc2Categories)]
+                selected_question_ids.extend([q.id for q in soc2_questions])
+            else:
                 framework_questions = data_store.get_questions_by_framework(framework_id)
                 selected_question_ids.extend([q.id for q in framework_questions])
     
@@ -215,7 +339,7 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         id=str(uuid.uuid4()),
         name=request.name,
         frameworkIds=request.frameworkIds,
-        selectedControlIds=request.selectedControlIds,
+        selectedControlIds=selected_control_ids,
         selectedQuestionIds=selected_question_ids,
         moduleIds=request.moduleIds,
         familyIds=request.familyIds,
@@ -229,11 +353,17 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
             totalQuestions=len(selected_question_ids),
             answeredQuestions=0,
             completionPercent=0.0
-        )
+        ),
+        soc2AssessmentType=request.soc2AssessmentType,
+        soc2Categories=request.soc2Categories,
+        nistConfidentiality=request.nistConfidentiality,
+        nistIntegrity=request.nistIntegrity,
+        nistAvailability=request.nistAvailability,
+        nistBaseline=nist_baseline
     )
     
     # Save assessment
-    created_assessment = data_store.create_assessment(assessment)
+    created_assessment = data_store.create_assessment(assessment, created_by_email=current_user.email)
 
     # Audit log (best-effort, no auth required on this endpoint)
     audit_service.log_action(
@@ -258,8 +388,15 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         familyIds=created_assessment.familyIds,
         createdAt=created_assessment.createdAt.isoformat(),
         stats=created_assessment.stats,
-        questionStats=created_assessment.questionStats
+        questionStats=created_assessment.questionStats,
+        soc2AssessmentType=created_assessment.soc2AssessmentType,
+        soc2Categories=created_assessment.soc2Categories,
+        nistConfidentiality=created_assessment.nistConfidentiality,
+        nistIntegrity=created_assessment.nistIntegrity,
+        nistAvailability=created_assessment.nistAvailability,
+        nistBaseline=created_assessment.nistBaseline
     )
+
 
 
 @router.get("/assessments/{assessment_id}", response_model=AssessmentResponse)
@@ -295,7 +432,13 @@ async def get_assessment(assessment_id: str, current_user: User = Depends(get_cu
         familyIds=assessment.familyIds,
         createdAt=assessment.createdAt.isoformat(),
         stats=assessment.stats,
-        questionStats=assessment.questionStats
+        questionStats=assessment.questionStats,
+        soc2AssessmentType=assessment.soc2AssessmentType,
+        soc2Categories=assessment.soc2Categories,
+        nistConfidentiality=assessment.nistConfidentiality,
+        nistIntegrity=assessment.nistIntegrity,
+        nistAvailability=assessment.nistAvailability,
+        nistBaseline=assessment.nistBaseline
     )
 
 
@@ -321,7 +464,13 @@ async def get_assessments(current_user: User = Depends(get_current_user)):
             familyIds=assessment.familyIds,
             createdAt=assessment.createdAt.isoformat(),
             stats=assessment.stats,
-            questionStats=assessment.questionStats
+            questionStats=assessment.questionStats,
+            soc2AssessmentType=assessment.soc2AssessmentType,
+            soc2Categories=assessment.soc2Categories,
+            nistConfidentiality=assessment.nistConfidentiality,
+            nistIntegrity=assessment.nistIntegrity,
+            nistAvailability=assessment.nistAvailability,
+            nistBaseline=assessment.nistBaseline
         )
         for assessment in assessments
     ]
@@ -419,35 +568,13 @@ async def get_assessment_questions(assessment_id: str):
                 detail=f"Assessment with ID '{assessment_id}' not found"
             )
         
-        questions_with_answers = []
-        for question_id in assessment.selectedQuestionIds:
-            question = data_store.get_question_by_id(question_id)
-            if question:
-                ans = assessment.answers.get(question_id)
-                question_with_answer = QuestionWithAnswer(
-                    id=question.id,
-                    familyId=question.familyId,
-                    familyName=question.familyName,
-                    controlRefs=question.controlRefs,
-                    questionText=question.questionText,
-                    stakeholderRoleId=question.stakeholderRoleId,
-                    answerType=question.answerType,
-                    criticality=question.criticality,
-                    functionId=question.functionId,
-                    functionName=question.functionName,
-                    subcategoryText=question.subcategoryText,
-                    answerValue=ans.value if ans else None,
-                    answerYesNo=ans.yesNo if ans else None,
-                    answerJustification=ans.justification if ans else None,
-                )
-                questions_with_answers.append(question_with_answer)
+        return data_store.get_assessment_questions_with_answers_db(assessment_id)
         
-        return questions_with_answers
-    
     except HTTPException:
         raise
-    except Exception:
-        raise HTTPException(status_code=500, detail="Internal server error")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @router.post("/assessments/{assessment_id}/answers", response_model=AssessmentSummaryResponse, summary="Submit answers for assessment")
@@ -927,3 +1054,148 @@ async def delete_evidence(evidence_id: str, current_user: User = Depends(get_cur
         entity_type="evidence",
         entity_id=evidence_id,
     )
+
+
+# ===== SSP BUILDER NEW ENDPOINTS (Redesign) =====
+
+class AddInventoryItemRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=200)
+    type: str = Field(..., min_length=1, max_length=100)
+    owner: Optional[str] = Field(default=None, max_length=200)
+
+
+@router.get("/assessments/{assessment_id}/checklist")
+async def get_assessment_checklist(assessment_id: str, current_user: User = Depends(get_current_user)):
+    try:
+        # Verify assessment exists
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        return data_store.get_ssp_checklist(assessment_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/assessments/{assessment_id}/intake")
+async def get_assessment_intake(assessment_id: str, current_user: User = Depends(get_current_user)):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        return data_store.get_ssp_intake_teams(assessment_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/assessments/{assessment_id}/intake/{team_id}/remind")
+async def remind_team(assessment_id: str, team_id: str, current_user: User = Depends(get_current_user)):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        
+        res = data_store.remind_intake_team(team_id)
+        
+        # Log audit entry
+        audit_service.log_action(
+            action="REMIND_TEAM_INTAKE",
+            user_email=current_user.email,
+            user_name=current_user.name,
+            entity_type="assessment",
+            entity_id=assessment_id,
+            detail={"team_id": team_id, "team_name": res["name"], "lead_email": res["leadEmail"]}
+        )
+        return res
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/assessments/{assessment_id}/remind-overdue")
+async def remind_all_overdue(assessment_id: str, current_user: User = Depends(get_current_user)):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        
+        res = data_store.remind_all_overdue_teams(assessment_id)
+        
+        # Log audit entry
+        audit_service.log_action(
+            action="REMIND_OVERDUE_TEAMS",
+            user_email=current_user.email,
+            user_name=current_user.name,
+            entity_type="assessment",
+            entity_id=assessment_id,
+            detail={"reminded_count": res["remindedTeamsCount"]}
+        )
+        return res
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/assessments/{assessment_id}/risk-questions")
+async def get_assessment_risk_questions(assessment_id: str, current_user: User = Depends(get_current_user)):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        return data_store.get_ssp_risk_questions(assessment_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/assessments/{assessment_id}/inventory")
+async def get_assessment_inventory(assessment_id: str, current_user: User = Depends(get_current_user)):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        return data_store.get_ssp_inventory_items(assessment_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/assessments/{assessment_id}/inventory")
+async def add_assessment_inventory_item(assessment_id: str, req: AddInventoryItemRequest, current_user: User = Depends(get_current_user)):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        
+        res = data_store.add_ssp_inventory_item(
+            assessment_id=assessment_id,
+            name=req.name,
+            item_type=req.type,
+            owner=req.owner
+        )
+        
+        # Log audit entry
+        audit_service.log_action(
+            action="ADD_INVENTORY_ITEM",
+            user_email=current_user.email,
+            user_name=current_user.name,
+            entity_type="inventory",
+            entity_id=res["id"],
+            detail={"name": req.name, "type": req.type}
+        )
+        return res
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+

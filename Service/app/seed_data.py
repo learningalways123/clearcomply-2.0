@@ -221,6 +221,88 @@ def _create_assessment(
                 updated_at=created_at + timedelta(days=2),
             ))
 
+        # Seed Checklist Items
+        from app.db_models import ChecklistItemRecord, IntakeTeamRecord, RiskQuestionRecord, InventoryItemRecord
+        checklist_items = [
+            ("Application Inventory", "complete", "inventory"),
+            ("Step #1 — System Contacts & Data", "complete", "data-categorization"),
+            ("Application Risk Assessment", "complete", "risk"),
+            ("Vendor Risk Assessment", "in_progress", "risk"),
+            ("Data Categorization", "complete", "data-categorization"),
+            ("System Environments", "complete", "data-categorization"),
+            ("Scanning Strategy", "complete", "data-categorization"),
+            ("System Inventory", "in_progress", "inventory"),
+            ("System Diagrams", "in_progress", "inventory"),
+            ("Controls Assessment", "in_progress", "controls")
+        ]
+        for title, status, link in checklist_items:
+            db.add(ChecklistItemRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=assessment_id,
+                title=title,
+                status=status,
+                target_link=link
+            ))
+
+        # Seed Intake Teams
+        intake_teams = [
+            ("Business / Data Owners", "Sarah Kim", "s.kim@agency.gov", 67, "in_progress", 2, "Data Categorization"),
+            ("IT Operations", "Marcus Johnson", "m.johnson@agency.gov", 69, "in_progress", 1, "Disaster Recovery Planning"),
+            ("IAM / IT Ops", "Priya Nair", "p.nair@agency.gov", 88, "complete", 0, "Identity & Access Management"),
+            ("Security Team", "Derek Walsh", "d.walsh@agency.gov", 30, "overdue", 5, "Incident Management"),
+            ("CISO Office", "Linda Torres", "l.torres@agency.gov", 100, "complete", 0, "Security Governance")
+        ]
+        for name, lead_name, lead_email, response_rate, t_status, active_days, families in intake_teams:
+            db.add(IntakeTeamRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=assessment_id,
+                name=name,
+                lead_name=lead_name,
+                lead_email=lead_email,
+                response_rate=response_rate,
+                status=t_status,
+                last_active_days_ago=active_days,
+                families=families
+            ))
+
+        # Seed Risk Questions
+        risk_questions = [
+            ("Inventory of authorized/unauthorized devices documented?", "Secure Config 3", "Full", 0),
+            ("Installed software limited to approved and documented list?", "Secure Config 4", "Full", 0),
+            ("Secure configuration baselines applied to all systems?", "Secure Config 10", "Partial", 5),
+            ("Monthly vulnerability scanning on all servers/devices?", "TVM 2", "Full", 0),
+            ("MFA required for all administrative access?", "IAM 11", "None", 15),
+            ("Centralized log server receiving all system logs?", "SLM 1", "N/A", 0),
+            ("All technologies modern and fully supported?", "Secure Config 7", "Full", 0)
+        ]
+        for q_text, control, resp, pts in risk_questions:
+            db.add(RiskQuestionRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=assessment_id,
+                question_text=q_text,
+                mapped_control=control,
+                response=resp,
+                points_missed=pts
+            ))
+
+        # Seed Inventory Items
+        inventory_items = [
+            ("Server 01", "VM", "Active", "IT Operations"),
+            ("Production DB", "Database", "Active", "Business / Data Owners"),
+            ("Secure Gateway", "Network Device", "Active", "IT Operations"),
+            ("Assessor Laptop", "Workstation", "Active", "Security Team")
+        ]
+        for name, type_str, i_status, owner in inventory_items:
+            db.add(InventoryItemRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=assessment_id,
+                name=name,
+                type=type_str,
+                status=i_status,
+                owner=owner
+            ))
+
+
     print(f"[seed]   Created: '{name}' ({answered}/{total_q} answered, status={status})")
 
 

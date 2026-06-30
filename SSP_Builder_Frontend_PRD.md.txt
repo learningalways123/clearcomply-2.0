@@ -1,0 +1,215 @@
+﻿PRD: SSP Builder — Frontend Improvements
+Artifact: https://claude.ai/public/artifacts/c7127067-11ab-48fd-816b-8276f39517c4
+Reviewed: June 29, 2026
+Author: Ash (Senior Director, AI Product Development)
+Status: Draft v1.0
+
+
+________________
+
+
+1. Overview
+The SSP Builder is a FedRAMP compliance tool for tracking System Security Plan (SSP) completion across security control domains. The current UI (v6.0 Draft) surfaces progress tracking, team intake management, findings, and SSP export. This PRD captures frontend improvements derived from a UI review of the live artifact, organized by impact and implementation complexity.
+
+
+Goal: Improve usability, clarity, and decision-making speed for compliance officers, system owners, and security teams working toward ATO (Authority to Operate).
+
+
+________________
+
+
+2. Current UI Inventory
+The artifact consists of the following surfaces:
+
+
+Left Sidebar — App title ("SSP Builder / v6.0 Draft"), navigation (Dashboard, Checklist, Team Intake, Risk Assessment, Data Categorization, Controls, Findings, Inventory), and a bottom status card showing overall completion (68%) and ATO target date (Jul 16, 2026).
+
+
+Dashboard (main panel)
+
+
+* System header: "Cloud Platform v2 · FedRAMP Moderate equivalent"
+* Two action buttons: "Remind all overdue" (red) and "Export SSP" (blue)
+* Security domain progress bars (8 domains, fractional counts with color-coded numerics)
+* "Team status at a glance" widget (Complete / In progress / Overdue counts)
+* "Manage team intake →" full-width CTA
+* Recent findings table (ID, Control, Severity, Status, Due)
+
+
+________________
+
+
+3. Problems & Opportunities
+3.1 Icon System Is Inconsistent and Non-Professional
+The sidebar navigation uses emoji (📋, 👥, ⚠️, 📦, 🛡️, 🔍, 🖥️) mixed with other symbols. In a regulated compliance context, this creates a visual tone mismatch and renders poorly at small sizes or in printed exports.
+
+
+Impact: Medium — affects perceived credibility with auditors and enterprise users.
+3.2 No Visual Legend for Color Coding
+The dashboard uses red/orange/green on progress bar numerics to signal risk, but there is no visible legend. New users cannot distinguish between a color convention (red = at risk) and a completion convention (red = low %) without prior context.
+
+
+Impact: High — causes misinterpretation for first-time or infrequent users.
+3.3 Progress Bars Lack Percentage and Context
+Each domain shows a fraction (e.g., "11/18") but no percentage conversion, no hover tooltip explaining what the numbers mean (controls completed / total controls), and no trend indicator (improving vs. stagnating).
+
+
+Impact: High — slows comprehension; users must mentally compute percentages.
+3.4 Sidebar Nav Has No Alerting or Badging
+None of the nav items surface how many pending items, overdue tasks, or new findings exist within each section. Users must visit every section to detect issues rather than being routed by urgency.
+
+
+Impact: High — increases time-to-action on critical compliance gaps.
+3.5 "Remind All Overdue" Is a Destructive-Class Action Without Guardrails
+The red "Remind all overdue" button is prominently placed with no confirmation step, preview of who will be contacted, or undo mechanism. In a team environment, this risks accidental mass-notification.
+
+
+Impact: High — potential for unintended bulk emails causing team friction.
+3.6 ATO Deadline Has No Urgency Framing
+The ATO target date (Jul 16, 2026) is shown in a small status card at the bottom of the sidebar. There is no countdown, no warning state as the date approaches, and no connection drawn between current completion percentage (68%) and whether the team is on track.
+
+
+Impact: High — the most critical planning metric is effectively buried.
+3.7 Recent Findings Table Is Passive
+The findings table shows 4 rows with no indication of total count, no sort/filter controls, no assignee column, and no visual urgency escalation for near-due items (e.g., FND-002 is due Jun 30, 2026 — within 24 hours at time of review). The "View all →" link is small and easy to miss.
+
+
+Impact: High — compliance officers need to triage at a glance; the current table requires manual scanning.
+3.8 No Search or Cross-Section Navigation
+There is no global search. Users looking for a specific control (e.g., "SA-4") must navigate to the Controls or Findings section manually.
+
+
+Impact: Medium — affects power users and auditor-assist workflows.
+3.9 Dashboard Lacks Historical Context
+The current dashboard is a point-in-time snapshot. There is no sparkline, changelog, or "progress since last week" indicator. Users cannot tell if 68% completion is an improvement or if the program is stalled.
+
+
+Impact: Medium — reduces accountability and makes it harder to report progress to leadership.
+3.10 Button Hierarchy Is Inconsistent
+"Export SSP" and "Remind all overdue" use large pill buttons at the top right. "Manage team intake →" uses a full-width blue button mid-page. This inconsistency makes it unclear which action is primary and creates visual noise.
+
+
+Impact: Low-Medium — affects learnability and visual polish.
+
+
+________________
+
+
+4. Proposed Improvements
+P0 — Critical (Ship First)
+4.1 Add a Color Legend to the Dashboard
+Place a small inline legend below the domain progress list: ● Green = Complete ● Orange = At Risk ● Red = Critical / Far Behind. Consider adding a persistent tooltip on hover for each color-coded number.
+
+
+4.2 Add Percentage Labels to Progress Bars
+Display both the fraction and computed percentage: 11/18 (61%). Show the fraction in muted text and the percentage in the primary color-coded style.
+
+
+4.3 Add ATO Countdown Widget
+Replace the static "ATO target: Jul 16, 2026" card with a dynamic countdown: 17 days to ATO target. Apply urgency styling when ≤30 days remain (yellow) and ≤7 days (red). Include a tooltip or popover with a pace indicator: "At current pace, you'll reach 84% by the target date."
+
+
+4.4 Add Confirmation Dialog for "Remind All Overdue"
+Before sending, show a modal: "You are about to send reminders to N assignees with overdue items. Proceed?" Include a list preview of who will be notified and a Cancel option.
+
+
+4.5 Escalate Urgency in the Findings Table
+Highlight rows where the due date is ≤7 days in a subtle amber row background. Add a "Days Remaining" computed column. Surface total findings count above the table: "Showing 4 of 12 findings."
+
+
+________________
+
+
+P1 — High Value
+4.6 Add Badge Counts to Sidebar Nav Items
+Show small numeric badges on nav items that have pending/overdue items (e.g., Findings: 🔴 4, Checklist: 🟡 2). This allows users to triage without entering each section.
+
+
+4.7 Replace Emoji Icons with a Consistent Icon Library
+Use a professional icon set (Heroicons, Lucide, or similar) for all sidebar nav icons. This improves visual consistency, accessibility (icons need aria-label), and print/export fidelity.
+
+
+4.8 Add "Since Last Review" Delta to Progress Bars
+Show a small delta indicator next to each domain score: 11/18 ▲2 or 5/16 —. This makes weekly status reviews faster and surfaces stalled domains without requiring a separate report.
+
+
+4.9 Standardize Button Hierarchy
+Define a clear button tier system: Primary (Export SSP — blue filled), Secondary (Remind all overdue — outlined or ghost with icon), Tertiary (Manage team intake → as a text link or smaller outlined button). Apply consistently across all views.
+
+
+4.10 Add a Findings Assignee Column
+Add "Assignee" to the Recent Findings table and the full Findings view. Compliance tasks require clear ownership; without it, the "Remind all overdue" feature has no meaningful target.
+
+
+________________
+
+
+P2 — Polish & Power User
+4.11 Global Search
+Add a search bar (Cmd+K shortcut) that searches across controls, findings, and inventory items by ID or keyword. This is table-stakes for users working directly with auditors.
+
+
+4.12 Dashboard Progress History / Sparkline
+Add a small 4-week sparkline or bar chart showing overall completion over time. Even a simple "Last 4 weeks: 58% → 61% → 65% → 68%" text summary would serve this need at low engineering cost.
+
+
+4.13 Domain Drilldown from Dashboard
+Make each domain progress bar row clickable, routing the user to the Controls view pre-filtered to that domain. This eliminates a common multi-step navigation flow.
+
+
+4.14 Responsive / Compact Mode
+Add a collapsed sidebar mode (icon-only) to allow more horizontal space for the main content area — particularly useful on laptop screens where the current two-panel layout is tight.
+
+
+________________
+
+
+5. Non-Goals for This Iteration
+* Backend/data model changes (all improvements above are frontend-only)
+* New sections or net-new features (e.g., SSP editor, AI-assisted control writing)
+* Mobile-native design (artifact is desktop-first; mobile optimization is a separate effort)
+* Multi-system/multi-tenant views
+
+
+________________
+
+
+6. Success Metrics
+Metric
+	Current
+	Target
+	Time to identify most critical finding
+	~60s (manual scan)
+	<10s (urgency escalation)
+	Accidental "Remind all" sends
+	Unknown (no guardrail)
+	0 (confirmation required)
+	% of users who correctly interpret color coding
+	Unknown
+	>90% (with legend)
+	Dashboard → Findings navigation steps
+	2+ clicks
+	1 click (domain drilldown)
+	
+
+________________
+
+
+7. Implementation Notes
+The artifact is built as a Claude-generated React component. All P0 and P1 improvements can be implemented within the existing component without external dependencies, using:
+
+
+* Inline computed values for percentages and countdowns (no new API calls)
+* A simple modal/dialog component for the "Remind all" confirmation (can use native <dialog> or a lightweight state-managed overlay)
+* Tailwind utility classes for badge counts and urgency row highlights (consistent with observed styling)
+* Lucide React (already a common Claude artifact dependency) for icon replacement
+
+
+________________
+
+
+8. Open Questions
+1. Is "Remind all overdue" sending actual emails, or is it a stub in the current artifact? If real, the P0 confirmation guard is urgent.
+2. What is the intended primary user persona — the system owner, the compliance officer, or an auditor reviewer? The answer affects whether search (P2.11) should be elevated to P1.
+3. Is there a planned print/PDF export flow for SSP documents? If so, emoji icons (3.1) become a P0 fix.
+4. Does the ATO target date need to be editable in the UI, or is it system-configured?
