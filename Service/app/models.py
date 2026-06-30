@@ -124,6 +124,7 @@ class Assessment(BaseModel):
     nistIntegrity: Optional[str] = Field(default=None, description="NIST FIPS 199 Integrity impact: Low | Moderate | High")
     nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
     nistBaseline: Optional[str] = Field(default=None, description="NIST Calculated Baseline: Low | Moderate | High")
+    diagramFilename: Optional[str] = Field(default=None, description="Uploaded data flow diagram filename")
 
 
 

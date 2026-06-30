@@ -2,10 +2,12 @@
 API routes for Clear Comply Service Layer
 """
 
+import os
+import shutil
 from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File, Form
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 import json
 from app.database import db_session
@@ -1197,5 +1199,286 @@ async def add_assessment_inventory_item(assessment_id: str, req: AddInventoryIte
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ===== DIAGRAM UPLOAD ENDPOINTS =====
+DIAGRAMS_DIR = "./uploads/diagrams"
+os.makedirs(DIAGRAMS_DIR, exist_ok=True)
+
+from app.db_models import AssessmentRecord, AnswerRecord, PoamRecord, ChecklistItemRecord, IntakeTeamRecord, RiskQuestionRecord, InventoryItemRecord
+
+@router.post("/assessments/{id}/diagram", summary="Upload a data flow diagram for an assessment")
+async def upload_diagram(
+    id: str,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+):
+    assessment = data_store.get_assessment_by_id(id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+        
+    filename = f"{id}_{file.filename}"
+    storage_path = os.path.join(DIAGRAMS_DIR, filename)
+    
+    with open(storage_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        
+    with db_session() as db:
+        rec = db.query(AssessmentRecord).filter_by(id=id).first()
+        if rec:
+            rec.diagram_filename = file.filename
+            rec.diagram_storage_path = storage_path
+            db.commit()
+            
+    audit_service.log_action(
+        action="UPLOAD_DIAGRAM",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="assessment",
+        entity_id=id,
+        detail={"filename": file.filename},
+    )
+    return {"message": "Data flow diagram uploaded successfully", "filename": file.filename}
+
+
+@router.get("/assessments/{id}/diagram", summary="Download the data flow diagram for an assessment")
+async def download_diagram(
+    id: str,
+    current_user: User = Depends(get_current_user),
+):
+    with db_session() as db:
+        rec = db.query(AssessmentRecord).filter_by(id=id).first()
+        if not rec or not rec.diagram_storage_path:
+            raise HTTPException(status_code=404, detail="Data flow diagram not found for this assessment")
+            
+        if not os.path.exists(rec.diagram_storage_path):
+            raise HTTPException(status_code=404, detail="Diagram file not found on disk")
+            
+        return FileResponse(
+            path=rec.diagram_storage_path,
+            filename=rec.diagram_filename,
+            media_type="application/octet-stream"
+        )
+
+
+@router.delete("/assessments/{id}/diagram", summary="Delete the data flow diagram for an assessment")
+async def delete_diagram(
+    id: str,
+    current_user: User = Depends(get_current_user),
+):
+    with db_session() as db:
+        rec = db.query(AssessmentRecord).filter_by(id=id).first()
+        if not rec or not rec.diagram_filename:
+            raise HTTPException(status_code=404, detail="No data flow diagram to delete")
+            
+        if rec.diagram_storage_path and os.path.exists(rec.diagram_storage_path):
+            try:
+                os.remove(rec.diagram_storage_path)
+            except Exception as e:
+                print(f"Error removing diagram file: {e}")
+                
+        rec.diagram_filename = None
+        rec.diagram_storage_path = None
+        db.commit()
+        
+    audit_service.log_action(
+        action="DELETE_DIAGRAM",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="assessment",
+        entity_id=id,
+        detail={},
+    )
+    return {"message": "Data flow diagram deleted successfully"}
+
+
+# ===== DEMO SEED ENDPOINT =====
+@router.post("/assessments/seed-demo", summary="Seed a mock assessment for NIST 800-53 with comprehensive capability data")
+async def seed_demo_assessment(
+    current_user: User = Depends(get_current_user)
+):
+    nist_qs = data_store.get_questions_by_framework("NIST-800-53")
+    if not nist_qs:
+        raise HTTPException(status_code=400, detail="NIST 800-53 questions not loaded in data store")
+        
+    demo_id = "demo-nist-800-53-ssp"
+    with db_session() as db:
+        existing = db.query(AssessmentRecord).filter_by(id=demo_id).first()
+        if existing:
+            db.delete(existing)
+            db.commit()
+            
+    demo_name = "NIST 800-53 SSP Builder Capability Demonstration"
+    selected_qs = nist_qs[:50]
+    selected_q_ids = [q.id for q in selected_qs]
+    
+    import random
+    rng = random.Random(42)
+    answers_to_submit = []
+    for q in selected_qs:
+        roll = rng.random()
+        if roll < 0.70:
+            answers_to_submit.append({
+                "question_id": q.id,
+                "yes_no": "yes",
+                "justification": "Verified implementation in policy and configuration files.",
+                "value": "yes"
+            })
+        elif roll < 0.90:
+            answers_to_submit.append({
+                "question_id": q.id,
+                "yes_no": "no",
+                "justification": "Temporary gap. Plan of Action is defined to address it.",
+                "value": "no"
+            })
+        else:
+            answers_to_submit.append({
+                "question_id": q.id,
+                "yes_no": "na",
+                "justification": "Not applicable to cloud-native SaaS environment.",
+                "value": "na"
+            })
+            
+    created_at = datetime.utcnow()
+    total_q = len(selected_q_ids)
+    answered = len(answers_to_submit)
+    completion_pct = round(answered / total_q * 100, 2)
+    coverage_pct = round(50 / len(nist_qs) * 100, 2)
+    
+    with db_session() as db:
+        rec = AssessmentRecord(
+            id=demo_id,
+            name=demo_name,
+            status="in_progress",
+            framework_ids=json.dumps(["NIST-800-53"]),
+            selected_control_ids=json.dumps([]),
+            selected_question_ids=json.dumps(selected_q_ids),
+            module_ids=json.dumps([]),
+            family_ids=json.dumps([]),
+            created_at=created_at,
+            created_by_email=current_user.email,
+            total_controls=0,
+            selected_controls_count=0,
+            coverage_percent=coverage_pct,
+            total_questions=total_q,
+            answered_questions=answered,
+            completion_percent=completion_pct,
+            nist_confidentiality="Moderate",
+            nist_integrity="Moderate",
+            nist_availability="Moderate",
+            nist_baseline="Moderate",
+        )
+        db.add(rec)
+        
+        for ans in answers_to_submit:
+            db.add(AnswerRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=demo_id,
+                question_id=ans["question_id"],
+                yes_no=ans["yes_no"],
+                justification=ans["justification"],
+                value=ans["value"],
+                updated_at=created_at,
+                updated_by_email=current_user.email,
+            ))
+            
+        poams_to_add = [
+            ("AC-2 Account Management Policies & Procedures Overdue", "high", "Account management policies need formal annual sign-off."),
+            ("AU-12 Audit Record Generation Gaps in Development Environment", "medium", "Audit records are only captured for production environments. Development needs to be configured."),
+            ("IR-8 Incident Response Tabletop Test Pending", "low", "Tabletop exercise needs to be scheduled for the current fiscal year.")
+        ]
+        for title, priority, desc in poams_to_add:
+            db.add(PoamRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=demo_id,
+                title=title,
+                description=desc,
+                status="open",
+                priority=priority,
+                due_date=(datetime.utcnow() + timedelta(days=30)).strftime("%Y-%m-%d"),
+                owner="Security Team",
+                created_at=created_at,
+            ))
+            
+        checklist_items = [
+            ("System Information Inventory", "complete", "inventory"),
+            ("Step #1 — Security Contacts", "complete", "data-categorization"),
+            ("Risk Assessment & Mitigation", "in_progress", "risk"),
+            ("Data Flow Categorization", "complete", "data-categorization"),
+            ("NIST Scoping Baselines", "complete", "data-categorization"),
+            ("Controls Gap Assessment", "in_progress", "controls"),
+            ("Upload System Diagram", "in_progress", "inventory"),
+        ]
+        for title, status, link in checklist_items:
+            db.add(ChecklistItemRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=demo_id,
+                title=title,
+                status=status,
+                target_link=link
+            ))
+            
+        intake_teams = [
+            ("Data Privacy Officers", "Alice Vance", "a.vance@agency.gov", 100, "complete", 0, "Security Assessment, Risk Management"),
+            ("Engineering Lead Team", "Bob Miller", "b.miller@agency.gov", 45, "in_progress", 1, "Identification and Authentication"),
+            ("Security Operations Team", "Charlie Smith", "c.smith@agency.gov", 20, "overdue", 3, "Audit and Accountability"),
+        ]
+        for name, lead_name, email, rate, status, last_active, families_val in intake_teams:
+            db.add(IntakeTeamRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=demo_id,
+                name=name,
+                lead_name=lead_name,
+                lead_email=email,
+                response_rate=rate,
+                status=status,
+                last_active_days_ago=last_active,
+                families=families_val
+            ))
+            
+        risk_qs = [
+            ("Has a FIPS 199 security categorization been officially completed?", 5, 0, "Yes"),
+            ("Are critical system components inventoried and updated quarterly?", 10, 10, "No"),
+            ("Is MFA strictly enforced for all system administrative accounts?", 15, 0, "Yes"),
+            ("Are regular vulnerability scans run on all production components?", 10, 0, "Yes"),
+            ("Is there an approved Contingency Plan that is tested annually?", 10, 10, "No"),
+        ]
+        for text, max_p, ded_p, ans_val in risk_qs:
+            db.add(RiskQuestionRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=demo_id,
+                question_text=text,
+                mapped_control="AC-2",
+                response=ans_val,
+                points_missed=ded_p
+            ))
+            
+        inventory = [
+            ("ClearComply Web Application Instance", "VM", "IT Operations"),
+            ("ClearComply PostgreSQL Database", "Database", "DB Administration Team"),
+            ("Gateway Load Balancer Proxy", "Network Device", "Security Operations Team"),
+            ("Qualys Scanner Agent", "SaaS", "Security Operations Team"),
+        ]
+        for name, type_val, owner in inventory:
+            db.add(InventoryItemRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=demo_id,
+                name=name,
+                type=type_val,
+                status="Active",
+                owner=owner
+            ))
+            
+        db.commit()
+        
+    audit_service.log_action(
+        action="SEED_DEMO_ASSESSMENT",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="assessment",
+        entity_id=demo_id,
+        detail={"name": demo_name},
+    )
+    return {"message": "Demo NIST 800-53 assessment seeded successfully", "assessmentId": demo_id}
 
 

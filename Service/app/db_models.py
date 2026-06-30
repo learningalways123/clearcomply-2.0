@@ -77,6 +77,8 @@ class AssessmentRecord(Base):
     nist_integrity = Column(String, nullable=True)
     nist_availability = Column(String, nullable=True)
     nist_baseline = Column(String, nullable=True)
+    diagram_filename = Column(String, nullable=True)
+    diagram_storage_path = Column(String, nullable=True)
 
 
     creator = relationship("UserRecord", back_populates="assessments", foreign_keys=[created_by_email])

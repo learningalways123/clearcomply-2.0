@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -92,6 +92,7 @@ function RiskBadge({ score }: { score?: number | null }) {
 
 export default function AssessmentsOverview() {
   const navigate = useNavigate();
+  const [seeding, setSeeding] = useState(false);
 
   const fetchAll = useCallback(
     () => Promise.all([api.getAssessments(), api.getFrameworks()]),
@@ -100,6 +101,21 @@ export default function AssessmentsOverview() {
   const { data, loading, error, execute } = useAsync(fetchAll, true);
 
   const [assessments, frameworks]: [Assessment[], Framework[]] = data ?? [[], []];
+
+  const handleSeedDemo = async () => {
+    setSeeding(true);
+    try {
+      const res = await api.seedDemoAssessment();
+      alert('Demo NIST 800-53 assessment seeded successfully!');
+      execute();
+      navigate(`/assessments/${res.assessmentId}/dashboard`);
+    } catch (e) {
+      console.error(e);
+      alert('Failed to seed demo assessment.');
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -118,9 +134,21 @@ export default function AssessmentsOverview() {
             Manage and track your compliance assessments
           </Typography>
         </Box>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/new-assessment')}>
-          New Assessment
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button 
+            variant="outlined" 
+            color="secondary" 
+            onClick={handleSeedDemo} 
+            disabled={seeding}
+            sx={{ borderRadius: 2, fontWeight: 700 }}
+          >
+            {seeding ? <CircularProgress size={16} sx={{ mr: 1 }} /> : null}
+            Seed Demo Assessment
+          </Button>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/new-assessment')} sx={{ borderRadius: 2, fontWeight: 700 }}>
+            New Assessment
+          </Button>
+        </Box>
       </Box>
 
       {error && (

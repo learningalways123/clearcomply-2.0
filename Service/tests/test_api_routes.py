@@ -600,5 +600,47 @@ def test_ssp_inventory_management(client):
     assert len(resp2.json()) == initial_count + 1
 
 
+def test_ssp_diagram_upload_download_delete(client):
+    created = _create_nist_assessment(client).json()
+    aid = created["id"]
+    
+    # 1. Upload diagram
+    import io
+    file_content = b"fake data flow diagram content"
+    file = (io.BytesIO(file_content), "data_flow_map.png")
+    upload_resp = client.post(
+        f"/api/assessments/{aid}/diagram",
+        files={"file": ("data_flow_map.png", io.BytesIO(file_content))}
+    )
+    assert upload_resp.status_code == 200
+    assert upload_resp.json()["filename"] == "data_flow_map.png"
+    
+    # 2. Download diagram
+    down_resp = client.get(f"/api/assessments/{aid}/diagram")
+    assert down_resp.status_code == 200
+    assert down_resp.content == file_content
+    
+    # 3. Delete diagram
+    del_resp = client.delete(f"/api/assessments/{aid}/diagram")
+    assert del_resp.status_code == 200
+    assert "deleted successfully" in del_resp.json()["message"]
+    
+    # 4. Try downloading again -> 404
+    down_resp2 = client.get(f"/api/assessments/{aid}/diagram")
+    assert down_resp2.status_code == 404
+
+
+def test_seed_demo_assessment(client):
+    resp = client.post("/api/assessments/seed-demo")
+    assert resp.status_code == 200
+    assert resp.json()["assessmentId"] == "demo-nist-800-53-ssp"
+    
+    # Verify we can fetch it
+    get_resp = client.get("/api/assessments/demo-nist-800-53-ssp")
+    assert get_resp.status_code == 200
+    assert get_resp.json()["name"] == "NIST 800-53 SSP Builder Capability Demonstration"
+
+
+
 
 

@@ -81,6 +81,7 @@ def _record_to_assessment(rec: AssessmentRecord, questions: Optional[Dict] = Non
         nistIntegrity=rec.nist_integrity,
         nistAvailability=rec.nist_availability,
         nistBaseline=rec.nist_baseline,
+        diagramFilename=rec.diagram_filename,
     )
 
 
@@ -223,6 +224,8 @@ class DataStore:
                 nist_integrity=assessment.nistIntegrity,
                 nist_availability=assessment.nistAvailability,
                 nist_baseline=assessment.nistBaseline,
+                diagram_filename=assessment.diagramFilename,
+                diagram_storage_path=None,
             )
             db.add(rec)
 

@@ -101,6 +101,7 @@ export interface Assessment {
   nistIntegrity?: string;
   nistAvailability?: string;
   nistBaseline?: string;
+  diagramFilename?: string;
 }
 
 
@@ -469,6 +470,18 @@ export const api = {
     apiClient.get<InventoryItem[]>(`/assessments/${id}/inventory`).then(r => r.data),
   addInventoryItem: (id: string, name: string, type: string, owner?: string) =>
     apiClient.post<InventoryItem>(`/assessments/${id}/inventory`, { name, type, owner }).then(r => r.data),
+  uploadDiagram: (id: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return apiClient.post<{ message: string; filename: string }>(`/assessments/${id}/diagram`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(r => r.data);
+  },
+  downloadDiagramUrl: (id: string) => `${apiClient.defaults.baseURL}/assessments/${id}/diagram`,
+  deleteDiagram: (id: string) =>
+    apiClient.delete<{ message: string }>(`/assessments/${id}/diagram`).then(r => r.data),
+  seedDemoAssessment: () =>
+    apiClient.post<{ message: string; assessmentId: string }>('/assessments/seed-demo').then(r => r.data),
 };
 
 export interface ChecklistItem {
