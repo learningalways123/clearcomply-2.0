@@ -888,6 +888,33 @@ class DataStore:
                 "owner": rec.owner,
             }
 
+    def add_ssp_intake_team(self, assessment_id: str, name: str, lead_name: str, lead_email: str, families: Optional[str]) -> dict:
+        with db_session() as db:
+            rec = IntakeTeamRecord(
+                id=str(uuid.uuid4()),
+                assessment_id=assessment_id,
+                name=name,
+                lead_name=lead_name,
+                lead_email=lead_email,
+                response_rate=0,
+                status="in_progress",
+                last_active_days_ago=0,
+                families=families or "",
+            )
+            db.add(rec)
+            db.flush()
+            return {
+                "id": rec.id,
+                "assessmentId": rec.assessment_id,
+                "name": rec.name,
+                "leadName": rec.lead_name,
+                "leadEmail": rec.lead_email,
+                "responseRate": rec.response_rate,
+                "status": rec.status,
+                "lastActiveDaysAgo": rec.last_active_days_ago,
+                "families": rec.families,
+            }
+
     def remind_intake_team(self, team_id: str) -> dict:
         with db_session() as db:
             rec = db.query(IntakeTeamRecord).filter_by(id=team_id).first()

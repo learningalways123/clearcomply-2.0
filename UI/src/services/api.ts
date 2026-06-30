@@ -482,6 +482,8 @@ export const api = {
     apiClient.delete<{ message: string }>(`/assessments/${id}/diagram`).then(r => r.data),
   seedDemoAssessment: () =>
     apiClient.post<{ message: string; assessmentId: string }>('/assessments/seed-demo').then(r => r.data),
+  addIntakeTeam: (id: string, name: string, leadName: string, leadEmail: string, families?: string) =>
+    apiClient.post<IntakeTeam>(`/assessments/${id}/intake`, { name, leadName, leadEmail, families }).then(r => r.data),
 };
 
 export interface ChecklistItem {

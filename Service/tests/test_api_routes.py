@@ -641,6 +641,32 @@ def test_seed_demo_assessment(client):
     assert get_resp.json()["name"] == "NIST 800-53 SSP Builder Capability Demonstration"
 
 
+def test_add_assessment_intake_team(client):
+    created = _create_nist_assessment(client).json()
+    aid = created["id"]
+    
+    payload = {
+        "name": "Audit Operations Group",
+        "leadName": "Dianne Ross",
+        "leadEmail": "d.ross@agency.gov",
+        "families": "Access Control, Incident Response"
+    }
+    resp = client.post(f"/api/assessments/{aid}/intake", json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["name"] == "Audit Operations Group"
+    assert data["leadEmail"] == "d.ross@agency.gov"
+    assert data["families"] == "Access Control, Incident Response"
+    assert data["responseRate"] == 0
+    assert data["status"] == "in_progress"
+    
+    # Verify it is returned in list
+    list_resp = client.get(f"/api/assessments/{aid}/intake")
+    assert list_resp.status_code == 200
+    assert any(t["name"] == "Audit Operations Group" for t in list_resp.json())
+
+
+
 
 
 
