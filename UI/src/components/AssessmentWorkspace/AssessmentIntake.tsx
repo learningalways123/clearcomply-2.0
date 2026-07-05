@@ -59,6 +59,7 @@ export default function AssessmentIntake() {
   const [leadName, setLeadName] = useState('');
   const [leadEmail, setLeadEmail] = useState('');
   const [families, setFamilies] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [saving, setSaving] = useState(false);
 
   // Menu and Edit States
@@ -88,6 +89,7 @@ export default function AssessmentIntake() {
     setLeadName('');
     setLeadEmail('');
     setFamilies('');
+    setDueDate('');
     setAddOpen(true);
   };
 
@@ -108,6 +110,7 @@ export default function AssessmentIntake() {
     setLeadName(selectedTeam.leadName);
     setLeadEmail(selectedTeam.leadEmail);
     setFamilies(selectedTeam.families || '');
+    setDueDate(selectedTeam.dueDate || '');
     setAddOpen(true);
     handleCloseMenu();
   };
@@ -134,10 +137,10 @@ export default function AssessmentIntake() {
     setSaving(true);
     try {
       if (editingTeam) {
-        await api.updateIntakeTeam(assessment.id, editingTeam.id, name, leadName, leadEmail, families);
+        await api.updateIntakeTeam(assessment.id, editingTeam.id, name, leadName, leadEmail, families, dueDate || undefined);
         alert('Intake team updated successfully!');
       } else {
-        await api.addIntakeTeam(assessment.id, name, leadName, leadEmail, families);
+        await api.addIntakeTeam(assessment.id, name, leadName, leadEmail, families, dueDate || undefined);
         alert('New intake team added successfully!');
       }
       setAddOpen(false);
@@ -252,6 +255,16 @@ export default function AssessmentIntake() {
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {team.leadEmail}
+                    </Typography>
+                  </Box>
+
+                  {/* Deadline Date */}
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                    <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
+                      Intake Deadline
+                    </Typography>
+                    <Typography variant="body2" fontWeight={600} color={isOverdue ? 'error.main' : '#334155'}>
+                      {team.dueDate ? new Date(team.dueDate + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'No deadline set'}
                     </Typography>
                   </Box>
 
@@ -371,6 +384,15 @@ export default function AssessmentIntake() {
                 ))}
               </Select>
             </FormControl>
+            <TextField 
+              label="Deadline Date" 
+              type="date"
+              value={dueDate} 
+              onChange={e => setDueDate(e.target.value)} 
+              size="small" 
+              fullWidth 
+              InputLabelProps={{ shrink: true }}
+            />
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>

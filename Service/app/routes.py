@@ -1119,6 +1119,7 @@ class AddIntakeTeamRequest(BaseModel):
     leadName: str = Field(..., min_length=1, max_length=200)
     leadEmail: str = Field(..., min_length=1, max_length=200)
     families: Optional[str] = None
+    dueDate: Optional[str] = None
 
 @router.post("/assessments/{assessment_id}/intake")
 async def add_assessment_intake_team(
@@ -1136,7 +1137,8 @@ async def add_assessment_intake_team(
             name=req.name,
             lead_name=req.leadName,
             lead_email=req.leadEmail,
-            families=req.families
+            families=req.families,
+            due_date=req.dueDate
         )
         
         audit_service.log_action(
@@ -1160,6 +1162,7 @@ class UpdateIntakeTeamRequest(BaseModel):
     leadName: str = Field(..., min_length=1, max_length=200)
     leadEmail: str = Field(..., min_length=1, max_length=200)
     families: Optional[str] = None
+    dueDate: Optional[str] = None
 
 @router.put("/assessments/{assessment_id}/intake/{team_id}")
 async def update_assessment_intake_team(
@@ -1178,7 +1181,8 @@ async def update_assessment_intake_team(
             name=req.name,
             lead_name=req.leadName,
             lead_email=req.leadEmail,
-            families=req.families
+            families=req.families,
+            due_date=req.dueDate
         )
         
         audit_service.log_action(

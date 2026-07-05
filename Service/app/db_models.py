@@ -286,6 +286,7 @@ class IntakeTeamRecord(Base):
     status = Column(String, nullable=False, default="in_progress") # complete | in_progress | overdue
     last_active_days_ago = Column(Integer, nullable=False, default=0)
     families = Column(Text, nullable=True)
+    due_date = Column(String, nullable=True)  # stored as ISO date string "YYYY-MM-DD"
 
     assessment = relationship("AssessmentRecord", back_populates="intake_teams")
 

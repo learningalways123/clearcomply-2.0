@@ -542,10 +542,10 @@ export const api = {
     apiClient.delete<{ message: string }>(`/assessments/${id}/diagram`).then(r => r.data),
   seedDemoAssessment: () =>
     apiClient.post<{ message: string; assessmentId: string }>('/assessments/seed-demo').then(r => r.data),
-  addIntakeTeam: (id: string, name: string, leadName: string, leadEmail: string, families?: string) =>
-    apiClient.post<IntakeTeam>(`/assessments/${id}/intake`, { name, leadName, leadEmail, families }).then(r => r.data),
-  updateIntakeTeam: (id: string, teamId: string, name: string, leadName: string, leadEmail: string, families?: string) =>
-    apiClient.put<IntakeTeam>(`/assessments/${id}/intake/${teamId}`, { name, leadName, leadEmail, families }).then(r => r.data),
+  addIntakeTeam: (id: string, name: string, leadName: string, leadEmail: string, families?: string, dueDate?: string) =>
+    apiClient.post<IntakeTeam>(`/assessments/${id}/intake`, { name, leadName, leadEmail, families, dueDate }).then(r => r.data),
+  updateIntakeTeam: (id: string, teamId: string, name: string, leadName: string, leadEmail: string, families?: string, dueDate?: string) =>
+    apiClient.put<IntakeTeam>(`/assessments/${id}/intake/${teamId}`, { name, leadName, leadEmail, families, dueDate }).then(r => r.data),
   deleteIntakeTeam: (id: string, teamId: string) =>
     apiClient.delete<{ success: boolean }>(`/assessments/${id}/intake/${teamId}`).then(r => r.data),
 
@@ -577,6 +577,7 @@ export interface IntakeTeam {
   status: 'complete' | 'in_progress' | 'overdue';
   lastActiveDaysAgo: number;
   families?: string;
+  dueDate?: string;
 }
 
 export interface RiskQuestion {

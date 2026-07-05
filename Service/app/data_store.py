@@ -975,12 +975,26 @@ class DataStore:
             result = []
             for r in recs:
                 prog = self.calculate_intake_team_progress(db, r.assessment_id, r.families)
-                if r.response_rate != prog:
+                
+                # Determine status dynamically based on progress and due_date
+                status = r.status
+                if prog == 100:
+                    status = "complete"
+                elif r.due_date:
+                    from datetime import date
+                    today_str = date.today().isoformat()
+                    if today_str > r.due_date:
+                        status = "overdue"
+                    else:
+                        status = "in_progress"
+                else:
+                    if status == "complete" or status == "overdue":
+                        status = "in_progress"
+                
+                if r.response_rate != prog or r.status != status:
                     r.response_rate = prog
-                    if prog == 100:
-                        r.status = "complete"
-                    elif r.status == "complete":
-                        r.status = "in_progress"
+                    r.status = status
+                    
                 result.append({
                     "id": r.id,
                     "assessmentId": r.assessment_id,
@@ -988,9 +1002,10 @@ class DataStore:
                     "leadName": r.lead_name,
                     "leadEmail": r.lead_email,
                     "responseRate": prog,
-                    "status": r.status,
+                    "status": status,
                     "lastActiveDaysAgo": r.last_active_days_ago,
                     "families": r.families,
+                    "dueDate": r.due_date,
                 })
             db.commit()
             return result
@@ -1046,7 +1061,7 @@ class DataStore:
                 "owner": rec.owner,
             }
 
-    def add_ssp_intake_team(self, assessment_id: str, name: str, lead_name: str, lead_email: str, families: Optional[str]) -> dict:
+    def add_ssp_intake_team(self, assessment_id: str, name: str, lead_name: str, lead_email: str, families: Optional[str], due_date: Optional[str] = None) -> dict:
         with db_session() as db:
             rec = IntakeTeamRecord(
                 id=str(uuid.uuid4()),
@@ -1058,6 +1073,7 @@ class DataStore:
                 status="in_progress",
                 last_active_days_ago=0,
                 families=families or "",
+                due_date=due_date
             )
             db.add(rec)
             db.flush()
@@ -1071,9 +1087,10 @@ class DataStore:
                 "status": rec.status,
                 "lastActiveDaysAgo": rec.last_active_days_ago,
                 "families": rec.families,
+                "dueDate": rec.due_date,
             }
 
-    def update_ssp_intake_team(self, team_id: str, name: str, lead_name: str, lead_email: str, families: Optional[str]) -> dict:
+    def update_ssp_intake_team(self, team_id: str, name: str, lead_name: str, lead_email: str, families: Optional[str], due_date: Optional[str] = None) -> dict:
         with db_session() as db:
             rec = db.query(IntakeTeamRecord).filter_by(id=team_id).first()
             if not rec:
@@ -1082,13 +1099,27 @@ class DataStore:
             rec.lead_name = lead_name
             rec.lead_email = lead_email
             rec.families = families or ""
+            rec.due_date = due_date
             # Recalculate progress immediately on update
             prog = self.calculate_intake_team_progress(db, rec.assessment_id, rec.families)
             rec.response_rate = prog
+            
+            # Determine status dynamically
+            status = rec.status
             if prog == 100:
-                rec.status = "complete"
-            elif rec.status == "complete":
-                rec.status = "in_progress"
+                status = "complete"
+            elif rec.due_date:
+                from datetime import date
+                today_str = date.today().isoformat()
+                if today_str > rec.due_date:
+                    status = "overdue"
+                else:
+                    status = "in_progress"
+            else:
+                if status == "complete" or status == "overdue":
+                    status = "in_progress"
+            rec.status = status
+            
             db.commit()
             return {
                 "id": rec.id,
@@ -1100,6 +1131,7 @@ class DataStore:
                 "status": rec.status,
                 "lastActiveDaysAgo": rec.last_active_days_ago,
                 "families": rec.families,
+                "dueDate": rec.due_date,
             }
 
     def delete_ssp_intake_team(self, team_id: str) -> bool:
