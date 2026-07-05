@@ -73,9 +73,8 @@ def seed_demo_data():
     from app.data_store import data_store
 
     nist_qs = data_store.get_questions_by_framework("NIST-800-53")
-    csf_qs = data_store.get_questions_by_framework("NIST-CSF-2.0")
 
-    if not nist_qs or not csf_qs:
+    if not nist_qs:
         print("[seed] Question banks not loaded yet — skipping seed.")
         return
 
@@ -98,20 +97,6 @@ def seed_demo_data():
     )
 
     _create_assessment(
-        name="Q1 2026 NIST CSF 2.0 Baseline",
-        framework_id="NIST-CSF-2.0",
-        questions=csf_qs,
-        scenario=SCENARIO_REVIEWED,
-        status="reviewed",
-        days_ago=90,
-        seed=2,
-        poam_titles=[
-            ("Cybersecurity risk tolerance not formally documented", "high",
-             "Board-level risk appetite statement required by CSF GV.RM. Owner: CRO. Due: Q2 2026."),
-        ],
-    )
-
-    _create_assessment(
         name="Critical Systems NIST 800-53 Review",
         framework_id="NIST-800-53",
         questions=nist_qs,
@@ -127,17 +112,6 @@ def seed_demo_data():
             ("Vendor security assessments incomplete for 3 suppliers", "low",
              "Tier-2 vendors pending questionnaire. Due August 2026."),
         ],
-    )
-
-    _create_assessment(
-        name="Cloud Migration CSF 2.0 Assessment",
-        framework_id="NIST-CSF-2.0",
-        questions=csf_qs,
-        scenario=SCENARIO_LOW_COMPLETION,
-        status="draft",
-        days_ago=5,
-        seed=4,
-        poam_titles=[],
     )
 
     print("[seed] Demo data loaded successfully ✓")

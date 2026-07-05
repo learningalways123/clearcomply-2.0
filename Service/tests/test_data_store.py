@@ -7,14 +7,14 @@ import pytest
 
 # ── Frameworks ────────────────────────────────────────────────────────────────
 
-def test_get_all_frameworks_returns_four(store):
+def test_get_all_frameworks_returns_three(store):
     frameworks = store.get_all_frameworks()
-    assert len(frameworks) == 4
+    assert len(frameworks) == 3
 
 
 def test_framework_ids_are_expected(store):
     ids = {f.id for f in store.get_all_frameworks()}
-    assert ids == {"SOC2", "NIST-800-53", "NIST-CSF-2.0", "ISO27001"}
+    assert ids == {"SOC2", "NIST-800-53", "ISO27001"}
 
 
 def test_get_framework_by_id_known(store):

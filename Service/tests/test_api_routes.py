@@ -23,7 +23,7 @@ def test_get_frameworks_returns_list(client):
     assert resp.status_code == 200
     data = resp.json()
     assert isinstance(data, list)
-    assert len(data) == 4
+    assert len(data) == 3
 
 
 def test_frameworks_have_required_fields(client):
@@ -86,10 +86,7 @@ def test_get_question_by_id_unknown_404(client):
 
 def test_get_csf_modules(client):
     resp = client.get("/api/frameworks/NIST-CSF-2.0/modules")
-    assert resp.status_code == 200
-    modules = resp.json()
-    assert len(modules) > 0
-    assert all("moduleId" in m for m in modules)
+    assert resp.status_code == 404
 
 
 def test_get_modules_non_csf_400(client):

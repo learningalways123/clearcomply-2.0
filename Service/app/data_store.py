@@ -130,7 +130,6 @@ class DataStore:
         for d in [
             {"id": "SOC2", "name": "SOC 2", "description": "Service Organization Control 2 - Framework for managing customer data."},
             {"id": "NIST-800-53", "name": "NIST 800-53", "description": "NIST SP 800-53 - Security and Privacy Controls for Federal Information Systems."},
-            {"id": "NIST-CSF-2.0", "name": "NIST Cybersecurity Framework 2.0", "description": "NIST CSF 2.0 - Risk-based approach to managing cybersecurity risk."},
             {"id": "ISO27001", "name": "ISO 27001", "description": "ISO/IEC 27001 - International standard for information security management systems."},
         ]:
             f = Framework(**d)
