@@ -729,6 +729,48 @@ def test_projects_lifecycle(client):
     del_resp = client.delete(f"/api/projects/{pid}")
     assert del_resp.status_code == 200
 
+    # 6. Verify assessment was also cascade deleted
+    ass_get_resp = client.get(f"/api/assessments/{aid}")
+    assert ass_get_resp.status_code == 404
+
+
+def test_intake_team_overdue_calculation(client):
+    created = _create_nist_assessment(client).json()
+    aid = created["id"]
+    
+    # 1. Create a team with a future due date
+    future_date = "2030-12-31"
+    payload = {
+        "name": "Audit Operations Group",
+        "leadName": "Dianne Ross",
+        "leadEmail": "d.ross@agency.gov",
+        "families": "Access Control",
+        "dueDate": future_date
+    }
+    resp = client.post(f"/api/assessments/{aid}/intake", json=payload)
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "in_progress"
+    team_id = resp.json()["id"]
+    
+    # 2. Update it to a past due date
+    past_date = "2020-01-01"
+    up_payload = {
+        "name": "Audit Operations Group",
+        "leadName": "Dianne Ross",
+        "leadEmail": "d.ross@agency.gov",
+        "families": "Access Control",
+        "dueDate": past_date
+    }
+    up_resp = client.put(f"/api/assessments/{aid}/intake/{team_id}", json=up_payload)
+    assert up_resp.status_code == 200
+    assert up_resp.json()["status"] == "overdue"
+    
+    # 3. Check listing endpoint also returns overdue
+    list_resp = client.get(f"/api/assessments/{aid}/intake")
+    assert list_resp.status_code == 200
+    fetched_team = [t for t in list_resp.json() if t["id"] == team_id][0]
+    assert fetched_team["status"] == "overdue"
+
 
 def test_ssp_workbook_lifecycle(client):
     from app.database import engine
