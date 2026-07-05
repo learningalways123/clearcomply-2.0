@@ -61,6 +61,16 @@ export default function NewAssessment() {
   const [selectedFrameworks, setSelectedFrameworks] = useState<Framework[]>([]);
   const [selectedControlIds, setSelectedControlIds] = useState<Set<string>>(new Set());
 
+  // Default to NIST 800-53 when frameworks load
+  useEffect(() => {
+    if (frameworks && frameworks.length > 0 && selectedFrameworks.length === 0) {
+      const nist = frameworks.find(f => f.id === 'NIST-800-53');
+      if (nist) {
+        setSelectedFrameworks([nist]);
+      }
+    }
+  }, [frameworks, selectedFrameworks]);
+
   // ── Controls ──
   const [controlsByFw, setControlsByFw] = useState<FrameworkControls>({});
   const [controlsLoading, setControlsLoading] = useState(false);
@@ -349,7 +359,8 @@ export default function NewAssessment() {
               <Typography variant="h6" gutterBottom>Frameworks</Typography>
               <Autocomplete
                 multiple
-                options={frameworks ?? []}
+                disabled
+                options={(frameworks ?? []).filter(f => f.id === 'NIST-800-53')}
                 getOptionLabel={o => o.name}
                 value={selectedFrameworks}
                 onChange={(_, v) => setSelectedFrameworks(v)}
