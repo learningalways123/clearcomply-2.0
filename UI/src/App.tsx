@@ -18,9 +18,9 @@ import Evidence from './components/Evidence/Evidence';
 const theme = createTheme({
   palette: {
     mode: 'light',
-    primary: { main: '#4f46e5', light: '#818cf8', dark: '#3730a3' },
+    primary: { main: '#6366f1', light: '#818cf8', dark: '#4f46e5' },
     secondary: { main: '#06b6d4' },
-    background: { default: '#f8f9fa', paper: '#ffffff' },
+    background: { default: '#f3f4f6', paper: '#ffffff' },
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',

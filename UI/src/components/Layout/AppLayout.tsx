@@ -116,15 +116,16 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           '& .MuiDrawer-paper': {
             width: DRAWER_WIDTH,
             boxSizing: 'border-box',
-            borderRight: '1px solid #e5e7eb',
-            bgcolor: '#fafafa',
+            borderRight: '1px solid rgba(255,255,255,0.08)',
+            background: 'linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%)',
+            color: '#f8fafc',
           },
         }}
       >
         {/* Spacer to sit below AppBar */}
         <Toolbar />
 
-        <Box sx={{ px: 1, pt: 2 }}>
+        <Box sx={{ px: 1.5, pt: 2 }}>
           <List disablePadding>
             {NAV_ITEMS.map((item) => {
               const active = pathname === item.path || pathname.startsWith(item.path + '/');
@@ -135,25 +136,33 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                     selected={active}
                     sx={{
                       borderRadius: 2,
-                      '&.Mui-selected': {
-                        bgcolor: 'primary.main',
+                      py: 1,
+                      color: active ? '#fff' : '#94a3b8',
+                      bgcolor: active ? 'rgba(99, 102, 241, 0.25)' : 'transparent',
+                      borderLeft: active ? '3px solid #6366f1' : '3px solid transparent',
+                      '&:hover': {
+                        bgcolor: active ? 'rgba(99, 102, 241, 0.35)' : 'rgba(255,255,255,0.04)',
                         color: '#fff',
-                        '&:hover': { bgcolor: 'primary.dark' },
-                        '& .MuiListItemIcon-root': { color: '#fff' },
+                      },
+                      '&.Mui-selected:hover': {
+                        bgcolor: 'rgba(99, 102, 241, 0.35)',
+                      },
+                      '& .MuiListItemIcon-root': {
+                        color: active ? '#818cf8' : '#64748b',
                       },
                     }}
                   >
                     <ListItemIcon
                       sx={{
-                        minWidth: 36,
-                        color: active ? 'inherit' : 'text.secondary',
+                        minWidth: 32,
+                        color: 'inherit',
                       }}
                     >
                       {item.icon}
                     </ListItemIcon>
                     <ListItemText
                       primary={item.label}
-                      slotProps={{ primary: { fontSize: 14, fontWeight: active ? 600 : 400 } }}
+                      slotProps={{ primary: { fontSize: 13, fontWeight: active ? 650 : 500 } }}
                     />
                   </ListItemButton>
                 </ListItem>
@@ -164,7 +173,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       </Drawer>
 
       {/* ── Main content ── */}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8, bgcolor: '#f3f4f6' }}>
         {children}
       </Box>
     </Box>
