@@ -68,6 +68,7 @@ export default function App() {
                         <AppLayout>
                           <Routes>
                              <Route path="/" element={<Navigate to="/projects" replace />} />
+                             <Route path="/assessments" element={<Navigate to="/projects" replace />} />
                              <Route path="/projects" element={<AssessmentsOverview />} />
                              <Route path="/projects/:id" element={<ProjectDetails />} />
                              <Route path="/new-assessment" element={<NewAssessment />} />

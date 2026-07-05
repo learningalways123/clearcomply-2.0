@@ -119,7 +119,7 @@ function AssessmentWorkspaceInner() {
       setAssessment(data);
     } catch (e) {
       console.error(e);
-      navigate('/assessments');
+      navigate('/projects');
     } finally {
       setLoading(false);
     }
