@@ -1734,6 +1734,18 @@ def load_default_workbook_state():
         return {}
 
 
+def _attach_control_defs(wb: SSPWorkbook) -> dict:
+    app_data = {}
+    try:
+        with open("../xlstohtml/build-source/app_data.json", "r") as f:
+            app_data = json.load(f)
+    except Exception as e:
+        print(f"Error loading app_data: {e}")
+    control_defs = app_data.get("controls", [])
+    wb_dict = wb.model_dump()
+    wb_dict["controlDefinitions"] = control_defs
+    return wb_dict
+
 @router.get("/assessments/{id}/workbook", response_model=SSPWorkbook, summary="Get or initialize the 14-section SSP workbook")
 def get_ssp_workbook_route(id: str, current_user: User = Depends(get_current_user)):
     wb = data_store.get_ssp_workbook(id)
@@ -1743,7 +1755,7 @@ def get_ssp_workbook_route(id: str, current_user: User = Depends(get_current_use
             risk_data = dict(wb.riskAssessment)
             risk_data["questionDefinitions"] = default_state.get("riskAssessment", {}).get("questionDefinitions", [])
             wb.riskAssessment = risk_data
-        return wb
+        return _attach_control_defs(wb)
         
     assessment = data_store.get_assessment_by_id(id)
     if not assessment:
@@ -1770,7 +1782,8 @@ def get_ssp_workbook_route(id: str, current_user: User = Depends(get_current_use
         createdAt=datetime.utcnow(),
         updatedAt=datetime.utcnow()
     )
-    return data_store.save_ssp_workbook(id, wb_obj)
+    saved_wb = data_store.save_ssp_workbook(id, wb_obj)
+    return _attach_control_defs(saved_wb)
 
 
 @router.put("/assessments/{id}/workbook/{section}", response_model=SSPWorkbook, summary="Update a specific section of the SSP workbook")
@@ -1791,7 +1804,7 @@ def update_ssp_workbook_section_route(
             entity_id=id,
             detail={"section": section}
         )
-        return wb
+        return _attach_control_defs(wb)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:

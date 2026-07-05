@@ -373,6 +373,7 @@ class SSPWorkbook(BaseModel):
     revisionHistory: Optional[List[Dict[str, Any]]] = None
     createdAt: datetime
     updatedAt: datetime
+    controlDefinitions: Optional[List[Dict[str, Any]]] = None
 
 class UpdateWorkbookSectionRequest(BaseModel):
     data: Any

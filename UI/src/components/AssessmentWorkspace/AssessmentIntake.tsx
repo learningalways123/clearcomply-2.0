@@ -18,6 +18,26 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Stack from '@mui/material/Stack';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
+const CONTROL_FAMILIES = [
+  'Data Categorization',
+  'Disaster Recovery Planning',
+  'Identity and Access Management Standard',
+  'Incident Management Standard',
+  'Information Security Program Standard',
+  'Network Security Standard',
+  'Physical and Environmental Security Standard',
+  'Risk Management',
+  'Secure Configuration Standard',
+  'Secure Systems Development and Acquisition',
+  'Security Awareness Standard',
+  'Security Logging and Monitoring Standard',
+  'Threat and Vulnerability Management'
+];
 
 import { api } from '../../services/api';
 import type { IntakeTeam } from '../../services/api';
@@ -268,14 +288,31 @@ export default function AssessmentIntake() {
               size="small" 
               fullWidth 
             />
-            <TextField 
-              label="Scoped Subject Families" 
-              placeholder="e.g. Access Control, Auditing" 
-              value={families} 
-              onChange={e => setFamilies(e.target.value)} 
-              size="small" 
-              fullWidth 
-            />
+            <FormControl fullWidth size="small">
+              <InputLabel>Scoped Subject Families</InputLabel>
+              <Select
+                multiple
+                value={families ? families.split(', ') : []}
+                onChange={e => {
+                  const val = e.target.value;
+                  setFamilies(typeof val === 'string' ? val : val.join(', '));
+                }}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {(selected as string[]).map((value) => (
+                      <Chip key={value} label={value} size="small" />
+                    ))}
+                  </Box>
+                )}
+                label="Scoped Subject Families"
+              >
+                {CONTROL_FAMILIES.map((fam) => (
+                  <MenuItem key={fam} value={fam}>
+                    {fam}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>

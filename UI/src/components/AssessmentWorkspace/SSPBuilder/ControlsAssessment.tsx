@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
@@ -15,43 +15,69 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import Alert from '@mui/material/Alert';
 
 import { useWorkbook } from './WorkbookContext';
-import { api } from '../../../services/api';
 
-const STATUS_OPTS = ['Implemented', 'Partially Implemented', 'Planned / POAM', 'Inherited', 'Not Applicable'];
+const COMPLIANT_OPTS = ['Full', 'Partial', 'None', 'N/A'];
+const ATTESTATION_OPTS = [
+  '*Attestation Required',
+  'Verbal or written claim of compliance received',
+  'Evidence/proof of compliance received'
+];
 
 function getStatusColor(status: string) {
-  if (status === 'Implemented') return 'success';
-  if (status === 'Partially Implemented') return 'warning';
-  if (status === 'Planned / POAM') return 'error';
-  if (status === 'Inherited') return 'info';
+  if (status === 'Full') return 'success';
+  if (status === 'Partial') return 'warning';
+  if (status === 'None') return 'error';
+  if (status === 'N/A') return 'info';
   return 'default';
 }
 
 export default function ControlsAssessment() {
   const { workbook, updateSection, loading: wbLoading } = useWorkbook();
-  const [controlsList, setControlsList] = useState<any[]>([]);
+  const [selectedFamily, setSelectedFamily] = useState<string>('');
   const [selectedControl, setSelectedControl] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Read controls from workbook definitions
+  const controlsList = useMemo(() => {
+    return workbook?.controlDefinitions || [];
+  }, [workbook?.controlDefinitions]);
+
+  // Compute unique families
+  const familiesList = useMemo(() => {
+    const fams = new Set<string>();
+    controlsList.forEach((c: any) => {
+      if (c.family) fams.add(c.family);
+    });
+    return Array.from(fams).sort();
+  }, [controlsList]);
+
+  // Filtered controls
+  const filteredControls = useMemo(() => {
+    if (!selectedFamily) return controlsList;
+    return controlsList.filter((c: any) => c.family === selectedFamily);
+  }, [controlsList, selectedFamily]);
+
+  // Set default selected control
   useEffect(() => {
-    if (!workbook) return;
-    setLoading(true);
-    api.getAssessment(workbook.assessmentId)
-      .then(ass => {
-        const fw = ass.frameworkIds[0] || 'NIST-800-53';
-        return api.getControls(fw);
-      })
-      .then(list => {
-        setControlsList(list);
-        if (list.length > 0) {
-          setSelectedControl(list[0]);
-        }
-      })
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
-  }, [workbook?.assessmentId]);
+    if (filteredControls.length > 0) {
+      // Keep current if it is in the filtered list, otherwise take the first
+      const exists = filteredControls.some((c: any) => c.id === selectedControl?.id);
+      if (!exists) {
+        setSelectedControl(filteredControls[0]);
+      }
+    } else {
+      setSelectedControl(null);
+    }
+  }, [filteredControls]);
+
+  useEffect(() => {
+    if (workbook?.controlDefinitions) {
+      setLoading(false);
+    }
+  }, [workbook]);
 
   if (wbLoading || loading) {
     return <Box sx={{ display: 'flex', justifyContent: 'center', pt: 4 }}><CircularProgress /></Box>;
@@ -62,9 +88,13 @@ export default function ControlsAssessment() {
   const getControlWbData = (ctrlId: string) => {
     return wbControls.find((c: any) => c.id === ctrlId) || {
       id: ctrlId,
-      status: 'Planned / POAM',
-      narrative: '',
-      gaps: ''
+      response: '',
+      compliant: '',
+      attestation: '',
+      attestationDesc: '',
+      reviewDate: '',
+      remediationPlan: '',
+      contact: ''
     };
   };
 
@@ -98,12 +128,29 @@ export default function ControlsAssessment() {
         </Typography>
       </Box>
 
+      {/* Filter by Family */}
+      <Box sx={{ mb: 3, maxWidth: 400 }}>
+        <FormControl fullWidth size="small">
+          <InputLabel>Filter by Control Family</InputLabel>
+          <Select
+            label="Filter by Control Family"
+            value={selectedFamily}
+            onChange={(e) => setSelectedFamily(e.target.value)}
+          >
+            <MenuItem value="">All Families</MenuItem>
+            {familiesList.map(fam => (
+              <MenuItem key={fam} value={fam}>{fam}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
       <Grid container spacing={3}>
         {/* Sidebar Controls List */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ borderRadius: 2, maxHeight: 600, overflow: 'auto', border: '1px solid #e5e7eb', boxShadow: 'none' }}>
+          <Card sx={{ borderRadius: 2, maxHeight: 650, overflow: 'auto', border: '1px solid #e5e7eb', boxShadow: 'none' }}>
             <List disablePadding>
-              {controlsList.map((ctrl) => {
+              {filteredControls.map((ctrl) => {
                 const data = getControlWbData(ctrl.id);
                 return (
                   <ListItemButton
@@ -127,8 +174,8 @@ export default function ControlsAssessment() {
                             {ctrl.id}
                           </Typography>
                           <Chip 
-                            label={data.status} 
-                            color={getStatusColor(data.status)} 
+                            label={data.compliant || 'None'} 
+                            color={getStatusColor(data.compliant)} 
                             size="small" 
                             sx={{ fontSize: 9, height: 16, fontWeight: 700 }} 
                           />
@@ -144,7 +191,7 @@ export default function ControlsAssessment() {
                             overflow: 'hidden'
                           }}
                         >
-                          {ctrl.title}
+                          {ctrl.name}
                         </Typography>
                       }
                     />
@@ -159,50 +206,105 @@ export default function ControlsAssessment() {
         <Grid size={{ xs: 12, md: 8 }}>
           {selectedControl && currentWb ? (
             <Card sx={{ borderRadius: 2 }}>
-              <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                 <Box>
                   <Typography variant="caption" fontWeight={700} color="primary.main" sx={{ display: 'block', mb: 0.5 }}>
-                    {selectedControl.id}
+                    {selectedControl.family} &bull; {selectedControl.id}
                   </Typography>
                   <Typography variant="h6" fontWeight={700}>
-                    {selectedControl.title}
+                    {selectedControl.name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    {selectedControl.description}
+                  <Typography variant="body2" sx={{ mt: 1, p: 2, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0', whiteSpace: 'pre-wrap' }}>
+                    {selectedControl.detail}
                   </Typography>
                 </Box>
 
+                {selectedControl.responseGuidance && (
+                  <Alert severity="info" sx={{ py: 0.5 }}>
+                    <strong>Response Guidance:</strong> {selectedControl.responseGuidance}
+                  </Alert>
+                )}
+
                 <Divider />
 
-                <FormControl fullWidth size="small">
-                  <InputLabel>Implementation Status</InputLabel>
-                  <Select
-                    label="Implementation Status"
-                    value={currentWb.status || ''}
-                    onChange={(e) => handleWbDataChange(selectedControl.id, 'status', e.target.value)}
-                  >
-                    {STATUS_OPTS.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
-                  </Select>
-                </FormControl>
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <FormControl fullWidth size="small">
+                      <InputLabel>Compliance Status</InputLabel>
+                      <Select
+                        label="Compliance Status"
+                        value={currentWb.compliant || ''}
+                        onChange={(e) => handleWbDataChange(selectedControl.id, 'compliant', e.target.value)}
+                      >
+                        {COMPLIANT_OPTS.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <FormControl fullWidth size="small">
+                      <InputLabel>Attestation Method</InputLabel>
+                      <Select
+                        label="Attestation Method"
+                        value={currentWb.attestation || ''}
+                        onChange={(e) => handleWbDataChange(selectedControl.id, 'attestation', e.target.value)}
+                      >
+                        {ATTESTATION_OPTS.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Attestation Details / Evidence Reference"
+                      value={currentWb.attestationDesc || ''}
+                      onChange={(e) => handleWbDataChange(selectedControl.id, 'attestationDesc', e.target.value)}
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, sm: 3 }}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Review Date"
+                      placeholder="e.g. 2026-07-01"
+                      value={currentWb.reviewDate || ''}
+                      onChange={(e) => handleWbDataChange(selectedControl.id, 'reviewDate', e.target.value)}
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, sm: 3 }}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Responsible Contact"
+                      placeholder="e.g. Dianne Ross"
+                      value={currentWb.contact || ''}
+                      onChange={(e) => handleWbDataChange(selectedControl.id, 'contact', e.target.value)}
+                    />
+                  </Grid>
+                </Grid>
 
                 <TextField
                   fullWidth
                   multiline
-                  rows={6}
-                  label="Implementation Narrative"
-                  helperText="Explain how this system meets the requirements. Identify specific technologies, configurations, or operational policies."
-                  value={currentWb.narrative || ''}
-                  onChange={(e) => handleWbDataChange(selectedControl.id, 'narrative', e.target.value)}
+                  rows={4}
+                  label="Implementation Narrative / Response"
+                  placeholder="Explain how the system meets the control requirement..."
+                  value={currentWb.response || ''}
+                  onChange={(e) => handleWbDataChange(selectedControl.id, 'response', e.target.value)}
                 />
 
                 <TextField
                   fullWidth
                   multiline
-                  rows={3}
+                  rows={2}
                   label="Remediation Plan / Discovered Gaps"
-                  helperText="If not fully implemented, describe what gaps exist and the active roadmap to reach full compliance."
-                  value={currentWb.gaps || ''}
-                  onChange={(e) => handleWbDataChange(selectedControl.id, 'gaps', e.target.value)}
+                  placeholder="Describe active plans to remediate compliance gaps if not fully implemented..."
+                  value={currentWb.remediationPlan || ''}
+                  onChange={(e) => handleWbDataChange(selectedControl.id, 'remediationPlan', e.target.value)}
                 />
               </CardContent>
             </Card>

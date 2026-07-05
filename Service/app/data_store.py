@@ -922,23 +922,78 @@ class DataStore:
                 for r in recs
             ]
 
+    def calculate_intake_team_progress(self, db, assessment_id: str, families_str: Optional[str]) -> int:
+        if not families_str:
+            return 0
+        assigned_families = [f.strip().lower() for f in families_str.split(",") if f.strip()]
+        if not assigned_families:
+            return 0
+
+        # Load app_data to get workbook controls metadata
+        import json as _json
+        app_data = {}
+        try:
+            with open("../xlstohtml/build-source/app_data.json", "r") as f:
+                app_data = _json.load(f)
+        except Exception as e:
+            print(f"Error loading app_data: {e}")
+        controls_meta = app_data.get("controls", [])
+        
+        # Filter control IDs belonging to the assigned families
+        family_control_ids = {
+            c.get("id")
+            for c in controls_meta
+            if c.get("family") and any(af in c.get("family").lower() for af in assigned_families)
+        }
+        
+        if not family_control_ids:
+            return 0
+
+        # Get the ssp_workbook controls answers from the database
+        from app.db_models import SSPWorkbookRecord
+        wb_rec = db.query(SSPWorkbookRecord).filter_by(assessment_id=assessment_id).first()
+        if not wb_rec or not wb_rec.controls:
+            return 0
+
+        # Count how many of these controls are answered
+        total_count = len(family_control_ids)
+        answered_count = 0
+        
+        for c_ans in wb_rec.controls:
+            c_id = c_ans.get("id")
+            if c_id in family_control_ids:
+                has_response = bool(c_ans.get("response", "").strip())
+                has_compliant = bool(c_ans.get("compliant", "").strip())
+                if has_response or has_compliant:
+                    answered_count += 1
+
+        return int((answered_count / total_count) * 100)
+
     def get_ssp_intake_teams(self, assessment_id: str) -> list:
         with db_session() as db:
             recs = db.query(IntakeTeamRecord).filter_by(assessment_id=assessment_id).all()
-            return [
-                {
+            result = []
+            for r in recs:
+                prog = self.calculate_intake_team_progress(db, r.assessment_id, r.families)
+                if r.response_rate != prog:
+                    r.response_rate = prog
+                    if prog == 100:
+                        r.status = "complete"
+                    elif r.status == "complete":
+                        r.status = "in_progress"
+                result.append({
                     "id": r.id,
                     "assessmentId": r.assessment_id,
                     "name": r.name,
                     "leadName": r.lead_name,
                     "leadEmail": r.lead_email,
-                    "responseRate": r.response_rate,
+                    "responseRate": prog,
                     "status": r.status,
                     "lastActiveDaysAgo": r.last_active_days_ago,
                     "families": r.families,
-                }
-                for r in recs
-            ]
+                })
+            db.commit()
+            return result
 
     def get_ssp_risk_questions(self, assessment_id: str) -> list:
         with db_session() as db:

@@ -354,6 +354,7 @@ export interface SSPWorkbook {
   revisionHistory: any[];
   createdAt: string;
   updatedAt: string;
+  controlDefinitions?: any[];
 }
 
 export interface SSPWorkbookProgress {
