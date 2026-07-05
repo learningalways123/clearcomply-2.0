@@ -12,7 +12,7 @@ BACKEND_SERVICE="clearcomply-backend"
 FRONTEND_SERVICE="clearcomply-frontend"
 
 # Update with your OAuth client ID
-GOOGLE_CLIENT_ID="440433810610-d83i1m8a1gupb51egb9a2cgl6n9c2mvs.apps.googleusercontent.com"
+GOOGLE_CLIENT_ID="440433810610-v59q0ah2d45o1fvginicsvrt7k5le76j.apps.googleusercontent.com"
 
 # Colors
 GREEN='\033[0;32m'

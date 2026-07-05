@@ -1669,8 +1669,8 @@ async def delete_project(id: str, current_user: User = Depends(get_current_user)
 
 def load_default_workbook_state():
     try:
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        path = os.path.join(base_dir, "xlstohtml", "build-source", "app_data.json")
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(current_dir, "app_data.json")
         with open(path, "r", encoding="utf-8") as f:
             app_data = json.load(f)
             
@@ -1811,7 +1811,9 @@ def load_default_workbook_state():
 def _attach_control_defs(wb: SSPWorkbook) -> dict:
     app_data = {}
     try:
-        with open("../xlstohtml/build-source/app_data.json", "r") as f:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(current_dir, "app_data.json")
+        with open(path, "r", encoding="utf-8") as f:
             app_data = json.load(f)
     except Exception as e:
         print(f"Error loading app_data: {e}")
@@ -1911,8 +1913,8 @@ def get_ssp_workbook_risk_score_route(id: str, current_user: User = Depends(get_
         
     risk_data = wb.riskAssessment or {}
     
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    path = os.path.join(base_dir, "xlstohtml", "build-source", "app_data.json")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(current_dir, "app_data.json")
     try:
         with open(path, "r", encoding="utf-8") as f:
             app_data = json.load(f)

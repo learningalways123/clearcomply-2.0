@@ -932,7 +932,9 @@ class DataStore:
         import json as _json
         app_data = {}
         try:
-            with open("../xlstohtml/build-source/app_data.json", "r") as f:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            path = os.path.join(current_dir, "app_data.json")
+            with open(path, "r", encoding="utf-8") as f:
                 app_data = _json.load(f)
         except Exception as e:
             print(f"Error loading app_data: {e}")
