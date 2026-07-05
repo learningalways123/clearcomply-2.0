@@ -290,7 +290,13 @@ function AssessmentWorkspaceInner() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <IconButton 
                 size="small" 
-                onClick={() => navigate('/assessments')} 
+                onClick={() => {
+                  if (assessment?.projectId) {
+                    navigate(`/projects/${assessment.projectId}`);
+                  } else {
+                    navigate('/projects');
+                  }
+                }} 
                 sx={{ color: '#94a3b8', '&:hover': { color: '#fff', bgcolor: 'rgba(255,255,255,0.08)' } }}
               >
                 <ArrowBackIcon fontSize="small" />
