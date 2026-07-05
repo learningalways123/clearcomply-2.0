@@ -34,8 +34,8 @@ const DRAWER_WIDTH = 240;
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
   { label: 'Projects', path: '/projects', icon: <FolderIcon /> },
-  { label: 'POA\u0026M', path: '/poam', icon: <AssignmentLateIcon /> },
-  { label: 'Evidence', path: '/evidence', icon: <FolderIcon /> },
+  { label: 'POA&M', path: '/poam', icon: <AssignmentLateIcon /> },
+  // { label: 'Evidence', path: '/evidence', icon: <FolderIcon /> },
   { label: 'Audit Log', path: '/audit-log', icon: <HistoryIcon /> },
 ];
 
