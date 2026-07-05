@@ -823,6 +823,59 @@ def test_ssp_workbook_lifecycle(client):
     assert risk_score_resp.json()["overallRisk"] == "Not yet calculated"
 
 
+def test_calculate_intake_team_progress(client):
+    proj = client.post("/api/projects", json={"name": "Apollo Project"}).json()
+    payload = {
+        "name": "Apollo SSP Test Progress",
+        "frameworkIds": ["NIST-800-53"],
+        "projectId": proj["id"]
+    }
+    ass = client.post("/api/assessments", json=payload).json()
+    aid = ass["id"]
+
+    team_payload = {
+        "name": "Audit Operations Group",
+        "leadName": "Dianne Ross",
+        "leadEmail": "d.ross@agency.gov",
+        "families": "Access Control"
+    }
+    team = client.post(f"/api/assessments/{aid}/intake", json=team_payload).json()
+    assert team["responseRate"] == 0
+
+    wb = client.get(f"/api/assessments/{aid}/workbook").json()
+    controls = wb["controls"]
+    
+    ac_control = None
+    for c in controls:
+        if c["id"].startswith("AC-"):
+            ac_control = c
+            break
+            
+    if ac_control:
+        ac_control["compliant"] = "Implemented"
+        ac_control["response"] = "This is fully implemented in production."
+        
+        save_resp = client.put(f"/api/assessments/{aid}/workbook/controls", json={"data": controls})
+        assert save_resp.status_code == 200
+        
+        list_resp = client.get(f"/api/assessments/{aid}/intake")
+        assert list_resp.status_code == 200
+        updated_team = [t for t in list_resp.json() if t["id"] == team["id"]][0]
+        assert updated_team["responseRate"] > 0
+
+
+def test_framework_lock_enforcement(client):
+    proj = client.post("/api/projects", json={"name": "Lock Test Project"}).json()
+    payload = {
+        "name": "CSF Assessment",
+        "frameworkIds": ["NIST-CSF-2.0"],
+        "projectId": proj["id"]
+    }
+    resp = client.post("/api/assessments", json=payload)
+    assert resp.status_code == 400
+    assert resp.json()["detail"] == "Framework with id 'NIST-CSF-2.0' not found"
+
+
 
 
 
