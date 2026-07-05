@@ -20,6 +20,7 @@ from app.models import (
     AssessmentQuestionStats, UpdateStatusRequest,
     PoamItem, CreatePoamRequest, UpdatePoamRequest, STATUS_TRANSITIONS, LOCKED_STATUSES,
     RiskScoreResponse, UpsertCsfProfileRequest, CsfProfileResponse, CsfFunctionProfile,
+    Project, CreateProjectRequest,
 )
 from app.data_store import data_store
 from app.auth import get_current_user, require_role, User
@@ -336,6 +337,22 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
                 framework_questions = data_store.get_questions_by_framework(framework_id)
                 selected_question_ids.extend([q.id for q in framework_questions])
     
+    # Ensure projectId is present, or associate with/create a Default Project
+    project_id = request.projectId
+    with open("debug_route.json", "w") as f:
+        import json
+        json.dump({
+            "request_projectId": request.projectId,
+            "project_id_var": project_id
+        }, f, indent=2)
+    if not project_id:
+        default_proj = next((p for p in data_store.get_projects() if p["name"] == "Default Project"), None)
+        if default_proj:
+            project_id = default_proj["id"]
+        else:
+            new_proj = data_store.create_project("Default Project", created_by_email=current_user.email)
+            project_id = new_proj["id"]
+
     # Create assessment
     assessment = Assessment(
         id=str(uuid.uuid4()),
@@ -361,7 +378,8 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         nistConfidentiality=request.nistConfidentiality,
         nistIntegrity=request.nistIntegrity,
         nistAvailability=request.nistAvailability,
-        nistBaseline=nist_baseline
+        nistBaseline=nist_baseline,
+        projectId=project_id
     )
     
     # Save assessment
@@ -396,7 +414,8 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         nistConfidentiality=created_assessment.nistConfidentiality,
         nistIntegrity=created_assessment.nistIntegrity,
         nistAvailability=created_assessment.nistAvailability,
-        nistBaseline=created_assessment.nistBaseline
+        nistBaseline=created_assessment.nistBaseline,
+        projectId=created_assessment.projectId
     )
 
 
@@ -440,7 +459,8 @@ async def get_assessment(assessment_id: str, current_user: User = Depends(get_cu
         nistConfidentiality=assessment.nistConfidentiality,
         nistIntegrity=assessment.nistIntegrity,
         nistAvailability=assessment.nistAvailability,
-        nistBaseline=assessment.nistBaseline
+        nistBaseline=assessment.nistBaseline,
+        projectId=assessment.projectId
     )
 
 
@@ -472,7 +492,8 @@ async def get_assessments(current_user: User = Depends(get_current_user)):
             nistConfidentiality=assessment.nistConfidentiality,
             nistIntegrity=assessment.nistIntegrity,
             nistAvailability=assessment.nistAvailability,
-            nistBaseline=assessment.nistBaseline
+            nistBaseline=assessment.nistBaseline,
+            projectId=assessment.projectId
         )
         for assessment in assessments
     ]
@@ -1520,5 +1541,55 @@ async def seed_demo_assessment(
         detail={"name": demo_name},
     )
     return {"message": "Demo NIST 800-53 assessment seeded successfully", "assessmentId": demo_id}
+
+
+# ===== PROJECT ENDPOINTS =====
+
+@router.get("/projects", response_model=List[Project], summary="List all projects")
+async def list_projects(current_user: User = Depends(get_current_user)):
+    return data_store.get_projects()
+
+@router.post("/projects", response_model=Project, summary="Create a new project")
+async def create_project(request: CreateProjectRequest, current_user: User = Depends(get_current_user)):
+    proj = data_store.create_project(request.name, created_by_email=current_user.email)
+    
+    audit_service.log_action(
+        action="CREATE_PROJECT",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="project",
+        entity_id=proj["id"],
+        detail={"name": request.name}
+    )
+    return proj
+
+@router.get("/projects/{id}", summary="Get a project by ID with its SSPs")
+async def get_project(id: str, current_user: User = Depends(get_current_user)):
+    proj = data_store.get_project_by_id(id)
+    if not proj:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # Get all assessments/SSPs for this project
+    ssps = [a for a in data_store.get_all_assessments() if a.projectId == id]
+    return {
+        **proj,
+        "ssps": ssps
+    }
+
+@router.delete("/projects/{id}", summary="Delete a project")
+async def delete_project(id: str, current_user: User = Depends(get_current_user)):
+    success = data_store.delete_project(id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Project not found")
+        
+    audit_service.log_action(
+        action="DELETE_PROJECT",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="project",
+        entity_id=id,
+        detail={}
+    )
+    return {"message": "Project deleted successfully"}
 
 

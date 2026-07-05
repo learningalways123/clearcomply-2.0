@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -49,6 +49,8 @@ const CRIT_COLOR = { High: 'error' as const, Medium: 'warning' as const, Low: 's
 
 export default function NewAssessment() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const projectId = searchParams.get('projectId') || undefined;
 
   // ── Framework list (loaded once) ──
   const { data: frameworks = [], loading: frameworksLoading, error: frameworksError } =
@@ -293,8 +295,13 @@ export default function NewAssessment() {
         nistConfidentiality: isNist ? nistConfidentiality : undefined,
         nistIntegrity: isNist ? nistIntegrity : undefined,
         nistAvailability: isNist ? nistAvailability : undefined,
+        projectId: projectId,
       });
-      navigate(`/assessments/${assessment.id}`);
+      if (projectId) {
+        navigate(`/projects/${projectId}`);
+      } else {
+        navigate(`/assessments/${assessment.id}`);
+      }
     } catch (err) {
       setCreateError(err instanceof Error ? err.message : 'Failed to create assessment');
       setCreating(false);

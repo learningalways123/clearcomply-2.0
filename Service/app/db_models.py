@@ -45,10 +45,23 @@ class UserRecord(Base):
     assessments = relationship("AssessmentRecord", back_populates="creator", foreign_keys="AssessmentRecord.created_by_email")
 
 
+class ProjectRecord(Base):
+    __tablename__ = "projects"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    name = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    created_by_email = Column(String, ForeignKey("users.email"), nullable=True)
+
+    creator = relationship("UserRecord", backref="projects")
+    ssps = relationship("AssessmentRecord", back_populates="project", cascade="all, delete-orphan")
+
+
 class AssessmentRecord(Base):
     __tablename__ = "assessments"
 
     id = Column(String, primary_key=True, default=_new_id)
+    project_id = Column(String, ForeignKey("projects.id", ondelete="CASCADE"), nullable=True)
     name = Column(String, nullable=False)
     status = Column(String, nullable=False, default="in_progress")
 
@@ -82,7 +95,12 @@ class AssessmentRecord(Base):
 
 
     creator = relationship("UserRecord", back_populates="assessments", foreign_keys=[created_by_email])
+    project = relationship("ProjectRecord", back_populates="ssps")
     answers = relationship("AnswerRecord", back_populates="assessment", cascade="all, delete-orphan")
+    checklist_items = relationship("ChecklistItemRecord", back_populates="assessment", cascade="all, delete-orphan")
+    intake_teams = relationship("IntakeTeamRecord", back_populates="assessment", cascade="all, delete-orphan")
+    risk_questions = relationship("RiskQuestionRecord", back_populates="assessment", cascade="all, delete-orphan")
+    inventory_items = relationship("InventoryItemRecord", back_populates="assessment", cascade="all, delete-orphan")
 
     # Convenience helpers -------------------------------------------------------
     def framework_ids_list(self):
@@ -252,7 +270,7 @@ class ChecklistItemRecord(Base):
     status = Column(String, nullable=False, default="not_started") # complete | in_progress | not_started
     target_link = Column(String, nullable=True)
 
-    assessment = relationship("AssessmentRecord", backref="checklist_items")
+    assessment = relationship("AssessmentRecord", back_populates="checklist_items")
 
 
 class IntakeTeamRecord(Base):
@@ -268,7 +286,7 @@ class IntakeTeamRecord(Base):
     last_active_days_ago = Column(Integer, nullable=False, default=0)
     families = Column(Text, nullable=True)
 
-    assessment = relationship("AssessmentRecord", backref="intake_teams")
+    assessment = relationship("AssessmentRecord", back_populates="intake_teams")
 
 
 class RiskQuestionRecord(Base):
@@ -281,7 +299,7 @@ class RiskQuestionRecord(Base):
     response = Column(String, nullable=False, default="None") # Full | Partial | None | N/A
     points_missed = Column(Integer, nullable=False, default=0)
 
-    assessment = relationship("AssessmentRecord", backref="risk_questions")
+    assessment = relationship("AssessmentRecord", back_populates="risk_questions")
 
 
 class InventoryItemRecord(Base):
@@ -294,5 +312,5 @@ class InventoryItemRecord(Base):
     status = Column(String, nullable=False, default="Active")
     owner = Column(String, nullable=True)
 
-    assessment = relationship("AssessmentRecord", backref="inventory_items")
+    assessment = relationship("AssessmentRecord", back_populates="inventory_items")
 

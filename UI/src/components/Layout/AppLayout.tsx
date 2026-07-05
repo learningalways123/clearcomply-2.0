@@ -20,8 +20,6 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import ListAltIcon from '@mui/icons-material/ListAlt';
 import HistoryIcon from '@mui/icons-material/History';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -35,8 +33,7 @@ const DRAWER_WIDTH = 240;
 
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
-  { label: 'Assessments', path: '/assessments', icon: <ListAltIcon /> },
-  { label: 'New Assessment', path: '/new-assessment', icon: <AddCircleOutlineIcon /> },
+  { label: 'Projects', path: '/projects', icon: <FolderIcon /> },
   { label: 'POA\u0026M', path: '/poam', icon: <AssignmentLateIcon /> },
   { label: 'Evidence', path: '/evidence', icon: <FolderIcon /> },
   { label: 'Audit Log', path: '/audit-log', icon: <HistoryIcon /> },

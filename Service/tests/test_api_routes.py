@@ -666,6 +666,53 @@ def test_add_assessment_intake_team(client):
     assert any(t["name"] == "Audit Operations Group" for t in list_resp.json())
 
 
+def test_projects_lifecycle(client):
+    # 1. Create a project
+    resp = client.post("/api/projects", json={"name": "Project Apollo"})
+    assert resp.status_code == 200
+    proj = resp.json()
+    assert proj["name"] == "Project Apollo"
+    pid = proj["id"]
+
+    # 2. List projects
+    list_resp = client.get("/api/projects")
+    assert list_resp.status_code == 200
+    assert any(p["id"] == pid for p in list_resp.json())
+
+    # 3. Create an assessment linked to the project
+    payload = {
+        "name": "Apollo NIST 800-53 SSP",
+        "frameworkIds": ["NIST-800-53"],
+        "projectId": pid,
+        "selectedQuestionIds": [],
+        "moduleIds": [],
+        "familyIds": [],
+    }
+    ass_resp = client.post("/api/assessments", json=payload)
+    assert ass_resp.status_code == 200
+    ass = ass_resp.json()
+    with open("debug_ass.json", "w") as f:
+        import json
+        json.dump(ass, f, indent=2)
+    assert ass["projectId"] == pid
+    aid = ass["id"]
+
+    # 4. Get project details and confirm it includes the assessment
+    proj_resp = client.get(f"/api/projects/{pid}")
+    assert proj_resp.status_code == 200
+    proj_details = proj_resp.json()
+    assert proj_details["sspCount"] == 1
+    assert any(s["id"] == aid for s in proj_details["ssps"])
+
+    # 5. Delete project
+    del_resp = client.delete(f"/api/projects/{pid}")
+    assert del_resp.status_code == 200
+    
+    # Confirm it's gone
+    get_gone = client.get(f"/api/projects/{pid}")
+    assert get_gone.status_code == 404
+
+
 
 
 

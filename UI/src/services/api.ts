@@ -102,6 +102,20 @@ export interface Assessment {
   nistAvailability?: string;
   nistBaseline?: string;
   diagramFilename?: string;
+  projectId?: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  createdAt: string;
+  createdByEmail?: string;
+  sspCount?: number;
+  ssps?: Assessment[];
+}
+
+export interface CreateProjectRequest {
+  name: string;
 }
 
 
@@ -317,6 +331,7 @@ export interface CreateAssessmentRequest {
   nistConfidentiality?: string;
   nistIntegrity?: string;
   nistAvailability?: string;
+  projectId?: string;
 }
 
 
@@ -332,6 +347,12 @@ export const api = {
 
   // Frameworks
   getFrameworks: () => apiClient.get<Framework[]>('/frameworks').then(r => r.data),
+
+  // Projects
+  getProjects: () => apiClient.get<Project[]>('/projects').then(r => r.data),
+  createProject: (name: string) => apiClient.post<Project>('/projects', { name }).then(r => r.data),
+  getProject: (id: string) => apiClient.get<Project & { ssps: Assessment[] }>(`/projects/${id}`).then(r => r.data),
+  deleteProject: (id: string) => apiClient.delete(`/projects/${id}`).then(r => r.data),
 
   // Controls
   getControls: (frameworkId?: string) => {

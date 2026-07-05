@@ -82,6 +82,7 @@ def _record_to_assessment(rec: AssessmentRecord, questions: Optional[Dict] = Non
         nistAvailability=rec.nist_availability,
         nistBaseline=rec.nist_baseline,
         diagramFilename=rec.diagram_filename,
+        projectId=rec.project_id,
     )
 
 
@@ -204,6 +205,7 @@ class DataStore:
         with db_session() as db:
             rec = AssessmentRecord(
                 id=assessment.id,
+                project_id=assessment.projectId,
                 name=assessment.name,
                 framework_ids=json.dumps(assessment.frameworkIds),
                 selected_control_ids=json.dumps(assessment.selectedControlIds),
@@ -941,6 +943,70 @@ class DataStore:
                 "remindedTeamsCount": len(recs),
                 "message": f"Reminders sent to {len(recs)} overdue teams: {', '.join(names)}" if recs else "No overdue teams to remind"
             }
+
+    # ── Projects ─────────────────────────────────────────────────────────────
+    def get_projects(self) -> list:
+        with db_session() as db:
+            from app.db_models import ProjectRecord, AssessmentRecord
+            recs = db.query(ProjectRecord).order_by(ProjectRecord.created_at.desc()).all()
+            result = []
+            for r in recs:
+                ssp_count = db.query(AssessmentRecord).filter_by(project_id=r.id).count()
+                result.append({
+                    "id": r.id,
+                    "name": r.name,
+                    "createdAt": r.created_at,
+                    "createdByEmail": r.created_by_email,
+                    "sspCount": ssp_count
+                })
+            return result
+
+    def get_project_by_id(self, project_id: str) -> Optional[dict]:
+        with db_session() as db:
+            from app.db_models import ProjectRecord, AssessmentRecord
+            r = db.query(ProjectRecord).filter_by(id=project_id).first()
+            if not r:
+                return None
+            ssp_count = db.query(AssessmentRecord).filter_by(project_id=r.id).count()
+            return {
+                "id": r.id,
+                "name": r.name,
+                "createdAt": r.created_at,
+                "createdByEmail": r.created_by_email,
+                "sspCount": ssp_count
+            }
+
+    def create_project(self, name: str, created_by_email: Optional[str] = None) -> dict:
+        with db_session() as db:
+            from app.db_models import ProjectRecord
+            import uuid
+            from datetime import datetime
+            
+            project_id = str(uuid.uuid4())
+            rec = ProjectRecord(
+                id=project_id,
+                name=name,
+                created_at=datetime.utcnow(),
+                created_by_email=created_by_email
+            )
+            db.add(rec)
+            db.flush()
+            return {
+                "id": rec.id,
+                "name": rec.name,
+                "createdAt": rec.created_at,
+                "createdByEmail": rec.created_by_email,
+                "sspCount": 0
+            }
+
+    def delete_project(self, project_id: str) -> bool:
+        with db_session() as db:
+            from app.db_models import ProjectRecord
+            rec = db.query(ProjectRecord).filter_by(id=project_id).first()
+            if not rec:
+                return False
+            db.delete(rec)
+            return True
 
 
 data_store = DataStore()

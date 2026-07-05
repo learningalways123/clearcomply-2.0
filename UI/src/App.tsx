@@ -9,6 +9,7 @@ import AppLayout from './components/Layout/AppLayout';
 import AssessmentsOverview from './components/AssessmentsOverview/AssessmentsOverview';
 import AssessmentWorkspace from './components/AssessmentWorkspace/AssessmentWorkspace';
 import NewAssessment from './components/NewAssessment/NewAssessment';
+import ProjectDetails from './components/AssessmentsOverview/ProjectDetails';
 import AuditLog from './components/AuditLog/AuditLog';
 import Dashboard from './components/Dashboard/Dashboard';
 import Poam from './components/Poam/Poam';
@@ -66,9 +67,10 @@ export default function App() {
                       element={
                         <AppLayout>
                           <Routes>
-                            <Route path="/" element={<Navigate to="/assessments" replace />} />
-                            <Route path="/assessments" element={<AssessmentsOverview />} />
-                            <Route path="/new-assessment" element={<NewAssessment />} />
+                             <Route path="/" element={<Navigate to="/projects" replace />} />
+                             <Route path="/projects" element={<AssessmentsOverview />} />
+                             <Route path="/projects/:id" element={<ProjectDetails />} />
+                             <Route path="/new-assessment" element={<NewAssessment />} />
                             <Route path="/audit-log" element={<AuditLog />} />
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/poam" element={<Poam />} />

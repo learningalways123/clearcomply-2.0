@@ -125,6 +125,7 @@ class Assessment(BaseModel):
     nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
     nistBaseline: Optional[str] = Field(default=None, description="NIST Calculated Baseline: Low | Moderate | High")
     diagramFilename: Optional[str] = Field(default=None, description="Uploaded data flow diagram filename")
+    projectId: Optional[str] = Field(default=None, description="Parent project ID")
 
 
 
@@ -141,6 +142,7 @@ class CreateAssessmentRequest(BaseModel):
     nistConfidentiality: Optional[str] = Field(default=None, description="NIST FIPS 199 Confidentiality impact: Low | Moderate | High")
     nistIntegrity: Optional[str] = Field(default=None, description="NIST FIPS 199 Integrity impact: Low | Moderate | High")
     nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
+    projectId: Optional[str] = Field(default=None, description="Parent project ID")
 
 
 
@@ -163,6 +165,7 @@ class AssessmentResponse(BaseModel):
     nistIntegrity: Optional[str] = Field(default=None, description="NIST FIPS 199 Integrity impact: Low | Moderate | High")
     nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
     nistBaseline: Optional[str] = Field(default=None, description="NIST Calculated Baseline: Low | Moderate | High")
+    projectId: Optional[str] = None
 
 
 
@@ -336,3 +339,15 @@ class UpsertCsfProfileRequest(BaseModel):
 class CsfProfileResponse(BaseModel):
     assessmentId: str
     profiles: List[CsfFunctionProfile]
+
+
+# ─── Projects ───────────────────────────────────────────────────────────────
+class CreateProjectRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=200, description="Project name")
+
+class Project(BaseModel):
+    id: str
+    name: str
+    createdAt: datetime
+    createdByEmail: Optional[str] = None
+    sspCount: int = 0
