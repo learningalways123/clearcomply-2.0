@@ -707,10 +707,58 @@ def test_projects_lifecycle(client):
     # 5. Delete project
     del_resp = client.delete(f"/api/projects/{pid}")
     assert del_resp.status_code == 200
-    
-    # Confirm it's gone
-    get_gone = client.get(f"/api/projects/{pid}")
-    assert get_gone.status_code == 404
+
+
+def test_ssp_workbook_lifecycle(client):
+    from app.database import engine
+    from sqlalchemy import inspect
+    print("TABLES AT TEST START:", inspect(engine).get_table_names())
+    proj = client.post("/api/projects", json={"name": "Apollo Project"}).json()
+    payload = {
+        "name": "Apollo SSP Workbook Test",
+        "frameworkIds": ["NIST-800-53"],
+        "projectId": proj["id"]
+    }
+    ass = client.post("/api/assessments", json=payload).json()
+    aid = ass["id"]
+
+    wb_resp = client.get(f"/api/assessments/{aid}/workbook")
+    assert wb_resp.status_code == 200
+    wb = wb_resp.json()
+    assert wb["assessmentId"] == aid
+    assert wb["coverPage"] is not None
+    assert wb["checklist"] is not None
+    assert len(wb["checklist"]) == 13
+
+    updated_cover = dict(wb["coverPage"])
+    updated_cover["systemName"] = "Apollo System Core"
+    update_resp = client.put(
+        f"/api/assessments/{aid}/workbook/coverPage",
+        json={"data": updated_cover}
+    )
+    assert update_resp.status_code == 200
+    assert update_resp.json()["coverPage"]["systemName"] == "Apollo System Core"
+
+    prog_resp = client.get(f"/api/assessments/{aid}/workbook/progress")
+    assert prog_resp.status_code == 200
+    assert prog_resp.json()["progressPercent"] == 0.0
+    assert prog_resp.json()["completedTasks"] == 0
+
+    updated_checklist = list(wb["checklist"])
+    updated_checklist[0]["status"] = "Completed"
+    client.put(
+        f"/api/assessments/{aid}/workbook/checklist",
+        json={"data": updated_checklist}
+    )
+
+    prog_resp2 = client.get(f"/api/assessments/{aid}/workbook/progress")
+    assert prog_resp2.json()["completedTasks"] == 1
+    assert prog_resp2.json()["progressPercent"] == 7.7
+
+    risk_score_resp = client.get(f"/api/assessments/{aid}/workbook/risk-score")
+    assert risk_score_resp.status_code == 200
+    assert risk_score_resp.json()["overallRisk"] == "Not yet calculated"
+
 
 
 

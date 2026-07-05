@@ -2,7 +2,7 @@
 Data models and schemas for Clear Comply API
 """
 
-from typing import List, Optional, Dict, Literal
+from typing import List, Optional, Dict, Literal, Any
 from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import datetime
@@ -351,3 +351,29 @@ class Project(BaseModel):
     createdAt: datetime
     createdByEmail: Optional[str] = None
     sspCount: int = 0
+
+
+# ─── SSP Workbook ────────────────────────────────────────────────────────────
+class SSPWorkbook(BaseModel):
+    id: str
+    assessmentId: str
+    coverPage: Optional[Dict[str, Any]] = None
+    checklist: Optional[List[Dict[str, Any]]] = None
+    contactsInfo: Optional[Dict[str, Any]] = None
+    riskAssessment: Optional[Dict[str, Any]] = None
+    dataCategorization: Optional[Dict[str, Any]] = None
+    environments: Optional[List[Dict[str, Any]]] = None
+    inventory: Optional[Dict[str, Any]] = None
+    diagrams: Optional[Dict[str, Any]] = None
+    scanning: Optional[List[Dict[str, Any]]] = None
+    controls: Optional[List[Dict[str, Any]]] = None
+    findingsExtra: Optional[Dict[str, Any]] = None
+    firewall: Optional[List[Dict[str, Any]]] = None
+    additionalResources: Optional[List[Dict[str, Any]]] = None
+    revisionHistory: Optional[List[Dict[str, Any]]] = None
+    createdAt: datetime
+    updatedAt: datetime
+
+class UpdateWorkbookSectionRequest(BaseModel):
+    data: Any
+

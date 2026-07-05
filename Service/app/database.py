@@ -24,6 +24,9 @@ _is_sqlite = DATABASE_URL.startswith("sqlite")
 _engine_kwargs: dict = {}
 if _is_sqlite:
     _engine_kwargs["connect_args"] = {"check_same_thread": False}
+    if DATABASE_URL == "sqlite://" or DATABASE_URL == "sqlite:///:memory:":
+        from sqlalchemy.pool import StaticPool
+        _engine_kwargs["poolclass"] = StaticPool
 else:
     # Small pool per instance — Cloud Run scales horizontally, so each instance
     # should hold few connections to avoid exhausting Cloud SQL's limit.

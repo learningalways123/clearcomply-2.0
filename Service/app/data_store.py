@@ -14,10 +14,13 @@ from typing import Dict, List, Optional
 from app.models import (
     Assessment, AssessmentQuestionStats, AssessmentStats,
     Control, CriticalityLevel, Family, Framework, Question, QuestionAnswer,
-    QuestionBank, QuestionWithAnswer, PoamItem,
+    QuestionBank, QuestionWithAnswer, PoamItem, SSPWorkbook,
 )
 from app.database import db_session
-from app.db_models import AssessmentRecord, AnswerRecord, PoamRecord, ChecklistItemRecord, IntakeTeamRecord, RiskQuestionRecord, InventoryItemRecord
+from app.db_models import (
+    AssessmentRecord, AnswerRecord, PoamRecord, ChecklistItemRecord,
+    IntakeTeamRecord, RiskQuestionRecord, InventoryItemRecord, SSPWorkbookRecord
+)
 
 
 WEIGHTS = {"High": 3, "Medium": 2, "Low": 1}
@@ -85,6 +88,28 @@ def _record_to_assessment(rec: AssessmentRecord, questions: Optional[Dict] = Non
         projectId=rec.project_id,
     )
 
+
+def _record_to_workbook(rec: SSPWorkbookRecord) -> SSPWorkbook:
+    return SSPWorkbook(
+        id=rec.id,
+        assessmentId=rec.assessment_id,
+        coverPage=rec.cover_page,
+        checklist=rec.checklist,
+        contactsInfo=rec.contacts_info,
+        riskAssessment=rec.risk_assessment,
+        dataCategorization=rec.data_categorization,
+        environments=rec.environments,
+        inventory=rec.inventory,
+        diagrams=rec.diagrams,
+        scanning=rec.scanning,
+        controls=rec.controls,
+        findingsExtra=rec.findings_extra,
+        firewall=rec.firewall,
+        additionalResources=rec.additional_resources,
+        revisionHistory=rec.revision_history,
+        createdAt=rec.created_at or datetime.utcnow(),
+        updatedAt=rec.updated_at or datetime.utcnow(),
+    )
 
 
 class DataStore:
@@ -324,6 +349,82 @@ class DataStore:
         with db_session() as db:
             recs = db.query(AssessmentRecord).order_by(AssessmentRecord.created_at.desc()).all()
             return [_record_to_assessment(r, self.questions) for r in recs]
+
+    # ── SSP Workbook Methods ───────────────────────────────────────────────
+    def get_ssp_workbook(self, assessment_id: str) -> Optional[SSPWorkbook]:
+        with db_session() as db:
+            rec = db.query(SSPWorkbookRecord).filter_by(assessment_id=assessment_id).first()
+            if not rec:
+                return None
+            return _record_to_workbook(rec)
+
+    def save_ssp_workbook(self, assessment_id: str, workbook: SSPWorkbook) -> SSPWorkbook:
+        with db_session() as db:
+            rec = db.query(SSPWorkbookRecord).filter_by(assessment_id=assessment_id).first()
+            if not rec:
+                rec = SSPWorkbookRecord(
+                    id=workbook.id or str(uuid.uuid4()),
+                    assessment_id=assessment_id
+                )
+                db.add(rec)
+            
+            rec.cover_page = workbook.coverPage
+            rec.checklist = workbook.checklist
+            rec.contacts_info = workbook.contactsInfo
+            rec.risk_assessment = workbook.riskAssessment
+            rec.data_categorization = workbook.dataCategorization
+            rec.environments = workbook.environments
+            rec.inventory = workbook.inventory
+            rec.diagrams = workbook.diagrams
+            rec.scanning = workbook.scanning
+            rec.controls = workbook.controls
+            rec.findings_extra = workbook.findingsExtra
+            rec.firewall = workbook.firewall
+            rec.additional_resources = workbook.additionalResources
+            rec.revision_history = workbook.revisionHistory
+            rec.updated_at = datetime.utcnow()
+            
+            db.commit()
+            db.refresh(rec)
+            return _record_to_workbook(rec)
+
+    def update_ssp_workbook_section(self, assessment_id: str, section: str, data: any) -> SSPWorkbook:
+        with db_session() as db:
+            rec = db.query(SSPWorkbookRecord).filter_by(assessment_id=assessment_id).first()
+            if not rec:
+                rec = SSPWorkbookRecord(
+                    id=str(uuid.uuid4()),
+                    assessment_id=assessment_id
+                )
+                db.add(rec)
+            
+            # Map section name to record attribute
+            attr_map = {
+                "coverPage": "cover_page",
+                "checklist": "checklist",
+                "contactsInfo": "contacts_info",
+                "riskAssessment": "risk_assessment",
+                "dataCategorization": "data_categorization",
+                "environments": "environments",
+                "inventory": "inventory",
+                "diagrams": "diagrams",
+                "scanning": "scanning",
+                "controls": "controls",
+                "findingsExtra": "findings_extra",
+                "firewall": "firewall",
+                "additionalResources": "additional_resources",
+                "revisionHistory": "revision_history"
+            }
+            attr_name = attr_map.get(section)
+            if not attr_name:
+                raise ValueError(f"Unknown section: {section}")
+            
+            setattr(rec, attr_name, data)
+            rec.updated_at = datetime.utcnow()
+            
+            db.commit()
+            db.refresh(rec)
+            return _record_to_workbook(rec)
 
     # ── Answers (SQLite) ─────────────────────────────────────────────────────
     def update_assessment_answers_v2(

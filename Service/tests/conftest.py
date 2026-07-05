@@ -14,6 +14,7 @@ def reset_db():
     """Re-create all tables in the in-memory DB before each test."""
     # Import here so the env-var override has already taken effect
     from app.database import Base, engine
+    import app.db_models
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     yield

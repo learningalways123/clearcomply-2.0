@@ -14,7 +14,7 @@ import json
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text, JSON
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -101,6 +101,7 @@ class AssessmentRecord(Base):
     intake_teams = relationship("IntakeTeamRecord", back_populates="assessment", cascade="all, delete-orphan")
     risk_questions = relationship("RiskQuestionRecord", back_populates="assessment", cascade="all, delete-orphan")
     inventory_items = relationship("InventoryItemRecord", back_populates="assessment", cascade="all, delete-orphan")
+    workbook = relationship("SSPWorkbookRecord", back_populates="assessment", uselist=False, cascade="all, delete-orphan")
 
     # Convenience helpers -------------------------------------------------------
     def framework_ids_list(self):
@@ -313,4 +314,32 @@ class InventoryItemRecord(Base):
     owner = Column(String, nullable=True)
 
     assessment = relationship("AssessmentRecord", back_populates="inventory_items")
+
+
+class SSPWorkbookRecord(Base):
+    __tablename__ = "ssp_workbooks"
+
+    id = Column(String, primary_key=True, default=_new_id)
+    assessment_id = Column(String, ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False, unique=True, index=True)
+    
+    cover_page = Column(JSON, nullable=True)
+    checklist = Column(JSON, nullable=True)
+    contacts_info = Column(JSON, nullable=True)
+    risk_assessment = Column(JSON, nullable=True)
+    data_categorization = Column(JSON, nullable=True)
+    environments = Column(JSON, nullable=True)
+    inventory = Column(JSON, nullable=True)
+    diagrams = Column(JSON, nullable=True)
+    scanning = Column(JSON, nullable=True)
+    controls = Column(JSON, nullable=True)
+    findings_extra = Column(JSON, nullable=True)
+    firewall = Column(JSON, nullable=True)
+    additional_resources = Column(JSON, nullable=True)
+    revision_history = Column(JSON, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    assessment = relationship("AssessmentRecord", back_populates="workbook")
+
 

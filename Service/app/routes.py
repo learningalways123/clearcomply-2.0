@@ -20,7 +20,7 @@ from app.models import (
     AssessmentQuestionStats, UpdateStatusRequest,
     PoamItem, CreatePoamRequest, UpdatePoamRequest, STATUS_TRANSITIONS, LOCKED_STATUSES,
     RiskScoreResponse, UpsertCsfProfileRequest, CsfProfileResponse, CsfFunctionProfile,
-    Project, CreateProjectRequest,
+    Project, CreateProjectRequest, SSPWorkbook, UpdateWorkbookSectionRequest,
 )
 from app.data_store import data_store
 from app.auth import get_current_user, require_role, User
@@ -1591,5 +1591,347 @@ async def delete_project(id: str, current_user: User = Depends(get_current_user)
         detail={}
     )
     return {"message": "Project deleted successfully"}
+
+
+def load_default_workbook_state():
+    try:
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        path = os.path.join(base_dir, "xlstohtml", "build-source", "app_data.json")
+        with open(path, "r", encoding="utf-8") as f:
+            app_data = json.load(f)
+            
+        cover_page = {
+            "systemName": "",
+            "systemSummary": "",
+            "assessmentSummary": "",
+            "risksSummary": "",
+            "closingStatement": "",
+            "supportingDocs": ["", "", "", ""],
+            "opsDocsRepo": "",
+            "approvals": [{"date": "", "approvedBy": "", "analyst": "", "comments": ""}]
+        }
+        
+        checklist = []
+        for c in app_data.get("checklist", []):
+            checklist.append({
+                "task": c.get("task", ""),
+                "resource": c.get("resource", ""),
+                "guidance": c.get("tracking", ""),
+                "status": "",
+                "notes": ""
+            })
+            
+        contacts_info = {
+            "contacts": [
+                {"role": r.get("role", ""), "emailLabel": r.get("emailLabel", ""), "name": "", "email": ""}
+                for r in app_data.get("contactRoles", [])
+            ],
+            "agency": "",
+            "projectName": "",
+            "systemName": "",
+            "appInventoryId": "",
+            "businessFunction": "",
+            "systemDependencies": "",
+            "billingCode": "",
+            "projectId": "",
+            "systemState": "",
+            "assessmentTarget": "",
+            "technologyPlatform": "",
+            "otherInfo": "",
+            "lifeCritical": "",
+            "downtimeTolerance": "",
+            "vendorServices": "",
+            "architecture": "",
+            "authentication": "",
+            "supportEntities": "",
+            "risksVulnerabilities": ""
+        }
+        
+        risk_assessment = {
+            "impact": {k: "" for k in app_data.get("riskVars", {}).get("impact", {}).keys()},
+            "likelihood": {k: "" for k in app_data.get("riskVars", {}).get("likelihood", {}).keys()},
+            "questions": [{"response": "", "notes": ""} for _ in app_data.get("riskQuestions", [])],
+            "questionDefinitions": app_data.get("riskQuestions", []),
+            "dateCompleted": ""
+        }
+        
+        data_categorization = {
+            "dataTypes": [{"description": "", "categorization": ""}],
+            "impacts": [
+                {"name": name, "yesNo": "", "description": ""}
+                for name in app_data.get("dataCategorizationImpacts", [])
+            ]
+        }
+        
+        environments = [{"type": "", "prodData": "", "categorization": "", "commonName": "", "users": "", "description": ""}]
+        
+        inventory = {
+            "hardware": [dict(r) for r in app_data.get("inventoryHardwareSeed", [])],
+            "software": [{"software": "", "vendor": "", "versionImplemented": "", "currentVersion": "", "contact": "", "maintSupport": ""}]
+        }
+        
+        diagrams = {
+            "appExists": "",
+            "appAttached": "",
+            "appLink": "",
+            "dfdExists": "",
+            "dfdStored": "",
+            "dfdLink": "",
+            "appInventoryLink": ""
+        }
+        
+        scanning = []
+        for s in app_data.get("scanning", []):
+            scanning.append({
+                "functionName": s.get("function", ""),
+                "relevantControl": s.get("relevantControl", ""),
+                "tool": s.get("tool", ""),
+                "description": s.get("description", ""),
+                "instructions": s.get("instructions", ""),
+                "targetsHint": s.get("targets", ""),
+                "targetsEntered": "",
+                "frequency": "",
+                "contacts": "",
+                "notes": ""
+            })
+            
+        controls = []
+        for c in app_data.get("controls", []):
+            controls.append({
+                "id": c.get("id", ""),
+                "response": "",
+                "compliant": "",
+                "attestation": "",
+                "attestationDesc": "",
+                "reviewDate": "",
+                "remediationPlan": "",
+                "contact": ""
+            })
+            
+        findings_extra = {}
+        firewall = [{"sourceIp": "", "sourceName": "", "destIp": "", "destName": "", "ports": "", "protocol": "", "purpose": "", "notes": ""}]
+        additional_resources = [dict(r) for r in app_data.get("additionalResources", [])]
+        revision_history = []
+        
+        return {
+            "coverPage": cover_page,
+            "checklist": checklist,
+            "contactsInfo": contacts_info,
+            "riskAssessment": risk_assessment,
+            "dataCategorization": data_categorization,
+            "environments": environments,
+            "inventory": inventory,
+            "diagrams": diagrams,
+            "scanning": scanning,
+            "controls": controls,
+            "findingsExtra": findings_extra,
+            "firewall": firewall,
+            "additionalResources": additional_resources,
+            "revisionHistory": revision_history
+        }
+    except Exception as e:
+        print(f"Error loading default workbook state: {e}")
+        return {}
+
+
+@router.get("/assessments/{id}/workbook", response_model=SSPWorkbook, summary="Get or initialize the 14-section SSP workbook")
+def get_ssp_workbook_route(id: str, current_user: User = Depends(get_current_user)):
+    wb = data_store.get_ssp_workbook(id)
+    default_state = load_default_workbook_state()
+    if wb:
+        if wb.riskAssessment and "questionDefinitions" not in wb.riskAssessment:
+            risk_data = dict(wb.riskAssessment)
+            risk_data["questionDefinitions"] = default_state.get("riskAssessment", {}).get("questionDefinitions", [])
+            wb.riskAssessment = risk_data
+        return wb
+        
+    assessment = data_store.get_assessment_by_id(id)
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+        
+    default_state = load_default_workbook_state()
+    wb_obj = SSPWorkbook(
+        id=str(uuid.uuid4()),
+        assessmentId=id,
+        coverPage=default_state.get("coverPage"),
+        checklist=default_state.get("checklist"),
+        contactsInfo=default_state.get("contactsInfo"),
+        riskAssessment=default_state.get("riskAssessment"),
+        dataCategorization=default_state.get("dataCategorization"),
+        environments=default_state.get("environments"),
+        inventory=default_state.get("inventory"),
+        diagrams=default_state.get("diagrams"),
+        scanning=default_state.get("scanning"),
+        controls=default_state.get("controls"),
+        findingsExtra=default_state.get("findingsExtra"),
+        firewall=default_state.get("firewall"),
+        additionalResources=default_state.get("additionalResources"),
+        revisionHistory=default_state.get("revisionHistory"),
+        createdAt=datetime.utcnow(),
+        updatedAt=datetime.utcnow()
+    )
+    return data_store.save_ssp_workbook(id, wb_obj)
+
+
+@router.put("/assessments/{id}/workbook/{section}", response_model=SSPWorkbook, summary="Update a specific section of the SSP workbook")
+def update_ssp_workbook_section_route(
+    id: str,
+    section: str,
+    req: UpdateWorkbookSectionRequest,
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        wb = data_store.update_ssp_workbook_section(id, section, req.data)
+        
+        audit_service.log_action(
+            action="UPDATE_SSP_WORKBOOK_SECTION",
+            user_email=current_user.email,
+            user_name=current_user.name,
+            entity_type="assessment",
+            entity_id=id,
+            detail={"section": section}
+        )
+        return wb
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update workbook: {str(e)}")
+
+
+@router.get("/assessments/{id}/workbook/progress", summary="Get workbook progress stats")
+def get_ssp_workbook_progress_route(id: str, current_user: User = Depends(get_current_user)):
+    wb = data_store.get_ssp_workbook(id)
+    if not wb:
+        return {"progressPercent": 0.0, "completedTasks": 0, "totalTasks": 13}
+        
+    checklist = wb.checklist or []
+    total_tasks = len(checklist)
+    completed_tasks = sum(1 for item in checklist if item.get("status") == "Completed")
+    progress_percent = round((completed_tasks / total_tasks * 100), 1) if total_tasks > 0 else 0.0
+    
+    return {
+        "progressPercent": progress_percent,
+        "completedTasks": completed_tasks,
+        "totalTasks": total_tasks
+    }
+
+
+@router.get("/assessments/{id}/workbook/risk-score", summary="Compute live risk score for the workbook")
+def get_ssp_workbook_risk_score_route(id: str, current_user: User = Depends(get_current_user)):
+    wb = data_store.get_ssp_workbook(id)
+    if not wb:
+        raise HTTPException(status_code=404, detail="Workbook not found")
+        
+    risk_data = wb.riskAssessment or {}
+    
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    path = os.path.join(base_dir, "xlstohtml", "build-source", "app_data.json")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            app_data = json.load(f)
+    except Exception:
+        raise HTTPException(status_code=500, detail="Failed to load app definitions")
+        
+    risk_vars = app_data.get("riskVars", {})
+    risk_questions = app_data.get("riskQuestions", [])
+    
+    # 1. Compute Impact
+    impact_score = 0
+    impact_complete = True
+    impact_selections = risk_data.get("impact", {})
+    for k, v in risk_vars.get("impact", {}).items():
+        sel = impact_selections.get(k)
+        options = v.get("options", [])
+        points = v.get("points", [])
+        if sel in options:
+            idx = options.index(sel)
+            impact_score += points[idx]
+        else:
+            impact_complete = False
+            
+    impact_rating = "---"
+    if impact_complete:
+        if impact_score <= 12:
+            impact_rating = "Minor"
+        elif impact_score <= 20:
+            impact_rating = "Moderate"
+        elif impact_score <= 28:
+            impact_rating = "Serious"
+        else:
+            impact_rating = "Critical"
+            
+    # 2. Compute Likelihood variables
+    like_var_score = 0
+    like_complete = True
+    like_selections = risk_data.get("likelihood", {})
+    for k, v in risk_vars.get("likelihood", {}).items():
+        sel = like_selections.get(k)
+        options = v.get("options", [])
+        points = v.get("points", [])
+        if sel in options:
+            idx = options.index(sel)
+            like_var_score += points[idx]
+        else:
+            like_complete = False
+            
+    # 3. Compute control questions likelihood
+    sum_pts = 0
+    applicable_count = 0
+    questions_answers = risk_data.get("questions", [])
+    for idx, q in enumerate(risk_questions):
+        if idx >= len(questions_answers):
+            break
+        resp = questions_answers[idx].get("response")
+        if not resp or resp == "N/A":
+            continue
+            
+        applicable_count += 1
+        if resp == "Full":
+            sum_pts += q.get("fullPts", 0)
+        elif resp == "Partial":
+            sum_pts += q.get("partialPts", 0)
+        elif resp == "None":
+            sum_pts += q.get("nonePts", 0)
+            
+    overall_likelihood_q = (sum_pts / applicable_count) if applicable_count > 0 else None
+    
+    likelihood_score = None
+    likelihood_rating = "---"
+    if like_complete and overall_likelihood_q is not None:
+        likelihood_score = like_var_score + overall_likelihood_q
+        if likelihood_score <= 18:
+            likelihood_rating = "Remote"
+        elif likelihood_score <= 25:
+            likelihood_rating = "Unlikely"
+        elif likelihood_score <= 32:
+            likelihood_rating = "Likely"
+        else:
+            likelihood_rating = "Almost Certain"
+            
+    # 4. Matrix overall risk
+    matrix = {
+        "Critical": {"Remote": 3, "Unlikely": 3, "Likely": 4, "Almost Certain": 4},
+        "Serious": {"Remote": 2, "Unlikely": 3, "Likely": 3, "Almost Certain": 4},
+        "Moderate": {"Remote": 1, "Unlikely": 2, "Likely": 2, "Almost Certain": 3},
+        "Minor": {"Remote": 1, "Unlikely": 1, "Likely": 2, "Almost Certain": 2},
+    }
+    legend = {1: "Low", 2: "Medium", 3: "High", 4: "Severe"}
+    
+    risk_num = None
+    risk_word = "Not yet calculated"
+    if impact_rating in matrix and likelihood_rating in matrix[impact_rating]:
+        risk_num = matrix[impact_rating][likelihood_rating]
+        risk_word = legend.get(risk_num, "Not yet calculated")
+        
+    return {
+        "impactScore": impact_score if impact_complete else None,
+        "impactRating": impact_rating,
+        "likelihoodScore": likelihood_score,
+        "likelihoodRating": likelihood_rating,
+        "overallRisk": risk_word,
+        "applicableCount": applicable_count,
+        "overallLikelihoodQ": overall_likelihood_q
+    }
+
 
 

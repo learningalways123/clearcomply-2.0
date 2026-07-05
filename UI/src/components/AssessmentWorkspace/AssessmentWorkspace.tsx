@@ -38,18 +38,39 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
 import StorageIcon from '@mui/icons-material/Storage';
 
+// Workbook specific icons
+import DescriptionIcon from '@mui/icons-material/Description';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import CloudIcon from '@mui/icons-material/Cloud';
+import ImageIcon from '@mui/icons-material/Image';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import RouterIcon from '@mui/icons-material/Router';
+import LinkIcon from '@mui/icons-material/Link';
+import HistoryIcon from '@mui/icons-material/History';
+
 import { api } from '../../services/api';
 import type { Assessment } from '../../services/api';
 
 import AssessmentDashboard from './AssessmentDashboard';
-import AssessmentChecklist from './AssessmentChecklist';
 import AssessmentIntake from './AssessmentIntake';
-import AssessmentRisk from './AssessmentRisk';
-import AssessmentDataCategorization from './AssessmentDataCategorization';
-import AssessmentControls from './AssessmentControls';
-import AssessmentFindings from './AssessmentFindings';
-import AssessmentInventory from './AssessmentInventory';
 import GlobalSearchDialog from './GlobalSearchDialog';
+
+// SSP Workbook imports
+import { WorkbookProvider, useWorkbook } from './SSPBuilder/WorkbookContext';
+import CoverPage from './SSPBuilder/CoverPage';
+import ChecklistTab from './SSPBuilder/ChecklistTab';
+import SystemContacts from './SSPBuilder/SystemContacts';
+import RiskAssessmentTab from './SSPBuilder/RiskAssessmentTab';
+import DataCategorizationTab from './SSPBuilder/DataCategorizationTab';
+import EnvironmentsTab from './SSPBuilder/EnvironmentsTab';
+import SystemInventoryTab from './SSPBuilder/SystemInventoryTab';
+import SystemDiagrams from './SSPBuilder/SystemDiagrams';
+import ScanningTesting from './SSPBuilder/ScanningTesting';
+import ControlsAssessment from './SSPBuilder/ControlsAssessment';
+import FindingsExceptions from './SSPBuilder/FindingsExceptions';
+import FirewallRules from './SSPBuilder/FirewallRules';
+import AdditionalResources from './SSPBuilder/AdditionalResources';
+import RevisionHistory from './SSPBuilder/RevisionHistory';
 
 const DRAWER_WIDTH = 260;
 
@@ -66,6 +87,14 @@ const WorkspaceContext = createContext<WorkspaceContextProps>({
 export const useWorkspace = () => useContext(WorkspaceContext);
 
 export default function AssessmentWorkspace() {
+  return (
+    <WorkbookProvider>
+      <AssessmentWorkspaceInner />
+    </WorkbookProvider>
+  );
+}
+
+function AssessmentWorkspaceInner() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -77,9 +106,11 @@ export default function AssessmentWorkspace() {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   // Sidebar count indicators
-  const [checklistItems, setChecklistItems] = useState<any[]>([]);
   const [poams, setPoams] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
+
+  // Consume SSP Workbook state
+  const { workbook } = useWorkbook();
 
   const fetchAssessment = async () => {
     if (!id) return;
@@ -97,12 +128,10 @@ export default function AssessmentWorkspace() {
   const fetchSidebarData = async () => {
     if (!id) return;
     try {
-      const [ck, pm, tm] = await Promise.all([
-        api.getChecklist(id),
+      const [pm, tm] = await Promise.all([
         api.getPoamItems({ assessment_id: id }),
         api.getIntake(id)
       ]);
-      setChecklistItems(ck);
       setPoams(pm);
       setTeams(tm);
     } catch (e) {
@@ -171,21 +200,31 @@ export default function AssessmentWorkspace() {
     );
   }
 
-  const completionPct = assessment ? Math.round(assessment.questionStats?.completionPercent ?? 0) : 0;
+  // Calculate live workbook statistics
+  const checklist = workbook?.checklist || [];
+  const completedChecklist = checklist.filter((c: any) => c.status === 'Completed').length;
+  const totalChecklist = checklist.length || 1;
+  const completionPct = Math.round((completedChecklist / totalChecklist) * 100);
 
-  // Filter badge counts
-  const incompleteChecklistCount = checklistItems.filter(i => i.status !== 'complete').length;
   const openFindingsCount = poams.filter(p => p.status === 'open').length;
 
   const NAV_ITEMS = [
     { label: 'Dashboard', path: `/assessments/${id}/dashboard`, icon: <DashboardIcon /> },
-    { label: 'Checklist', path: `/assessments/${id}/checklist`, icon: <PlaylistAddCheckIcon />, badge: incompleteChecklistCount, badgeColor: 'warning' as const },
     { label: 'Team Intake', path: `/assessments/${id}/intake`, icon: <PeopleIcon /> },
-    { label: 'Risk Assessment', path: `/assessments/${id}/risk`, icon: <WarningAmberIcon /> },
-    { label: 'Data Categorization', path: `/assessments/${id}/data-categorization`, icon: <CategoryIcon /> },
-    { label: 'Controls', path: `/assessments/${id}/controls`, icon: <ShieldIcon /> },
-    { label: 'Findings', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon />, badge: openFindingsCount, badgeColor: 'error' as const },
-    { label: 'Inventory', path: `/assessments/${id}/inventory`, icon: <StorageIcon /> },
+    { label: '1. Cover Page', path: `/assessments/${id}/cover`, icon: <DescriptionIcon /> },
+    { label: '2. Checklist', path: `/assessments/${id}/checklist`, icon: <PlaylistAddCheckIcon />, badge: totalChecklist - completedChecklist, badgeColor: 'warning' as const },
+    { label: '3. Contacts & Details', path: `/assessments/${id}/contacts`, icon: <ContactMailIcon /> },
+    { label: '4. Risk Assessment', path: `/assessments/${id}/risk`, icon: <WarningAmberIcon /> },
+    { label: '5. Data Categorization', path: `/assessments/${id}/data-categorization`, icon: <CategoryIcon /> },
+    { label: '6. Environments', path: `/assessments/${id}/environments`, icon: <CloudIcon /> },
+    { label: '7. System Inventory', path: `/assessments/${id}/inventory`, icon: <StorageIcon /> },
+    { label: '8. System Diagrams', path: `/assessments/${id}/diagrams`, icon: <ImageIcon /> },
+    { label: '9. Scanning & Testing', path: `/assessments/${id}/scanning`, icon: <BugReportIcon /> },
+    { label: '10. Controls Assessment', path: `/assessments/${id}/controls`, icon: <ShieldIcon /> },
+    { label: '11. Findings & POAM', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon />, badge: openFindingsCount, badgeColor: 'error' as const },
+    { label: '12. Firewall Planning', path: `/assessments/${id}/firewall`, icon: <RouterIcon /> },
+    { label: '13. Additional Resources', path: `/assessments/${id}/resources`, icon: <LinkIcon /> },
+    { label: '14. Revision History', path: `/assessments/${id}/revision`, icon: <HistoryIcon /> },
   ];
 
   // Dynamic Countdown (Target Date: Jul 16, 2026)
@@ -207,16 +246,23 @@ export default function AssessmentWorkspace() {
   const projectedCompletion = Math.min(100, Math.round(completionPct + (daysToAto * 1.1)));
   const overdueTeams = teams.filter(t => t.status === 'overdue');
 
-  // Map route path to page header title
   const getPageHeaderTitle = () => {
     if (pathname.includes('/dashboard')) return 'Dashboard';
-    if (pathname.includes('/checklist')) return 'SSP checklist';
     if (pathname.includes('/intake')) return 'Team intake tracker';
+    if (pathname.includes('/cover')) return 'Cover Page';
+    if (pathname.includes('/checklist')) return 'SSP checklist';
+    if (pathname.includes('/contacts')) return 'System Contacts';
     if (pathname.includes('/risk')) return 'Risk assessment';
     if (pathname.includes('/data-categorization')) return 'Data categorization';
-    if (pathname.includes('/controls')) return 'SSP controls grid';
-    if (pathname.includes('/findings')) return 'Findings & POA&M';
+    if (pathname.includes('/environments')) return 'System Environments';
     if (pathname.includes('/inventory')) return 'System inventory';
+    if (pathname.includes('/diagrams')) return 'System Diagrams';
+    if (pathname.includes('/scanning')) return 'Scanning & Testing';
+    if (pathname.includes('/controls')) return 'Controls Assessment';
+    if (pathname.includes('/findings')) return 'Findings & exceptions';
+    if (pathname.includes('/firewall')) return 'Firewall rules';
+    if (pathname.includes('/resources')) return 'Additional Resources';
+    if (pathname.includes('/revision')) return 'Revision history';
     return 'Assessment Detail';
   };
 
@@ -261,7 +307,7 @@ export default function AssessmentWorkspace() {
           <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
 
           {/* Navigation Links */}
-          <Box sx={{ px: 1.5, pt: 2, flexGrow: 1 }}>
+          <Box sx={{ px: 1.5, pt: 2, flexGrow: 1, overflowY: 'auto' }}>
             <List disablePadding>
               {NAV_ITEMS.map((item) => {
                 const active = pathname === item.path;
@@ -293,7 +339,7 @@ export default function AssessmentWorkspace() {
                       </ListItemIcon>
                       <ListItemText
                         primary={item.label}
-                        slotProps={{ primary: { fontSize: 13.5, fontWeight: active ? 650 : 500 } }}
+                        slotProps={{ primary: { fontSize: 13, fontWeight: active ? 650 : 500 } }}
                       />
                       {item.badge !== undefined && item.badge > 0 && (
                         <Chip
@@ -430,13 +476,21 @@ export default function AssessmentWorkspace() {
             <Routes>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<AssessmentDashboard />} />
-              <Route path="checklist" element={<AssessmentChecklist />} />
               <Route path="intake" element={<AssessmentIntake />} />
-              <Route path="risk" element={<AssessmentRisk />} />
-              <Route path="data-categorization" element={<AssessmentDataCategorization />} />
-              <Route path="controls" element={<AssessmentControls />} />
-              <Route path="findings" element={<AssessmentFindings />} />
-              <Route path="inventory" element={<AssessmentInventory />} />
+              <Route path="cover" element={<CoverPage />} />
+              <Route path="checklist" element={<ChecklistTab />} />
+              <Route path="contacts" element={<SystemContacts />} />
+              <Route path="risk" element={<RiskAssessmentTab />} />
+              <Route path="data-categorization" element={<DataCategorizationTab />} />
+              <Route path="environments" element={<EnvironmentsTab />} />
+              <Route path="inventory" element={<SystemInventoryTab />} />
+              <Route path="diagrams" element={<SystemDiagrams />} />
+              <Route path="scanning" element={<ScanningTesting />} />
+              <Route path="controls" element={<ControlsAssessment />} />
+              <Route path="findings" element={<FindingsExceptions />} />
+              <Route path="firewall" element={<FirewallRules />} />
+              <Route path="resources" element={<AdditionalResources />} />
+              <Route path="revision" element={<RevisionHistory />} />
             </Routes>
           </Box>
         </Box>

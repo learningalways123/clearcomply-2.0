@@ -335,6 +335,44 @@ export interface CreateAssessmentRequest {
 }
 
 
+export interface SSPWorkbook {
+  id: string;
+  assessmentId: string;
+  coverPage: Record<string, any>;
+  checklist: any[];
+  contactsInfo: Record<string, any>;
+  riskAssessment: Record<string, any>;
+  dataCategorization: Record<string, any>;
+  environments: any[];
+  inventory: Record<string, any>;
+  diagrams: Record<string, any>;
+  scanning: any[];
+  controls: any[];
+  findingsExtra: Record<string, any>;
+  firewall: any[];
+  additionalResources: any[];
+  revisionHistory: any[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SSPWorkbookProgress {
+  progressPercent: number;
+  completedTasks: number;
+  totalTasks: number;
+}
+
+export interface SSPWorkbookRiskScore {
+  impactScore: number | null;
+  impactRating: string;
+  likelihoodScore: number | null;
+  likelihoodRating: string;
+  overallRisk: string;
+  applicableCount: number;
+  overallLikelihoodQ: number | null;
+}
+
+
 // ─── API methods ──────────────────────────────────────────────────────────────
 
 export const api = {
@@ -505,6 +543,15 @@ export const api = {
     apiClient.post<{ message: string; assessmentId: string }>('/assessments/seed-demo').then(r => r.data),
   addIntakeTeam: (id: string, name: string, leadName: string, leadEmail: string, families?: string) =>
     apiClient.post<IntakeTeam>(`/assessments/${id}/intake`, { name, leadName, leadEmail, families }).then(r => r.data),
+
+  // SSP Workbook
+  getSSPWorkbook: (id: string) => apiClient.get<SSPWorkbook>(`/assessments/${id}/workbook`).then(r => r.data),
+  updateSSPWorkbookSection: (id: string, section: string, data: any) =>
+    apiClient.put<SSPWorkbook>(`/assessments/${id}/workbook/${section}`, { data }).then(r => r.data),
+  getSSPWorkbookProgress: (id: string) =>
+    apiClient.get<SSPWorkbookProgress>(`/assessments/${id}/workbook/progress`).then(r => r.data),
+  getSSPWorkbookRiskScore: (id: string) =>
+    apiClient.get<SSPWorkbookRiskScore>(`/assessments/${id}/workbook/risk-score`).then(r => r.data),
 };
 
 export interface ChecklistItem {
