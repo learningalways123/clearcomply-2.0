@@ -1073,6 +1073,44 @@ class DataStore:
                 "families": rec.families,
             }
 
+    def update_ssp_intake_team(self, team_id: str, name: str, lead_name: str, lead_email: str, families: Optional[str]) -> dict:
+        with db_session() as db:
+            rec = db.query(IntakeTeamRecord).filter_by(id=team_id).first()
+            if not rec:
+                raise ValueError(f"Intake team with ID '{team_id}' not found")
+            rec.name = name
+            rec.lead_name = lead_name
+            rec.lead_email = lead_email
+            rec.families = families or ""
+            # Recalculate progress immediately on update
+            prog = self.calculate_intake_team_progress(db, rec.assessment_id, rec.families)
+            rec.response_rate = prog
+            if prog == 100:
+                rec.status = "complete"
+            elif rec.status == "complete":
+                rec.status = "in_progress"
+            db.commit()
+            return {
+                "id": rec.id,
+                "assessmentId": rec.assessment_id,
+                "name": rec.name,
+                "leadName": rec.lead_name,
+                "leadEmail": rec.lead_email,
+                "responseRate": rec.response_rate,
+                "status": rec.status,
+                "lastActiveDaysAgo": rec.last_active_days_ago,
+                "families": rec.families,
+            }
+
+    def delete_ssp_intake_team(self, team_id: str) -> bool:
+        with db_session() as db:
+            rec = db.query(IntakeTeamRecord).filter_by(id=team_id).first()
+            if not rec:
+                raise ValueError(f"Intake team with ID '{team_id}' not found")
+            db.delete(rec)
+            db.commit()
+            return True
+
     def remind_intake_team(self, team_id: str) -> dict:
         with db_session() as db:
             rec = db.query(IntakeTeamRecord).filter_by(id=team_id).first()

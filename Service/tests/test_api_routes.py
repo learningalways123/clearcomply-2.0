@@ -663,7 +663,31 @@ def test_add_assessment_intake_team(client):
     # Verify it is returned in list
     list_resp = client.get(f"/api/assessments/{aid}/intake")
     assert list_resp.status_code == 200
-    assert any(t["name"] == "Audit Operations Group" for t in list_resp.json())
+    teams = list_resp.json()
+    assert any(t["name"] == "Audit Operations Group" for t in teams)
+    
+    team_id = [t["id"] for t in teams if t["name"] == "Audit Operations Group"][0]
+    
+    # 2. Update the team
+    up_payload = {
+        "name": "Audit Operations Group v2",
+        "leadName": "Dianne Ross",
+        "leadEmail": "d.ross-v2@agency.gov",
+        "families": "Access Control"
+    }
+    up_resp = client.put(f"/api/assessments/{aid}/intake/{team_id}", json=up_payload)
+    assert up_resp.status_code == 200
+    assert up_resp.json()["name"] == "Audit Operations Group v2"
+    assert up_resp.json()["leadEmail"] == "d.ross-v2@agency.gov"
+    
+    # 3. Delete the team
+    del_resp = client.delete(f"/api/assessments/{aid}/intake/{team_id}")
+    assert del_resp.status_code == 200
+    assert del_resp.json() == {"success": True}
+    
+    # Verify it is gone
+    list_resp_after = client.get(f"/api/assessments/{aid}/intake")
+    assert not any(t["id"] == team_id for t in list_resp_after.json())
 
 
 def test_projects_lifecycle(client):

@@ -22,6 +22,9 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const CONTROL_FAMILIES = [
   'Data Categorization',
@@ -58,6 +61,11 @@ export default function AssessmentIntake() {
   const [families, setFamilies] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // Menu and Edit States
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [selectedTeam, setSelectedTeam] = useState<IntakeTeam | null>(null);
+  const [editingTeam, setEditingTeam] = useState<IntakeTeam | null>(null);
+
   const fetchIntakeTeams = async () => {
     if (!assessment) return;
     try {
@@ -75,6 +83,7 @@ export default function AssessmentIntake() {
   }, [assessment]);
 
   const handleOpenAdd = () => {
+    setEditingTeam(null);
     setName('');
     setLeadName('');
     setLeadEmail('');
@@ -82,17 +91,61 @@ export default function AssessmentIntake() {
     setAddOpen(true);
   };
 
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>, team: IntakeTeam) => {
+    setMenuAnchor(event.currentTarget);
+    setSelectedTeam(team);
+  };
+
+  const handleCloseMenu = () => {
+    setMenuAnchor(null);
+    setSelectedTeam(null);
+  };
+
+  const handleEditClick = () => {
+    if (!selectedTeam) return;
+    setEditingTeam(selectedTeam);
+    setName(selectedTeam.name);
+    setLeadName(selectedTeam.leadName);
+    setLeadEmail(selectedTeam.leadEmail);
+    setFamilies(selectedTeam.families || '');
+    setAddOpen(true);
+    handleCloseMenu();
+  };
+
+  const handleDeleteClick = async () => {
+    if (!selectedTeam || !assessment) return;
+    const confirmDelete = window.confirm(`Are you sure you want to delete intake team "${selectedTeam.name}"?`);
+    if (!confirmDelete) return;
+    
+    try {
+      await api.deleteIntakeTeam(assessment.id, selectedTeam.id);
+      fetchIntakeTeams();
+      alert('Intake team deleted successfully.');
+    } catch (e) {
+      console.error(e);
+      alert('Failed to delete intake team.');
+    } finally {
+      handleCloseMenu();
+    }
+  };
+
   const handleAddTeam = async () => {
     if (!assessment || !name.trim() || !leadName.trim() || !leadEmail.trim()) return;
     setSaving(true);
     try {
-      await api.addIntakeTeam(assessment.id, name, leadName, leadEmail, families);
+      if (editingTeam) {
+        await api.updateIntakeTeam(assessment.id, editingTeam.id, name, leadName, leadEmail, families);
+        alert('Intake team updated successfully!');
+      } else {
+        await api.addIntakeTeam(assessment.id, name, leadName, leadEmail, families);
+        alert('New intake team added successfully!');
+      }
       setAddOpen(false);
+      setEditingTeam(null);
       fetchIntakeTeams();
-      alert('New intake team added successfully!');
     } catch (e) {
       console.error(e);
-      alert('Failed to add intake team.');
+      alert(editingTeam ? 'Failed to update intake team.' : 'Failed to add intake team.');
     } finally {
       setSaving(false);
     }
@@ -176,12 +229,17 @@ export default function AssessmentIntake() {
                     <Typography variant="body1" fontWeight={750} color="#0f172a">
                       {team.name}
                     </Typography>
-                    <Chip 
-                      label={isComplete ? 'Complete' : isOverdue ? 'Overdue' : 'In Progress'} 
-                      size="small"
-                      color={isComplete ? 'success' : isOverdue ? 'error' : 'primary'}
-                      sx={{ fontWeight: 650, fontSize: 11 }}
-                    />
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                      <Chip 
+                        label={isComplete ? 'Complete' : isOverdue ? 'Overdue' : 'In Progress'} 
+                        size="small"
+                        color={isComplete ? 'success' : isOverdue ? 'error' : 'primary'}
+                        sx={{ fontWeight: 650, fontSize: 11 }}
+                      />
+                      <IconButton size="small" onClick={(e) => handleOpenMenu(e, team)}>
+                        <MoreVertIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
                   </Box>
 
                   {/* Lead Info */}
@@ -259,9 +317,9 @@ export default function AssessmentIntake() {
         })}
       </Grid>
 
-      {/* Add Dialog */}
-      <Dialog open={addOpen} onClose={() => setAddOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle sx={{ fontWeight: 800 }}>Add Intake Team</DialogTitle>
+      {/* Add/Edit Dialog */}
+      <Dialog open={addOpen} onClose={() => { setAddOpen(false); setEditingTeam(null); }} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800 }}>{editingTeam ? 'Edit Intake Team' : 'Add Intake Team'}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2.5} pt={1}>
             <TextField 
@@ -316,16 +374,26 @@ export default function AssessmentIntake() {
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setAddOpen(false)}>Cancel</Button>
+          <Button onClick={() => { setAddOpen(false); setEditingTeam(null); }}>Cancel</Button>
           <Button 
             variant="contained" 
             onClick={handleAddTeam} 
             disabled={saving || !name.trim() || !leadName.trim() || !leadEmail.trim()}
           >
-            {saving ? <CircularProgress size={16} color="inherit" /> : 'Add Intake Team'}
+            {saving ? <CircularProgress size={16} color="inherit" /> : (editingTeam ? 'Save Changes' : 'Add Intake Team')}
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Card Options Menu */}
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleCloseMenu}
+      >
+        <MenuItem onClick={handleEditClick}>Edit Team</MenuItem>
+        <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>Delete Team</MenuItem>
+      </Menu>
 
     </Box>
   );

@@ -1154,6 +1154,76 @@ async def add_assessment_intake_team(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+
+class UpdateIntakeTeamRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=200)
+    leadName: str = Field(..., min_length=1, max_length=200)
+    leadEmail: str = Field(..., min_length=1, max_length=200)
+    families: Optional[str] = None
+
+@router.put("/assessments/{assessment_id}/intake/{team_id}")
+async def update_assessment_intake_team(
+    assessment_id: str,
+    team_id: str,
+    req: UpdateIntakeTeamRequest,
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        
+        res = data_store.update_ssp_intake_team(
+            team_id=team_id,
+            name=req.name,
+            lead_name=req.leadName,
+            lead_email=req.leadEmail,
+            families=req.families
+        )
+        
+        audit_service.log_action(
+            action="UPDATE_INTAKE_TEAM",
+            user_email=current_user.email,
+            user_name=current_user.name,
+            entity_type="assessment",
+            entity_id=assessment_id,
+            detail={"team_id": team_id, "team_name": req.name}
+        )
+        return res
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/assessments/{assessment_id}/intake/{team_id}")
+async def delete_assessment_intake_team(
+    assessment_id: str,
+    team_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        assessment = data_store.get_assessment_by_id(assessment_id)
+        if not assessment:
+            raise HTTPException(status_code=404, detail=f"Assessment '{assessment_id}' not found")
+        
+        data_store.delete_ssp_intake_team(team_id)
+        
+        audit_service.log_action(
+            action="DELETE_INTAKE_TEAM",
+            user_email=current_user.email,
+            user_name=current_user.name,
+            entity_type="assessment",
+            entity_id=assessment_id,
+            detail={"team_id": team_id}
+        )
+        return {"success": True}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/assessments/{assessment_id}/intake/{team_id}/remind")
 async def remind_team(assessment_id: str, team_id: str, current_user: User = Depends(get_current_user)):
     try:

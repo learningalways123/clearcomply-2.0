@@ -544,6 +544,10 @@ export const api = {
     apiClient.post<{ message: string; assessmentId: string }>('/assessments/seed-demo').then(r => r.data),
   addIntakeTeam: (id: string, name: string, leadName: string, leadEmail: string, families?: string) =>
     apiClient.post<IntakeTeam>(`/assessments/${id}/intake`, { name, leadName, leadEmail, families }).then(r => r.data),
+  updateIntakeTeam: (id: string, teamId: string, name: string, leadName: string, leadEmail: string, families?: string) =>
+    apiClient.put<IntakeTeam>(`/assessments/${id}/intake/${teamId}`, { name, leadName, leadEmail, families }).then(r => r.data),
+  deleteIntakeTeam: (id: string, teamId: string) =>
+    apiClient.delete<{ success: boolean }>(`/assessments/${id}/intake/${teamId}`).then(r => r.data),
 
   // SSP Workbook
   getSSPWorkbook: (id: string) => apiClient.get<SSPWorkbook>(`/assessments/${id}/workbook`).then(r => r.data),
