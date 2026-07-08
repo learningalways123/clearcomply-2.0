@@ -99,7 +99,7 @@ export default function AdditionalResources() {
                     <TableCell sx={{ py: 1 }}>
                       <TextField
                         fullWidth
-                        placeholder="https://collab.mn.gov/files/ir-plan.pdf"
+                        placeholder="https://collab.sharepoint.com/files/ir-plan.pdf"
                         value={res.link || ''}
                         onChange={(e) => handleResourceChange(idx, 'link', e.target.value)}
                         size="small"

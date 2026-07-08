@@ -270,7 +270,7 @@ export default function CoverPage() {
               helperText="SharePoint, Teams, or corporate file share location"
               value={cp.opsDocsRepo || ''}
               onChange={(e) => handleFieldChange('opsDocsRepo', e.target.value)}
-              placeholder="https://collab.mn.gov/teams/ils-sec..."
+              placeholder="https://collab.sharepoint.com/teams/ils-sec..."
               size="small"
             />
           </Box>
