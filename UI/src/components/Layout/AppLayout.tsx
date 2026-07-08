@@ -23,7 +23,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import HistoryIcon from '@mui/icons-material/History';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
-import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
+// import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
 import PersonIcon from '@mui/icons-material/Person';
 import FolderIcon from '@mui/icons-material/Folder';
 
@@ -34,7 +34,7 @@ const DRAWER_WIDTH = 240;
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
   { label: 'Projects', path: '/projects', icon: <FolderIcon /> },
-  { label: 'POA&M', path: '/poam', icon: <AssignmentLateIcon /> },
+  // { label: 'POA&M', path: '/poam', icon: <AssignmentLateIcon /> },
   // { label: 'Evidence', path: '/evidence', icon: <FolderIcon /> },
   { label: 'Audit Log', path: '/audit-log', icon: <HistoryIcon /> },
 ];
