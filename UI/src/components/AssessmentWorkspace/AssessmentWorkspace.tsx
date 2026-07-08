@@ -216,7 +216,7 @@ function AssessmentWorkspaceInner() {
     { label: '5. Data Categorization', path: `/assessments/${id}/data-categorization`, icon: <CategoryIcon /> },
     { label: '6. Environments', path: `/assessments/${id}/environments`, icon: <CloudIcon /> },
     { label: '7. System Inventory', path: `/assessments/${id}/inventory`, icon: <StorageIcon /> },
-    { label: '8. System Diagrams', path: `/assessments/${id}/diagrams`, icon: <ImageIcon /> },
+    { label: '8. Diagram', path: `/assessments/${id}/diagrams`, icon: <ImageIcon /> },
     { label: '9. Scanning & Testing', path: `/assessments/${id}/scanning`, icon: <BugReportIcon /> },
     { label: '10. Controls Assessment', path: `/assessments/${id}/controls`, icon: <ShieldIcon /> },
     { label: '11. Findings & POAM', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon />, badge: openFindingsCount, badgeColor: 'error' as const },
@@ -253,7 +253,7 @@ function AssessmentWorkspaceInner() {
     if (pathname.includes('/data-categorization')) return 'Data categorization';
     if (pathname.includes('/environments')) return 'System Environments';
     if (pathname.includes('/inventory')) return 'System inventory';
-    if (pathname.includes('/diagrams')) return 'System Diagrams';
+    if (pathname.includes('/diagrams')) return 'Diagram';
     if (pathname.includes('/scanning')) return 'Scanning & Testing';
     if (pathname.includes('/controls')) return 'Controls Assessment';
     if (pathname.includes('/findings')) return 'Findings & exceptions';

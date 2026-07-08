@@ -104,9 +104,9 @@ export default function SystemDiagrams() {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h5" fontWeight={700} color="primary.main">System Diagrams</Typography>
+        <Typography variant="h5" fontWeight={700} color="primary.main">Diagram</Typography>
         <Typography variant="body2" color="text.secondary">
-          Upload and review the authoritative System Data Flow Diagram (DFD) showing security boundaries, network paths, and endpoints.
+          Upload and review the authoritative diagram showing security boundaries, network paths, and endpoints.
         </Typography>
       </Box>
 
@@ -120,7 +120,7 @@ export default function SystemDiagrams() {
           ) : hasDiagram ? (
             <Box sx={{ width: '100%', textAlign: 'center' }}>
               <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>
-                Current Data Flow Diagram
+                Current Diagram
               </Typography>
               
               <Box 
@@ -139,7 +139,7 @@ export default function SystemDiagrams() {
               >
                 <img 
                   src={diagramUrl} 
-                  alt="System Data Flow Diagram" 
+                  alt="System Diagram" 
                   style={{ maxWidth: '100%', maxHeight: '450px', objectFit: 'contain' }}
                 />
               </Box>
@@ -177,7 +177,7 @@ export default function SystemDiagrams() {
                 No Diagram Uploaded
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}>
-                Please upload a detailed network topology diagram or data flow diagram (DFD) mapping out the system boundary, connections, and host servers.
+                Please upload a detailed diagram mapping out the system boundary, connections, and host servers.
               </Typography>
 
               <Button
@@ -187,7 +187,7 @@ export default function SystemDiagrams() {
                 disabled={uploading}
                 sx={{ borderRadius: 2 }}
               >
-                {uploading ? 'Uploading...' : 'Upload DFD Diagram'}
+                {uploading ? 'Uploading...' : 'Upload Diagram'}
                 <input
                   type="file"
                   hidden
