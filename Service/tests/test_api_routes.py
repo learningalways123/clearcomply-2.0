@@ -876,6 +876,31 @@ def test_framework_lock_enforcement(client):
     assert resp.json()["detail"] == "Framework with id 'NIST-CSF-2.0' not found"
 
 
+def test_poam_export_findings_xlsx(client):
+    proj = client.post("/api/projects", json={"name": "Export Project"}).json()
+    payload = {
+        "name": "Export Workbook Test",
+        "frameworkIds": ["NIST-800-53"],
+        "projectId": proj["id"]
+    }
+    ass = client.post("/api/assessments", json=payload).json()
+    aid = ass["id"]
+
+    wb = client.get(f"/api/assessments/{aid}/workbook").json()
+    controls = wb["controls"]
+    
+    if len(controls) > 0:
+        controls[0]["compliant"] = "Partial"
+        controls[0]["remediationPlan"] = "Test remediation plan"
+        controls[0]["findingNumber"] = "FND-TEST-01"
+        client.put(f"/api/assessments/{aid}/workbook/controls", json={"data": controls})
+
+    export_resp = client.get(f"/api/assessments/{aid}/poam/export")
+    assert export_resp.status_code == 200
+    assert export_resp.headers["content-type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    assert len(export_resp.content) > 0
+
+
 
 
 
