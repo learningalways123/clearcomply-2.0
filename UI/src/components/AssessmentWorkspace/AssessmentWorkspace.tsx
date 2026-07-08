@@ -44,7 +44,6 @@ import ContactMailIcon from '@mui/icons-material/ContactMail';
 import CloudIcon from '@mui/icons-material/Cloud';
 import ImageIcon from '@mui/icons-material/Image';
 import BugReportIcon from '@mui/icons-material/BugReport';
-import RouterIcon from '@mui/icons-material/Router';
 import LinkIcon from '@mui/icons-material/Link';
 import HistoryIcon from '@mui/icons-material/History';
 
@@ -68,7 +67,6 @@ import SystemDiagrams from './SSPBuilder/SystemDiagrams';
 import ScanningTesting from './SSPBuilder/ScanningTesting';
 import ControlsAssessment from './SSPBuilder/ControlsAssessment';
 import FindingsExceptions from './SSPBuilder/FindingsExceptions';
-import FirewallRules from './SSPBuilder/FirewallRules';
 import AdditionalResources from './SSPBuilder/AdditionalResources';
 import RevisionHistory from './SSPBuilder/RevisionHistory';
 
@@ -222,9 +220,8 @@ function AssessmentWorkspaceInner() {
     { label: '9. Scanning & Testing', path: `/assessments/${id}/scanning`, icon: <BugReportIcon /> },
     { label: '10. Controls Assessment', path: `/assessments/${id}/controls`, icon: <ShieldIcon /> },
     { label: '11. Findings & POAM', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon />, badge: openFindingsCount, badgeColor: 'error' as const },
-    { label: '12. Firewall Planning', path: `/assessments/${id}/firewall`, icon: <RouterIcon /> },
-    { label: '13. Additional Resources', path: `/assessments/${id}/resources`, icon: <LinkIcon /> },
-    { label: '14. Revision History', path: `/assessments/${id}/revision`, icon: <HistoryIcon /> },
+    { label: '12. Additional Resources', path: `/assessments/${id}/resources`, icon: <LinkIcon /> },
+    { label: '13. Revision History', path: `/assessments/${id}/revision`, icon: <HistoryIcon /> },
   ];
 
   // Dynamic Countdown (Target Date: Jul 16, 2026)
@@ -260,7 +257,6 @@ function AssessmentWorkspaceInner() {
     if (pathname.includes('/scanning')) return 'Scanning & Testing';
     if (pathname.includes('/controls')) return 'Controls Assessment';
     if (pathname.includes('/findings')) return 'Findings & exceptions';
-    if (pathname.includes('/firewall')) return 'Firewall rules';
     if (pathname.includes('/resources')) return 'Additional Resources';
     if (pathname.includes('/revision')) return 'Revision history';
     return 'Assessment Detail';
@@ -494,7 +490,6 @@ function AssessmentWorkspaceInner() {
               <Route path="scanning" element={<ScanningTesting />} />
               <Route path="controls" element={<ControlsAssessment />} />
               <Route path="findings" element={<FindingsExceptions />} />
-              <Route path="firewall" element={<FirewallRules />} />
               <Route path="resources" element={<AdditionalResources />} />
               <Route path="revision" element={<RevisionHistory />} />
             </Routes>
