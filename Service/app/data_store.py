@@ -86,6 +86,8 @@ def _record_to_assessment(rec: AssessmentRecord, questions: Optional[Dict] = Non
         nistBaseline=rec.nist_baseline,
         diagramFilename=rec.diagram_filename,
         projectId=rec.project_id,
+        startDate=rec.start_date,
+        endDate=rec.end_date,
     )
 
 
@@ -252,6 +254,8 @@ class DataStore:
                 nist_baseline=assessment.nistBaseline,
                 diagram_filename=assessment.diagramFilename,
                 diagram_storage_path=None,
+                start_date=assessment.startDate,
+                end_date=assessment.endDate,
             )
             db.add(rec)
 

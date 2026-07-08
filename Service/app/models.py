@@ -126,6 +126,8 @@ class Assessment(BaseModel):
     nistBaseline: Optional[str] = Field(default=None, description="NIST Calculated Baseline: Low | Moderate | High")
     diagramFilename: Optional[str] = Field(default=None, description="Uploaded data flow diagram filename")
     projectId: Optional[str] = Field(default=None, description="Parent project ID")
+    startDate: Optional[datetime] = None
+    endDate: Optional[datetime] = None
 
 
 
@@ -143,6 +145,8 @@ class CreateAssessmentRequest(BaseModel):
     nistIntegrity: Optional[str] = Field(default=None, description="NIST FIPS 199 Integrity impact: Low | Moderate | High")
     nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
     projectId: Optional[str] = Field(default=None, description="Parent project ID")
+    startDate: Optional[datetime] = None
+    endDate: Optional[datetime] = None
 
 
 
@@ -166,6 +170,8 @@ class AssessmentResponse(BaseModel):
     nistAvailability: Optional[str] = Field(default=None, description="NIST FIPS 199 Availability impact: Low | Moderate | High")
     nistBaseline: Optional[str] = Field(default=None, description="NIST Calculated Baseline: Low | Moderate | High")
     projectId: Optional[str] = None
+    startDate: Optional[str] = None
+    endDate: Optional[str] = None
 
 
 

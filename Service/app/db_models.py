@@ -74,6 +74,8 @@ class AssessmentRecord(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     created_by_email = Column(String, ForeignKey("users.email"), nullable=True)
+    start_date = Column(DateTime, nullable=True)
+    end_date = Column(DateTime, nullable=True)
 
     # Aggregated stats (kept in sync on every answer submission)
     total_controls = Column(Integer, default=0)

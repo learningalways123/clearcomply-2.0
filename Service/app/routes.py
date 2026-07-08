@@ -379,7 +379,9 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         nistIntegrity=request.nistIntegrity,
         nistAvailability=request.nistAvailability,
         nistBaseline=nist_baseline,
-        projectId=project_id
+        projectId=project_id,
+        startDate=request.startDate,
+        endDate=request.endDate,
     )
     
     # Save assessment

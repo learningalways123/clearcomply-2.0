@@ -64,6 +64,24 @@ export default function AssessmentDashboard() {
     return '#ef4444'; // Red
   };
 
+  const getDaysToATO = () => {
+    if (!assessment || !assessment.endDate) return { days: '—', label: 'No end date set', color: 'text.secondary' };
+    const due = new Date(assessment.endDate);
+    const now = new Date();
+    due.setHours(0,0,0,0);
+    now.setHours(0,0,0,0);
+    const diffTime = due.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const targetLabel = due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (diffDays < 0) {
+      return { days: `${Math.abs(diffDays)}d`, label: `Overdue (Target: ${targetLabel})`, color: 'error.main' };
+    }
+    if (diffDays === 0) {
+      return { days: '0d', label: `Due today (Target: ${targetLabel})`, color: 'error.main' };
+    }
+    return { days: `${diffDays}`, label: `Target date: ${targetLabel}`, color: diffDays <= 7 ? 'error.main' : 'warning.main' };
+  };
+
   useEffect(() => {
     const loadDashboardData = async () => {
       if (!assessment) return;
@@ -189,10 +207,10 @@ export default function AssessmentDashboard() {
                   Days to ATO
                 </Typography>
                 <Typography variant="h4" fontWeight={850} sx={{ color: '#0f172a', mt: 0.25 }}>
-                  17
+                  {getDaysToATO().days}
                 </Typography>
-                <Typography variant="caption" color="warning.main" fontWeight={650} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  Target date: Jul 16
+                <Typography variant="caption" color={getDaysToATO().color as any} fontWeight={650} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  {getDaysToATO().label}
                 </Typography>
               </Box>
             </CardContent>

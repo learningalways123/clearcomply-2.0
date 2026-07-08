@@ -103,6 +103,8 @@ export interface Assessment {
   nistBaseline?: string;
   diagramFilename?: string;
   projectId?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface Project {
@@ -332,6 +334,8 @@ export interface CreateAssessmentRequest {
   nistIntegrity?: string;
   nistAvailability?: string;
   projectId?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 
