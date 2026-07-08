@@ -468,3 +468,65 @@ def generate_poam_xlsx(
     buf = io.BytesIO()
     wb.save(buf)
     return buf.getvalue()
+
+
+def generate_findings_xlsx(
+    assessment_name: str,
+    findings: List[dict]
+) -> bytes:
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Findings & Policy Exceptions"
+
+    header_font = Font(name="Calibri", bold=True, color="FFFFFF", size=11)
+    header_fill = PatternFill("solid", fgColor="4F46E5")
+    thin = Side(style="thin", color="D1D5DB")
+    border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+    headers = [
+        "Control Family", "Control Name", "Control Details", "Response",
+        "Remediation Plan", "Compensating Controls", "Business Justification",
+        "Impacted Hosts & IP Addresses", "Technical Contact", "Business Owner",
+        "Finding #", "Remediation Plan #", "Policy Exception #"
+    ]
+    
+    ws.append(headers)
+    for col_num, _ in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        cell.border = border
+
+    col_widths = [20, 15, 45, 45, 45, 45, 45, 25, 20, 20, 15, 15, 15]
+    for i, w in enumerate(col_widths, 1):
+        ws.column_dimensions[get_column_letter(i)].width = w
+    ws.freeze_panes = "A2"
+
+    for row_idx, item in enumerate(findings, 2):
+        row = [
+            item.get("family", ""),
+            item.get("controlName", ""),
+            item.get("controlDetails", ""),
+            item.get("response", ""),
+            item.get("remediationPlan", ""),
+            item.get("compensatingControls", ""),
+            item.get("businessJustification", ""),
+            item.get("hostsIpAddresses", ""),
+            item.get("technicalContact", ""),
+            item.get("businessOwner", ""),
+            item.get("findingNumber", ""),
+            item.get("remediationPlanNumber", ""),
+            item.get("policyExceptionNumber", "")
+        ]
+        ws.append(row)
+        for col_num in range(1, len(headers) + 1):
+            cell = ws.cell(row=row_idx, column=col_num)
+            cell.alignment = Alignment(vertical="top", wrap_text=True)
+            cell.border = border
+
+    ws.auto_filter.ref = ws.dimensions
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue()

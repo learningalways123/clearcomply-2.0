@@ -955,9 +955,63 @@ async def export_poam_xlsx(assessment_id: str, current_user: User = Depends(get_
     assessment = data_store.get_assessment_by_id(assessment_id)
     if not assessment:
         raise HTTPException(status_code=404, detail="Assessment not found")
-    items = data_store.get_all_poam_items(assessment_id=assessment_id)
-    items_dict = [i.model_dump() for i in items]
-    xlsx_bytes = report_service.generate_poam_xlsx(assessment.name, items_dict)
+    
+    wb = data_store.get_ssp_workbook(assessment_id)
+    if wb:
+        app_data = {}
+        try:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            path = os.path.join(current_dir, "app_data.json")
+            with open(path, "r", encoding="utf-8") as f:
+                app_data = json.load(f)
+        except Exception as e:
+            print(f"Error loading app_data: {e}")
+        
+        control_defs = app_data.get("controls", [])
+        wb_controls = wb.controls or []
+        findings_list = []
+        
+        for def_item in control_defs:
+            ctrl_id = def_item.get("id")
+            data = next((c for c in wb_controls if c.get("id") == ctrl_id), {})
+            
+            compliant = data.get("compliant", "")
+            has_status_gap = compliant in ("Partial", "None")
+            has_data_gap = any([
+                data.get("remediationPlan"),
+                data.get("compensatingControls"),
+                data.get("businessJustification"),
+                data.get("hostsIpAddresses"),
+                data.get("technicalContact"),
+                data.get("businessOwner"),
+                data.get("findingNumber"),
+                data.get("remediationPlanNumber"),
+                data.get("policyExceptionNumber")
+            ])
+            
+            if has_status_gap or has_data_gap:
+                findings_list.append({
+                    "family": def_item.get("family", ""),
+                    "controlName": ctrl_id,
+                    "controlDetails": def_item.get("detail", ""),
+                    "response": data.get("response", ""),
+                    "remediationPlan": data.get("remediationPlan", ""),
+                    "compensatingControls": data.get("compensatingControls", ""),
+                    "businessJustification": data.get("businessJustification", ""),
+                    "hostsIpAddresses": data.get("hostsIpAddresses", ""),
+                    "technicalContact": data.get("technicalContact", ""),
+                    "businessOwner": data.get("businessOwner", ""),
+                    "findingNumber": data.get("findingNumber", ""),
+                    "remediationPlanNumber": data.get("remediationPlanNumber", ""),
+                    "policyExceptionNumber": data.get("policyExceptionNumber", "")
+                })
+        
+        xlsx_bytes = report_service.generate_findings_xlsx(assessment.name, findings_list)
+    else:
+        items = data_store.get_all_poam_items(assessment_id=assessment_id)
+        items_dict = [i.model_dump() for i in items]
+        xlsx_bytes = report_service.generate_poam_xlsx(assessment.name, items_dict)
+        
     safe_name = assessment.name.replace(" ", "_")[:40]
     return Response(
         content=xlsx_bytes,
