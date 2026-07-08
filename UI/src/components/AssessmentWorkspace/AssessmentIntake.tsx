@@ -184,6 +184,14 @@ export default function AssessmentIntake() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3.5 }}>
+      <Box>
+        <Typography variant="h5" fontWeight={750} color="primary.main" sx={{ mb: 0.5 }}>
+          Team Intake Tracker
+        </Typography>
+        <Typography variant="body2" color="text.secondary" fontWeight={500}>
+          Assign controls to specific business and engineering leads and track response progress.
+        </Typography>
+      </Box>
       
       {/* Search & Add Filter Bar */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

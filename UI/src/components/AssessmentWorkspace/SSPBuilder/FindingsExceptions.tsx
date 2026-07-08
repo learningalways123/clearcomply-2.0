@@ -207,10 +207,15 @@ export default function FindingsExceptions() {
   return (
     <Box>
       {/* Summary Header & Stats */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3.5 }}>
-        <Typography variant="body2" color="text.secondary" fontWeight={500}>
-          Track discovered gaps, policy deviations, compensating controls, and Archer ticket numbers.
-        </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3.5 }}>
+        <Box>
+          <Typography variant="h5" fontWeight={700} color="primary.main" sx={{ mb: 0.5 }}>
+            Findings & Exceptions
+          </Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>
+            Track discovered gaps, policy deviations, compensating controls, and Archer ticket numbers.
+          </Typography>
+        </Box>
         <Button
           variant="contained"
           color="primary"

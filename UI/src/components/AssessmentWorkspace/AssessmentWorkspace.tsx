@@ -243,25 +243,6 @@ function AssessmentWorkspaceInner() {
   const projectedCompletion = Math.min(100, Math.round(completionPct + (daysToAto * 1.1)));
   const overdueTeams = teams.filter(t => t.status === 'overdue');
 
-  const getPageHeaderTitle = () => {
-    if (pathname.includes('/dashboard')) return 'Dashboard';
-    if (pathname.includes('/intake')) return 'Team intake tracker';
-    if (pathname.includes('/cover')) return 'Cover Page';
-    if (pathname.includes('/checklist')) return 'SSP checklist';
-    if (pathname.includes('/contacts')) return 'System Contacts';
-    if (pathname.includes('/risk')) return 'Risk assessment';
-    if (pathname.includes('/data-categorization')) return 'Data categorization';
-    if (pathname.includes('/environments')) return 'System Environments';
-    if (pathname.includes('/inventory')) return 'System inventory';
-    if (pathname.includes('/diagrams')) return 'Diagram';
-    if (pathname.includes('/scanning')) return 'Scanning & Testing';
-    if (pathname.includes('/controls')) return 'Controls Assessment';
-    if (pathname.includes('/findings')) return 'Findings & exceptions';
-    if (pathname.includes('/resources')) return 'Additional Resources';
-    if (pathname.includes('/revision')) return 'Revision history';
-    return 'Assessment Detail';
-  };
-
   return (
     <WorkspaceContext.Provider value={{ assessment, refreshAssessment: fetchAssessment }}>
       <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f3f4f6' }}>
@@ -301,8 +282,11 @@ function AssessmentWorkspaceInner() {
                 SSP Builder
               </Typography>
             </Box>
-            <Typography variant="caption" sx={{ color: '#64748b', ml: 4, fontWeight: 650 }}>
-              Clear Comply · v6.0 Draft
+            <Typography variant="caption" sx={{ color: '#818cf8', ml: 4, fontWeight: 700, display: 'block', fontSize: 11 }}>
+              {assessment?.name}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#64748b', ml: 4, fontWeight: 600, fontSize: 9.5 }}>
+              NIST-800-53 Equivalent
             </Typography>
           </Box>
 
@@ -419,12 +403,9 @@ function AssessmentWorkspaceInner() {
           {/* Top Bar Header */}
           <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '1px solid #e5e7eb', bgcolor: '#fff' }}>
             <Toolbar sx={{ px: 3, py: 1.5 }}>
-              <Box>
-                <Typography variant="h5" fontWeight={850} letterSpacing={-0.5} sx={{ color: '#0f172a' }}>
-                  {getPageHeaderTitle()}
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 550, display: 'block', mt: 0.25 }}>
-                  {assessment?.name} · {assessment?.frameworkIds.join(', ')} equivalent
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 600 }}>
+                  SSP BUILDER WORKSPACE
                 </Typography>
               </Box>
 

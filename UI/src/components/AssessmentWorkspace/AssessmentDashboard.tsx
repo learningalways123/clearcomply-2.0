@@ -130,6 +130,14 @@ export default function AssessmentDashboard() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3.5 }}>
+      <Box>
+        <Typography variant="h5" fontWeight={750} color="primary.main" sx={{ mb: 0.5 }}>
+          Dashboard
+        </Typography>
+        <Typography variant="body2" color="text.secondary" fontWeight={500}>
+          Overview of workbook completion progress, milestone deadlines, and active gaps.
+        </Typography>
+      </Box>
       
       {/* ── Stat Cards ── */}
       <Grid container spacing={3}>
