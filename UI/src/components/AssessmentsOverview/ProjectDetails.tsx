@@ -116,6 +116,17 @@ export default function ProjectDetails() {
     }
   };
 
+  const handleDeleteSsp = async (sspId: string) => {
+    if (!window.confirm('Are you sure you want to delete this SSP? All associated data will be permanently removed.')) return;
+    try {
+      await api.deleteAssessment(sspId);
+      execute();
+    } catch (e) {
+      console.error(e);
+      alert('Failed to delete SSP.');
+    }
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', pt: 8 }}>
@@ -166,6 +177,15 @@ export default function ProjectDetails() {
             Delete Project
           </Button>
           <Button 
+            variant="outlined" 
+            color="primary" 
+            startIcon={<AddIcon />} 
+            onClick={() => navigate(`/new-assessment?projectId=${id}&type=risk_assessment`)}
+            sx={{ borderRadius: 2, fontWeight: 700 }}
+          >
+            Create Risk Assessment
+          </Button>
+          <Button 
             variant="contained" 
             startIcon={<AddIcon />} 
             onClick={() => navigate(`/new-assessment?projectId=${id}`)}
@@ -188,24 +208,33 @@ export default function ProjectDetails() {
       <Card>
         {ssps.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 8, px: 2 }}>
-            <Typography variant="h6" color="text.secondary" gutterBottom>No System Security Plans (SSPs) yet</Typography>
+            <Typography variant="h6" color="text.secondary" gutterBottom>No System Security Plans (SSPs) or Risk Assessments yet</Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Create your first System Security Plan (SSP) for this project to start tracking controls.
+              Create your first System Security Plan (SSP) or Risk Assessment for this project to start tracking controls.
             </Typography>
-            <Button 
-              variant="contained" 
-              startIcon={<AddIcon />} 
-              onClick={() => navigate(`/new-assessment?projectId=${id}`)}
-            >
-              Create SSP
-            </Button>
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+              <Button 
+                variant="outlined" 
+                startIcon={<AddIcon />} 
+                onClick={() => navigate(`/new-assessment?projectId=${id}&type=risk_assessment`)}
+              >
+                Create Risk Assessment
+              </Button>
+              <Button 
+                variant="contained" 
+                startIcon={<AddIcon />} 
+                onClick={() => navigate(`/new-assessment?projectId=${id}`)}
+              >
+                Create SSP
+              </Button>
+            </Box>
           </Box>
         ) : (
           <TableContainer>
             <Table>
               <TableHead>
                 <TableRow sx={{ bgcolor: 'grey.50' }}>
-                  {['SSP Name', 'Frameworks', 'Status', 'Completion', 'Risk Score', 'Created', ''].map(h => (
+                  {['Name', 'Frameworks', 'Status', 'Completion', 'Risk Score', 'Created', ''].map(h => (
                     <TableCell key={h}>
                       <Typography variant="subtitle2" fontWeight={600}>{h}</Typography>
                     </TableCell>
@@ -218,7 +247,6 @@ export default function ProjectDetails() {
                     onClick={() => navigate(`/assessments/${s.id}`)}>
                     <TableCell>
                       <Typography variant="subtitle2" fontWeight={600}>{s.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">{s.id.substring(0, 8)}…</Typography>
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -236,14 +264,24 @@ export default function ProjectDetails() {
                     <TableCell><CompletionRing value={s.questionStats?.completionPercent ?? 0} /></TableCell>
                     <TableCell><RiskBadge score={s.riskScore} /></TableCell>
                     <TableCell><Typography variant="body2">{formatDate(s.createdAt)}</Typography></TableCell>
-                    <TableCell>
-                      <Button 
-                        size="small" 
-                        startIcon={<VisibilityIcon />}
-                        onClick={(e) => { e.stopPropagation(); navigate(`/assessments/${s.id}`); }}
-                      >
-                        View
-                      </Button>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button 
+                          size="small" 
+                          startIcon={<VisibilityIcon />}
+                          onClick={() => navigate(`/assessments/${s.id}`)}
+                        >
+                          View
+                        </Button>
+                        <Button 
+                          size="small" 
+                          color="error"
+                          startIcon={<DeleteIcon />}
+                          onClick={() => handleDeleteSsp(s.id)}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}

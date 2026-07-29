@@ -88,6 +88,7 @@ def _record_to_assessment(rec: AssessmentRecord, questions: Optional[Dict] = Non
         projectId=rec.project_id,
         startDate=rec.start_date,
         endDate=rec.end_date,
+        assessmentType=rec.assessment_type or "ssp",
     )
 
 
@@ -256,6 +257,7 @@ class DataStore:
                 diagram_storage_path=None,
                 start_date=assessment.startDate,
                 end_date=assessment.endDate,
+                assessment_type=assessment.assessmentType or "ssp",
             )
             db.add(rec)
 
@@ -281,26 +283,7 @@ class DataStore:
                     target_link=link
                 ))
 
-            # Auto-populate intake teams
-            intake_teams = [
-                ("Business / Data Owners", "Sarah Kim", "s.kim@agency.gov", 67, "in_progress", 2, "Data Categorization"),
-                ("IT Operations", "Marcus Johnson", "m.johnson@agency.gov", 69, "in_progress", 1, "Disaster Recovery Planning"),
-                ("IAM / IT Ops", "Priya Nair", "p.nair@agency.gov", 88, "complete", 0, "Identity & Access Management"),
-                ("Security Team", "Derek Walsh", "d.walsh@agency.gov", 30, "overdue", 5, "Incident Management"),
-                ("CISO Office", "Linda Torres", "l.torres@agency.gov", 100, "complete", 0, "Security Governance")
-            ]
-            for name, lead_name, lead_email, response_rate, t_status, active_days, families in intake_teams:
-                db.add(IntakeTeamRecord(
-                    id=str(uuid.uuid4()),
-                    assessment_id=assessment.id,
-                    name=name,
-                    lead_name=lead_name,
-                    lead_email=lead_email,
-                    response_rate=response_rate,
-                    status=t_status,
-                    last_active_days_ago=active_days,
-                    families=families
-                ))
+
 
             # Auto-populate risk questions
             risk_questions = [
@@ -1234,6 +1217,15 @@ class DataStore:
         with db_session() as db:
             from app.db_models import ProjectRecord
             rec = db.query(ProjectRecord).filter_by(id=project_id).first()
+            if not rec:
+                return False
+            db.delete(rec)
+            return True
+
+    def delete_assessment(self, assessment_id: str) -> bool:
+        with db_session() as db:
+            from app.db_models import AssessmentRecord
+            rec = db.query(AssessmentRecord).filter_by(id=assessment_id).first()
             if not rec:
                 return False
             db.delete(rec)

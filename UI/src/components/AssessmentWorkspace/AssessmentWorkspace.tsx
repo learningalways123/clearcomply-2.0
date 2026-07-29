@@ -206,22 +206,28 @@ function AssessmentWorkspaceInner() {
 
   const openFindingsCount = poams.filter(p => p.status === 'open').length;
 
+  const isRiskOnly = assessment?.assessmentType === 'risk_assessment';
+
   const NAV_ITEMS = [
     { label: 'Dashboard', path: `/assessments/${id}/dashboard`, icon: <DashboardIcon /> },
-    { label: 'Team Intake', path: `/assessments/${id}/intake`, icon: <PeopleIcon /> },
-    { label: '1. Cover Page', path: `/assessments/${id}/cover`, icon: <DescriptionIcon /> },
-    { label: '2. Checklist', path: `/assessments/${id}/checklist`, icon: <PlaylistAddCheckIcon />, badge: totalChecklist - completedChecklist, badgeColor: 'warning' as const },
-    { label: '3. Contacts & Details', path: `/assessments/${id}/contacts`, icon: <ContactMailIcon /> },
-    { label: '4. Risk Assessment', path: `/assessments/${id}/risk`, icon: <WarningAmberIcon /> },
-    { label: '5. Data Categorization', path: `/assessments/${id}/data-categorization`, icon: <CategoryIcon /> },
-    { label: '6. Environments', path: `/assessments/${id}/environments`, icon: <CloudIcon /> },
-    { label: '7. System Inventory', path: `/assessments/${id}/inventory`, icon: <StorageIcon /> },
-    { label: '8. Diagram', path: `/assessments/${id}/diagrams`, icon: <ImageIcon /> },
-    { label: '9. Scanning & Testing', path: `/assessments/${id}/scanning`, icon: <BugReportIcon /> },
-    { label: '10. Controls Assessment', path: `/assessments/${id}/controls`, icon: <ShieldIcon /> },
-    { label: '11. Findings & POAM', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon />, badge: openFindingsCount, badgeColor: 'error' as const },
-    { label: '12. Additional Resources', path: `/assessments/${id}/resources`, icon: <LinkIcon /> },
-    { label: '13. Revision History', path: `/assessments/${id}/revision`, icon: <HistoryIcon /> },
+    ...(!isRiskOnly ? [
+      { label: 'Team Intake', path: `/assessments/${id}/intake`, icon: <PeopleIcon /> },
+      { label: '1. Cover Page', path: `/assessments/${id}/cover`, icon: <DescriptionIcon /> },
+      { label: '2. Checklist', path: `/assessments/${id}/checklist`, icon: <PlaylistAddCheckIcon />, badge: totalChecklist - completedChecklist, badgeColor: 'warning' as const },
+      { label: '3. Contacts & Details', path: `/assessments/${id}/contacts`, icon: <ContactMailIcon /> },
+    ] : []),
+    { label: isRiskOnly ? 'Risk Assessment' : '4. Risk Assessment', path: `/assessments/${id}/risk`, icon: <WarningAmberIcon /> },
+    ...(!isRiskOnly ? [
+      { label: '5. Data Categorization', path: `/assessments/${id}/data-categorization`, icon: <CategoryIcon /> },
+      { label: '6. Environments', path: `/assessments/${id}/environments`, icon: <CloudIcon /> },
+      { label: '7. System Inventory', path: `/assessments/${id}/inventory`, icon: <StorageIcon /> },
+      { label: '8. Diagram', path: `/assessments/${id}/diagrams`, icon: <ImageIcon /> },
+      { label: '9. Scanning & Testing', path: `/assessments/${id}/scanning`, icon: <BugReportIcon /> },
+      { label: '10. Controls Assessment', path: `/assessments/${id}/controls`, icon: <ShieldIcon /> },
+      { label: '11. Findings & POAM', path: `/assessments/${id}/findings`, icon: <AssignmentLateIcon />, badge: openFindingsCount, badgeColor: 'error' as const },
+      { label: '12. Additional Resources', path: `/assessments/${id}/resources`, icon: <LinkIcon /> },
+    ] : []),
+    { label: isRiskOnly ? 'Revision History' : '13. Revision History', path: `/assessments/${id}/revision`, icon: <HistoryIcon /> },
   ];
 
   // Dynamic Countdown (Target Date: Jul 16, 2026)
@@ -279,7 +285,7 @@ function AssessmentWorkspaceInner() {
                 <ArrowBackIcon fontSize="small" />
               </IconButton>
               <Typography variant="h6" fontWeight={850} letterSpacing={-0.5} sx={{ color: '#fff' }}>
-                SSP Builder
+                {isRiskOnly ? 'Risk Assessment' : 'SSP Builder'}
               </Typography>
             </Box>
             <Typography variant="caption" sx={{ color: '#818cf8', ml: 4, fontWeight: 700, display: 'block', fontSize: 11 }}>
@@ -405,7 +411,7 @@ function AssessmentWorkspaceInner() {
             <Toolbar sx={{ px: 3, py: 1.5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 600 }}>
-                  SSP BUILDER WORKSPACE
+                  {isRiskOnly ? 'RISK ASSESSMENT WORKSPACE' : 'SSP BUILDER WORKSPACE'}
                 </Typography>
               </Box>
 
@@ -429,27 +435,31 @@ function AssessmentWorkspaceInner() {
                   </IconButton>
                 </Tooltip>
 
-                <Button 
-                  variant="outlined" 
-                  color="warning" 
-                  size="small"
-                  onClick={handleRemindAllOverdue}
-                  disabled={reminding || overdueTeams.length === 0}
-                  startIcon={<NotificationImportantIcon />}
-                  sx={{ borderRadius: 2, px: 2, py: 0.75, fontWeight: 650, fontSize: 13 }}
-                >
-                  Remind all overdue
-                </Button>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  size="small"
-                  onClick={handleExportSSP}
-                  startIcon={<DownloadIcon />}
-                  sx={{ borderRadius: 2, px: 2, py: 0.75, fontWeight: 650, fontSize: 13, boxShadow: 'none', '&:hover': { boxShadow: 'none' } }}
-                >
-                  Export SSP
-                </Button>
+                {!isRiskOnly && (
+                  <>
+                    <Button 
+                      variant="outlined" 
+                      color="warning" 
+                      size="small"
+                      onClick={handleRemindAllOverdue}
+                      disabled={reminding || overdueTeams.length === 0}
+                      startIcon={<NotificationImportantIcon />}
+                      sx={{ borderRadius: 2, px: 2, py: 0.75, fontWeight: 650, fontSize: 13 }}
+                    >
+                      Remind all overdue
+                    </Button>
+                    <Button 
+                      variant="contained" 
+                      color="primary" 
+                      size="small"
+                      onClick={handleExportSSP}
+                      startIcon={<DownloadIcon />}
+                      sx={{ borderRadius: 2, px: 2, py: 0.75, fontWeight: 650, fontSize: 13, boxShadow: 'none', '&:hover': { boxShadow: 'none' } }}
+                    >
+                      Export SSP
+                    </Button>
+                  </>
+                )}
               </Box>
             </Toolbar>
           </AppBar>

@@ -382,6 +382,7 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         projectId=project_id,
         startDate=request.startDate,
         endDate=request.endDate,
+        assessmentType=request.assessmentType or "ssp",
     )
     
     # Save assessment
@@ -396,7 +397,7 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         entity_id=created_assessment.id,
         detail={"name": created_assessment.name, "frameworks": created_assessment.frameworkIds},
     )
-    
+
     # Return response
     return AssessmentResponse(
         id=created_assessment.id,
@@ -417,7 +418,10 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
         nistIntegrity=created_assessment.nistIntegrity,
         nistAvailability=created_assessment.nistAvailability,
         nistBaseline=created_assessment.nistBaseline,
-        projectId=created_assessment.projectId
+        projectId=created_assessment.projectId,
+        startDate=created_assessment.startDate.isoformat() if created_assessment.startDate else None,
+        endDate=created_assessment.endDate.isoformat() if created_assessment.endDate else None,
+        assessmentType=created_assessment.assessmentType,
     )
 
 
@@ -462,7 +466,10 @@ async def get_assessment(assessment_id: str, current_user: User = Depends(get_cu
         nistIntegrity=assessment.nistIntegrity,
         nistAvailability=assessment.nistAvailability,
         nistBaseline=assessment.nistBaseline,
-        projectId=assessment.projectId
+        projectId=assessment.projectId,
+        startDate=assessment.startDate.isoformat() if assessment.startDate else None,
+        endDate=assessment.endDate.isoformat() if assessment.endDate else None,
+        assessmentType=assessment.assessmentType,
     )
 
 
@@ -495,7 +502,10 @@ async def get_assessments(current_user: User = Depends(get_current_user)):
             nistIntegrity=assessment.nistIntegrity,
             nistAvailability=assessment.nistAvailability,
             nistBaseline=assessment.nistBaseline,
-            projectId=assessment.projectId
+            projectId=assessment.projectId,
+            startDate=assessment.startDate.isoformat() if assessment.startDate else None,
+            endDate=assessment.endDate.isoformat() if assessment.endDate else None,
+            assessmentType=assessment.assessmentType,
         )
         for assessment in assessments
     ]
@@ -1721,6 +1731,23 @@ async def delete_project(id: str, current_user: User = Depends(get_current_user)
         detail={}
     )
     return {"message": "Project deleted successfully"}
+
+
+@router.delete("/assessments/{id}", summary="Delete an assessment")
+async def delete_assessment(id: str, current_user: User = Depends(get_current_user)):
+    success = data_store.delete_assessment(id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+        
+    audit_service.log_action(
+        action="DELETE_ASSESSMENT",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="assessment",
+        entity_id=id,
+        detail={}
+    )
+    return {"message": "Assessment deleted successfully"}
 
 
 def load_default_workbook_state():

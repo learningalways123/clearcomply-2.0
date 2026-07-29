@@ -162,7 +162,6 @@ export default function AssessmentsOverview() {
                         <FolderIcon sx={{ color: 'primary.main' }} />
                         <Box>
                           <Typography variant="subtitle2" fontWeight={600}>{p.name}</Typography>
-                          <Typography variant="caption" color="text.secondary">{p.id.substring(0, 8)}…</Typography>
                         </Box>
                       </Box>
                     </TableCell>

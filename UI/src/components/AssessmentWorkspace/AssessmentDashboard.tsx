@@ -26,9 +26,11 @@ import Tooltip from '@mui/material/Tooltip';
 import { api } from '../../services/api';
 import type { IntakeTeam, PoamItem } from '../../services/api';
 import { useWorkspace } from './AssessmentWorkspace';
+import { useWorkbook } from './SSPBuilder/WorkbookContext';
 
 export default function AssessmentDashboard() {
   const { assessment } = useWorkspace();
+  const { workbook } = useWorkbook();
   const navigate = useNavigate();
   const [teams, setTeams] = useState<IntakeTeam[]>([]);
   const [poams, setPoams] = useState<PoamItem[]>([]);
@@ -119,13 +121,28 @@ export default function AssessmentDashboard() {
 
   const openFindings = poams.filter(p => p.status === 'open').length;
 
-  // Static/dynamic family progress data with deltas
+  // Dynamic family progress data calculated from workbook controls
+  const wbControls = workbook?.controls || [];
+
+  const getFamilyStats = (familyId: string) => {
+    const familyControls = wbControls.filter((c: any) => c.id.startsWith(`${familyId}-`));
+    const completed = familyControls.filter((c: any) => c.compliant === 'Implemented').length;
+    const total = familyControls.length;
+    return { completed, total };
+  };
+
+  const acStats = getFamilyStats('AC');
+  const iaStats = getFamilyStats('IA');
+  const auStats = getFamilyStats('AU');
+  const raStats = getFamilyStats('RA');
+  const irStats = getFamilyStats('IR');
+
   const familyProgress = [
-    { id: 'AC', family: 'Access Control (AC)', completed: 18, total: 22, delta: '▲2' },
-    { id: 'IA', family: 'Identification & Auth (IA)', completed: 12, total: 15, delta: '—' },
-    { id: 'AU', family: 'Audit & Accountability (AU)', completed: 9, total: 14, delta: '▲1' },
-    { id: 'RA', family: 'Risk Assessment (RA)', completed: 5, total: 8, delta: '▲1' },
-    { id: 'IR', family: 'Incident Response (IR)', completed: 6, total: 10, delta: '—' },
+    { id: 'AC', family: 'Access Control (AC)', completed: acStats.completed, total: acStats.total, delta: acStats.completed > 0 ? `▲${acStats.completed}` : '—' },
+    { id: 'IA', family: 'Identification & Auth (IA)', completed: iaStats.completed, total: iaStats.total, delta: iaStats.completed > 0 ? `▲${iaStats.completed}` : '—' },
+    { id: 'AU', family: 'Audit & Accountability (AU)', completed: auStats.completed, total: auStats.total, delta: auStats.completed > 0 ? `▲${auStats.completed}` : '—' },
+    { id: 'RA', family: 'Risk Assessment (RA)', completed: raStats.completed, total: raStats.total, delta: raStats.completed > 0 ? `▲${raStats.completed}` : '—' },
+    { id: 'IR', family: 'Incident Response (IR)', completed: irStats.completed, total: irStats.total, delta: irStats.completed > 0 ? `▲${irStats.completed}` : '—' },
   ];
 
   return (
@@ -246,7 +263,7 @@ export default function AssessmentDashboard() {
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {familyProgress.map((item) => {
-                  const pct = Math.round((item.completed / item.total) * 100);
+                  const pct = item.total > 0 ? Math.round((item.completed / item.total) * 100) : 0;
                   const barColor = getProgressColor(pct);
                   return (
                     <Tooltip key={item.id} title="Click to view and edit controls for this family" arrow>

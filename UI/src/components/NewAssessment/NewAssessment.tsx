@@ -16,6 +16,7 @@ export default function NewAssessment() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('projectId') || undefined;
+  const isRiskAssessment = searchParams.get('type') === 'risk_assessment';
 
   // ── Form state ──
   const [name, setName] = useState('');
@@ -56,7 +57,7 @@ export default function NewAssessment() {
   }, []);
 
   const handleCreate = async () => {
-    if (!name.trim()) { setCreateError('Please enter an SSP name.'); return; }
+    if (!name.trim()) { setCreateError(`Please enter a ${isRiskAssessment ? 'Risk Assessment' : 'SSP'} name.`); return; }
     if (!startDate) { setCreateError('Please select a start date.'); return; }
     if (!endDate) { setCreateError('Please select a target end date.'); return; }
     
@@ -73,6 +74,7 @@ export default function NewAssessment() {
         projectId: projectId,
         startDate: new Date(startDate).toISOString(),
         endDate: new Date(endDate).toISOString(),
+        assessmentType: isRiskAssessment ? 'risk_assessment' : 'ssp',
       });
       if (projectId) {
         navigate(`/projects/${projectId}`);
@@ -80,7 +82,7 @@ export default function NewAssessment() {
         navigate(`/assessments/${assessment.id}/dashboard`);
       }
     } catch (err) {
-      setCreateError(err instanceof Error ? err.message : 'Failed to create SSP');
+      setCreateError(err instanceof Error ? err.message : `Failed to create ${isRiskAssessment ? 'Risk Assessment' : 'SSP'}`);
       setCreating(false);
     }
   };
@@ -100,10 +102,10 @@ export default function NewAssessment() {
     <Box sx={{ maxWidth: 640, mx: 'auto', py: 4 }}>
       <Box sx={{ mb: 4, textAlign: 'center' }}>
         <Typography variant="h4" fontWeight={850} sx={{ color: '#1e1b4b', letterSpacing: '-0.75px', mb: 1 }}>
-          Create New SSP
+          Create New {isRiskAssessment ? 'Risk Assessment' : 'SSP'}
         </Typography>
         <Typography variant="body2" color="text.secondary" fontWeight={500}>
-          Enter details below to initialize your System Security Plan using NIST 800-53 standards.
+          Enter details below to initialize your {isRiskAssessment ? 'Risk Assessment' : 'System Security Plan'} using NIST 800-53 standards.
         </Typography>
       </Box>
 
@@ -120,13 +122,13 @@ export default function NewAssessment() {
             {/* SSP Name */}
             <Box>
               <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1.5, color: '#1e1b4b' }}>
-                SSP Name
+                {isRiskAssessment ? 'Risk Assessment Name' : 'SSP Name'}
               </Typography>
               <TextField
                 fullWidth
                 value={name}
                 onChange={e => setName(e.target.value)}
-                placeholder="e.g., Agency System Security Plan - Production"
+                placeholder={isRiskAssessment ? "e.g., Application Risk Assessment - Production" : "e.g., Agency System Security Plan - Production"}
                 variant="outlined"
                 sx={{
                   '& .MuiOutlinedInput-root': {
@@ -197,7 +199,7 @@ export default function NewAssessment() {
                   }
                 }}
               >
-                {creating ? <CircularProgress size={20} color="inherit" /> : 'Create SSP'}
+                {creating ? <CircularProgress size={20} color="inherit" /> : isRiskAssessment ? 'Create Risk Assessment' : 'Create SSP'}
               </Button>
             </Box>
 

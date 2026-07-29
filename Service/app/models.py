@@ -128,6 +128,7 @@ class Assessment(BaseModel):
     projectId: Optional[str] = Field(default=None, description="Parent project ID")
     startDate: Optional[datetime] = None
     endDate: Optional[datetime] = None
+    assessmentType: Optional[str] = Field(default="ssp", description="ssp | risk_assessment")
 
 
 
@@ -147,6 +148,7 @@ class CreateAssessmentRequest(BaseModel):
     projectId: Optional[str] = Field(default=None, description="Parent project ID")
     startDate: Optional[datetime] = None
     endDate: Optional[datetime] = None
+    assessmentType: Optional[str] = Field(default="ssp", description="ssp | risk_assessment")
 
 
 
@@ -172,6 +174,7 @@ class AssessmentResponse(BaseModel):
     projectId: Optional[str] = None
     startDate: Optional[str] = None
     endDate: Optional[str] = None
+    assessmentType: Optional[str] = Field(default="ssp", description="ssp | risk_assessment")
 
 
 

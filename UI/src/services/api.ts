@@ -105,6 +105,7 @@ export interface Assessment {
   projectId?: string;
   startDate?: string;
   endDate?: string;
+  assessmentType?: string;
 }
 
 export interface Project {
@@ -336,6 +337,7 @@ export interface CreateAssessmentRequest {
   projectId?: string;
   startDate?: string;
   endDate?: string;
+  assessmentType?: string;
 }
 
 
@@ -437,6 +439,8 @@ export const api = {
 
   createAssessment: (data: CreateAssessmentRequest) =>
     apiClient.post<Assessment>('/assessments', data).then(r => r.data),
+
+  deleteAssessment: (id: string) => apiClient.delete(`/assessments/${id}`).then(r => r.data),
 
   submitAnswers: (id: string, answers: AnswerSubmission[]) =>
     apiClient.post<AssessmentSummary>(`/assessments/${id}/answers`, { answers }).then(r => r.data),

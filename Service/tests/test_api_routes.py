@@ -542,7 +542,17 @@ def test_get_ssp_intake_teams_and_reminders(client):
     created = _create_nist_assessment(client).json()
     aid = created["id"]
     
-    # 1. Get intake teams
+    # 1. Create an intake team since it is empty by default
+    team_payload = {
+        "name": "Business / Data Owners",
+        "leadName": "Sarah Kim",
+        "leadEmail": "s.kim@agency.gov",
+        "families": "Data Categorization",
+        "dueDate": "2026-12-31"
+    }
+    client.post(f"/api/assessments/{aid}/intake", json=team_payload)
+
+    # 2. Get intake teams
     resp = client.get(f"/api/assessments/{aid}/intake")
     assert resp.status_code == 200
     data = resp.json()
@@ -899,6 +909,37 @@ def test_poam_export_findings_xlsx(client):
     assert export_resp.status_code == 200
     assert export_resp.headers["content-type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     assert len(export_resp.content) > 0
+
+
+def test_create_and_delete_assessment(client):
+    proj = client.post("/api/projects", json={"name": "Delete Test Project"}).json()
+    
+    # 1. Create a Risk Assessment
+    payload = {
+        "name": "Risk Assessment Test",
+        "frameworkIds": ["NIST-800-53"],
+        "projectId": proj["id"],
+        "assessmentType": "risk_assessment"
+    }
+    ass_resp = client.post("/api/assessments", json=payload)
+    assert ass_resp.status_code == 200
+    ass = ass_resp.json()
+    print("DEBUG: ass =", ass)
+    assert ass["assessmentType"] == "risk_assessment"
+    aid = ass["id"]
+
+    # 2. Verify assessment is in the list
+    list_resp = client.get(f"/api/projects/{proj['id']}")
+    assert list_resp.status_code == 200
+    assert any(s["id"] == aid for s in list_resp.json()["ssps"])
+
+    # 3. Delete the assessment
+    del_resp = client.delete(f"/api/assessments/{aid}")
+    assert del_resp.status_code == 200
+
+    # 4. Verify assessment is deleted
+    get_resp = client.get(f"/api/assessments/{aid}")
+    assert get_resp.status_code == 404
 
 
 
