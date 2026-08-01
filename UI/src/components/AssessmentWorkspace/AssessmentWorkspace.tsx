@@ -46,6 +46,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import LinkIcon from '@mui/icons-material/Link';
 import HistoryIcon from '@mui/icons-material/History';
+import EditIcon from '@mui/icons-material/Edit';
+import TextField from '@mui/material/TextField';
 
 import { api } from '../../services/api';
 import type { Assessment } from '../../services/api';
@@ -102,10 +104,31 @@ function AssessmentWorkspaceInner() {
   const [reminding, setReminding] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-
-  // Sidebar count indicators
   const [poams, setPoams] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
+  const [editNameOpen, setEditNameOpen] = useState(false);
+  const [editingName, setEditingName] = useState('');
+  const [savingName, setSavingName] = useState(false);
+
+  const handleOpenEditName = () => {
+    setEditingName(assessment?.name || '');
+    setEditNameOpen(true);
+  };
+
+  const handleSaveName = async () => {
+    if (!id || !editingName.trim()) return;
+    setSavingName(true);
+    try {
+      const updated = await api.updateAssessment(id, { name: editingName.trim() });
+      setAssessment(updated);
+      setEditNameOpen(false);
+    } catch (e) {
+      console.error(e);
+      alert('Failed to update name');
+    } finally {
+      setSavingName(false);
+    }
+  };
 
   // Consume SSP Workbook state
   const { workbook } = useWorkbook();
@@ -288,9 +311,24 @@ function AssessmentWorkspaceInner() {
                 {isRiskOnly ? 'Risk Assessment' : 'SSP Builder'}
               </Typography>
             </Box>
-            <Typography variant="caption" sx={{ color: '#818cf8', ml: 4, fontWeight: 700, display: 'block', fontSize: 11 }}>
-              {assessment?.name}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, ml: 4 }}>
+              <Typography 
+                variant="caption" 
+                onClick={handleOpenEditName}
+                sx={{ color: '#818cf8', fontWeight: 700, fontSize: 11, cursor: 'pointer', '&:hover': { textDecoration: 'underline', color: '#a5b4fc' } }}
+              >
+                {assessment?.name}
+              </Typography>
+              <Tooltip title="Edit Name">
+                <IconButton
+                  size="small"
+                  onClick={handleOpenEditName}
+                  sx={{ color: '#818cf8', p: 0.2, opacity: 0.7, '&:hover': { opacity: 1, color: '#fff' } }}
+                >
+                  <EditIcon sx={{ fontSize: 12 }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
             <Typography variant="caption" sx={{ color: '#64748b', ml: 4, fontWeight: 600, fontSize: 9.5 }}>
               NIST-800-53 Equivalent
             </Typography>
@@ -531,6 +569,38 @@ function AssessmentWorkspaceInner() {
               disabled={overdueTeams.length === 0}
             >
               Send Reminders
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Edit Name Dialog */}
+        <Dialog open={editNameOpen} onClose={() => !savingName && setEditNameOpen(false)} maxWidth="xs" fullWidth>
+          <DialogTitle sx={{ fontWeight: 800 }}>Edit Name</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="SSP / Risk Assessment Name"
+              type="text"
+              fullWidth
+              value={editingName}
+              onChange={(e) => setEditingName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSaveName();
+                }
+              }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ p: 2.5 }}>
+            <Button onClick={() => setEditNameOpen(false)} disabled={savingName}>Cancel</Button>
+            <Button 
+              variant="contained" 
+              onClick={handleSaveName} 
+              disabled={savingName || !editingName.trim()}
+            >
+              {savingName ? 'Saving…' : 'Save Changes'}
             </Button>
           </DialogActions>
         </Dialog>

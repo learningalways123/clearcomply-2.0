@@ -440,6 +440,9 @@ export const api = {
   createAssessment: (data: CreateAssessmentRequest) =>
     apiClient.post<Assessment>('/assessments', data).then(r => r.data),
 
+  updateAssessment: (id: string, data: { name?: string }) =>
+    apiClient.patch<Assessment>(`/assessments/${id}`, data).then(r => r.data),
+
   deleteAssessment: (id: string) => apiClient.delete(`/assessments/${id}`).then(r => r.data),
 
   submitAnswers: (id: string, answers: AnswerSubmission[]) =>

@@ -942,6 +942,29 @@ def test_create_and_delete_assessment(client):
     assert get_resp.status_code == 404
 
 
+def test_update_assessment_name(client):
+    proj = client.post("/api/projects", json={"name": "Rename Test Project"}).json()
+    payload = {
+        "name": "Original Name SSP",
+        "frameworkIds": ["NIST-800-53"],
+        "projectId": proj["id"]
+    }
+    ass = client.post("/api/assessments", json=payload).json()
+    aid = ass["id"]
+    assert ass["name"] == "Original Name SSP"
+
+    # Patch assessment name
+    patch_resp = client.patch(f"/api/assessments/{aid}", json={"name": "Updated MAXIS System Security Plan"})
+    assert patch_resp.status_code == 200
+    assert patch_resp.json()["name"] == "Updated MAXIS System Security Plan"
+
+    # Fetch assessment and verify name updated
+    get_resp = client.get(f"/api/assessments/{aid}")
+    assert get_resp.status_code == 200
+    assert get_resp.json()["name"] == "Updated MAXIS System Security Plan"
+
+
+
 
 
 

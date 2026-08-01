@@ -425,6 +425,43 @@ async def create_assessment(request: CreateAssessmentRequest, current_user: User
     )
 
 
+class UpdateAssessmentRequest(BaseModel):
+    name: Optional[str] = Field(default=None, min_length=1, max_length=200, description="New assessment name")
+
+
+@router.patch("/assessments/{assessment_id}", response_model=AssessmentResponse, summary="Update assessment name or info")
+async def update_assessment(assessment_id: str, request: UpdateAssessmentRequest, current_user: User = Depends(get_current_user)):
+    updated = data_store.update_assessment(assessment_id, name=request.name)
+    if not updated:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Assessment with id '{assessment_id}' not found"
+        )
+    return AssessmentResponse(
+        id=updated.id,
+        name=updated.name,
+        status=updated.status,
+        riskScore=updated.riskScore,
+        frameworkIds=updated.frameworkIds,
+        selectedControlIds=updated.selectedControlIds,
+        selectedQuestionIds=updated.selectedQuestionIds,
+        moduleIds=updated.moduleIds,
+        familyIds=updated.familyIds,
+        createdAt=updated.createdAt.isoformat(),
+        stats=updated.stats,
+        questionStats=updated.questionStats,
+        soc2AssessmentType=updated.soc2AssessmentType,
+        soc2Categories=updated.soc2Categories,
+        nistConfidentiality=updated.nistConfidentiality,
+        nistIntegrity=updated.nistIntegrity,
+        nistAvailability=updated.nistAvailability,
+        nistBaseline=updated.nistBaseline,
+        projectId=updated.projectId,
+        startDate=updated.startDate.isoformat() if updated.startDate else None,
+        endDate=updated.endDate.isoformat() if updated.endDate else None,
+        assessmentType=updated.assessmentType,
+    )
+
 
 @router.get("/assessments/{assessment_id}", response_model=AssessmentResponse)
 async def get_assessment(assessment_id: str, current_user: User = Depends(get_current_user)):

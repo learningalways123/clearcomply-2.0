@@ -336,6 +336,17 @@ class DataStore:
             recs = db.query(AssessmentRecord).order_by(AssessmentRecord.created_at.desc()).all()
             return [_record_to_assessment(r, self.questions) for r in recs]
 
+    def update_assessment(self, assessment_id: str, name: Optional[str] = None) -> Optional[Assessment]:
+        with db_session() as db:
+            rec = db.query(AssessmentRecord).filter_by(id=assessment_id).first()
+            if not rec:
+                return None
+            if name is not None:
+                rec.name = name
+            db.commit()
+            db.refresh(rec)
+            return _record_to_assessment(rec, self.questions)
+
     # ── SSP Workbook Methods ───────────────────────────────────────────────
     def get_ssp_workbook(self, assessment_id: str) -> Optional[SSPWorkbook]:
         with db_session() as db:

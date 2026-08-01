@@ -15,10 +15,17 @@ import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useAsync } from '../../hooks/useAsync';
 import { api } from '../../services/api';
@@ -91,6 +98,8 @@ export default function ProjectDetails() {
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
+  const [editSsp, setEditSsp] = useState<{ id: string; name: string } | null>(null);
+  const [savingName, setSavingName] = useState(false);
 
   const fetchProjectWithSsp = useCallback(
     () => Promise.all([api.getProject(id), api.getFrameworks()]),
@@ -124,6 +133,25 @@ export default function ProjectDetails() {
     } catch (e) {
       console.error(e);
       alert('Failed to delete SSP.');
+    }
+  };
+
+  const handleEditSsp = (ssp: Assessment) => {
+    setEditSsp({ id: ssp.id, name: ssp.name });
+  };
+
+  const handleSaveSspName = async () => {
+    if (!editSsp || !editSsp.name.trim()) return;
+    setSavingName(true);
+    try {
+      await api.updateAssessment(editSsp.id, { name: editSsp.name.trim() });
+      setEditSsp(null);
+      execute();
+    } catch (e) {
+      console.error(e);
+      alert('Failed to update SSP name.');
+    } finally {
+      setSavingName(false);
     }
   };
 
@@ -246,7 +274,21 @@ export default function ProjectDetails() {
                   <TableRow key={s.id} hover sx={{ cursor: 'pointer' }}
                     onClick={() => navigate(`/assessments/${s.id}`)}>
                     <TableCell>
-                      <Typography variant="subtitle2" fontWeight={600}>{s.name}</Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography variant="subtitle2" fontWeight={600}>{s.name}</Typography>
+                        <Tooltip title="Edit Name">
+                          <IconButton
+                            size="small"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditSsp(s);
+                            }}
+                            sx={{ color: 'text.secondary', opacity: 0.6, '&:hover': { opacity: 1, color: 'primary.main' } }}
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -275,6 +317,14 @@ export default function ProjectDetails() {
                         </Button>
                         <Button 
                           size="small" 
+                          color="primary"
+                          startIcon={<EditIcon />}
+                          onClick={() => handleEditSsp(s)}
+                        >
+                          Edit
+                        </Button>
+                        <Button 
+                          size="small" 
                           color="error"
                           startIcon={<DeleteIcon />}
                           onClick={() => handleDeleteSsp(s.id)}
@@ -290,6 +340,43 @@ export default function ProjectDetails() {
           </TableContainer>
         )}
       </Card>
+
+      {/* ── Edit SSP Name Dialog ── */}
+      <Dialog 
+        open={Boolean(editSsp)} 
+        onClose={() => !savingName && setEditSsp(null)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>Edit Name</DialogTitle>
+        <DialogContent dividers>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="SSP / Risk Assessment Name"
+            type="text"
+            fullWidth
+            value={editSsp?.name ?? ''}
+            onChange={(e) => setEditSsp(prev => prev ? { ...prev, name: e.target.value } : null)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSaveSspName();
+              }
+            }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={() => setEditSsp(null)} disabled={savingName}>Cancel</Button>
+          <Button 
+            onClick={handleSaveSspName} 
+            variant="contained" 
+            disabled={savingName || !editSsp?.name.trim()}
+          >
+            {savingName ? 'Saving…' : 'Save Changes'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
