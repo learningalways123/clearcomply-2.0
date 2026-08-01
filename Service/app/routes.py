@@ -1753,6 +1753,26 @@ async def get_project(id: str, current_user: User = Depends(get_current_user)):
         "ssps": ssps
     }
 
+
+class UpdateProjectRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=200, description="New project name")
+
+@router.patch("/projects/{id}", summary="Update project name")
+async def update_project(id: str, request: UpdateProjectRequest, current_user: User = Depends(get_current_user)):
+    updated = data_store.update_project(id, request.name)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    audit_service.log_action(
+        action="UPDATE_PROJECT",
+        user_email=current_user.email,
+        user_name=current_user.name,
+        entity_type="project",
+        entity_id=id,
+        detail={"name": request.name}
+    )
+    return updated
+
 @router.delete("/projects/{id}", summary="Delete a project")
 async def delete_project(id: str, current_user: User = Depends(get_current_user)):
     success = data_store.delete_project(id)

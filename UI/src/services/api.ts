@@ -396,6 +396,7 @@ export const api = {
   // Projects
   getProjects: () => apiClient.get<Project[]>('/projects').then(r => r.data),
   createProject: (name: string) => apiClient.post<Project>('/projects', { name }).then(r => r.data),
+  updateProject: (id: string, data: { name: string }) => apiClient.patch<Project>(`/projects/${id}`, data).then(r => r.data),
   getProject: (id: string) => apiClient.get<Project & { ssps: Assessment[] }>(`/projects/${id}`).then(r => r.data),
   deleteProject: (id: string) => apiClient.delete(`/projects/${id}`).then(r => r.data),
 

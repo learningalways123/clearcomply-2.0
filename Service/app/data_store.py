@@ -1224,6 +1224,24 @@ class DataStore:
                 "sspCount": 0
             }
 
+    def update_project(self, project_id: str, name: str) -> Optional[dict]:
+        with db_session() as db:
+            from app.db_models import ProjectRecord, AssessmentRecord
+            rec = db.query(ProjectRecord).filter_by(id=project_id).first()
+            if not rec:
+                return None
+            rec.name = name
+            db.commit()
+            db.refresh(rec)
+            ssp_count = db.query(AssessmentRecord).filter_by(project_id=project_id).count()
+            return {
+                "id": rec.id,
+                "name": rec.name,
+                "createdAt": rec.created_at,
+                "createdByEmail": rec.created_by_email,
+                "sspCount": ssp_count
+            }
+
     def delete_project(self, project_id: str) -> bool:
         with db_session() as db:
             from app.db_models import ProjectRecord

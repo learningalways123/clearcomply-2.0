@@ -101,6 +101,10 @@ export default function ProjectDetails() {
   const [editSsp, setEditSsp] = useState<{ id: string; name: string } | null>(null);
   const [savingName, setSavingName] = useState(false);
 
+  const [editProjectOpen, setEditProjectOpen] = useState(false);
+  const [editingProjectName, setEditingProjectName] = useState('');
+  const [savingProjectName, setSavingProjectName] = useState(false);
+
   const fetchProjectWithSsp = useCallback(
     () => Promise.all([api.getProject(id), api.getFrameworks()]),
     [id],
@@ -155,6 +159,26 @@ export default function ProjectDetails() {
     }
   };
 
+  const handleOpenEditProject = () => {
+    setEditingProjectName(project?.name || '');
+    setEditProjectOpen(true);
+  };
+
+  const handleSaveProjectTitle = async () => {
+    if (!id || !editingProjectName.trim()) return;
+    setSavingProjectName(true);
+    try {
+      await api.updateProject(id, { name: editingProjectName.trim() });
+      setEditProjectOpen(false);
+      execute();
+    } catch (e) {
+      console.error(e);
+      alert('Failed to update project name.');
+    } finally {
+      setSavingProjectName(false);
+    }
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', pt: 8 }}>
@@ -188,7 +212,18 @@ export default function ProjectDetails() {
       {/* ── Header ── */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
         <Box>
-          <Typography variant="h4" gutterBottom>{project.name}</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+            <Typography variant="h4">{project.name}</Typography>
+            <Tooltip title="Edit Project Name">
+              <IconButton 
+                size="small" 
+                onClick={handleOpenEditProject} 
+                sx={{ color: 'text.secondary', opacity: 0.7, '&:hover': { opacity: 1, color: 'primary.main' } }}
+              >
+                <EditIcon fontSize="medium" />
+              </IconButton>
+            </Tooltip>
+          </Box>
           <Typography variant="body2" color="text.secondary">
             Project created on {formatDate(project.createdAt)} {project.createdByEmail ? `by ${project.createdByEmail}` : ''}
           </Typography>
@@ -374,6 +409,43 @@ export default function ProjectDetails() {
             disabled={savingName || !editSsp?.name.trim()}
           >
             {savingName ? 'Saving…' : 'Save Changes'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* ── Edit Project Name Dialog ── */}
+      <Dialog 
+        open={editProjectOpen} 
+        onClose={() => !savingProjectName && setEditProjectOpen(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>Edit Project Name</DialogTitle>
+        <DialogContent dividers>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Project Name"
+            type="text"
+            fullWidth
+            value={editingProjectName}
+            onChange={(e) => setEditingProjectName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSaveProjectTitle();
+              }
+            }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={() => setEditProjectOpen(false)} disabled={savingProjectName}>Cancel</Button>
+          <Button 
+            onClick={handleSaveProjectTitle} 
+            variant="contained" 
+            disabled={savingProjectName || !editingProjectName.trim()}
+          >
+            {savingProjectName ? 'Saving…' : 'Save Changes'}
           </Button>
         </DialogActions>
       </Dialog>

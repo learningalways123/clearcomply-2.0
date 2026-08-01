@@ -964,6 +964,21 @@ def test_update_assessment_name(client):
     assert get_resp.json()["name"] == "Updated MAXIS System Security Plan"
 
 
+def test_update_project_name(client):
+    proj = client.post("/api/projects", json={"name": "Old Project Title"}).json()
+    pid = proj["id"]
+    assert proj["name"] == "Old Project Title"
+
+    patch_resp = client.patch(f"/api/projects/{pid}", json={"name": "MAXIS Enterprise Project"})
+    assert patch_resp.status_code == 200
+    assert patch_resp.json()["name"] == "MAXIS Enterprise Project"
+
+    get_resp = client.get(f"/api/projects/{pid}")
+    assert get_resp.status_code == 200
+    assert get_resp.json()["name"] == "MAXIS Enterprise Project"
+
+
+
 
 
 

@@ -19,9 +19,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+
 import AddIcon from '@mui/icons-material/Add';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FolderIcon from '@mui/icons-material/Folder';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useAsync } from '../../hooks/useAsync';
 import { api } from '../../services/api';
@@ -43,6 +47,9 @@ export default function AssessmentsOverview() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projectName, setProjectName] = useState('');
   const [creating, setCreating] = useState(false);
+
+  const [editProject, setEditProject] = useState<{ id: string; name: string } | null>(null);
+  const [savingProject, setSavingProject] = useState(false);
 
   const fetchProjects = useCallback(
     () => api.getProjects(),
@@ -79,6 +86,21 @@ export default function AssessmentsOverview() {
       alert('Failed to create project.');
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleSaveProjectName = async () => {
+    if (!editProject || !editProject.name.trim()) return;
+    setSavingProject(true);
+    try {
+      await api.updateProject(editProject.id, { name: editProject.name.trim() });
+      setEditProject(null);
+      execute();
+    } catch (e) {
+      console.error(e);
+      alert('Failed to update project name.');
+    } finally {
+      setSavingProject(false);
     }
   };
 
@@ -160,8 +182,20 @@ export default function AssessmentsOverview() {
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                         <FolderIcon sx={{ color: 'primary.main' }} />
-                        <Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Typography variant="subtitle2" fontWeight={600}>{p.name}</Typography>
+                          <Tooltip title="Edit Project Name">
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditProject({ id: p.id, name: p.name });
+                              }}
+                              sx={{ color: 'text.secondary', opacity: 0.6, '&:hover': { opacity: 1, color: 'primary.main' } }}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
                         </Box>
                       </Box>
                     </TableCell>
@@ -171,11 +205,17 @@ export default function AssessmentsOverview() {
                     <TableCell>
                       <Typography variant="body2">{formatDate(p.createdAt)}</Typography>
                     </TableCell>
-                    <TableCell>
-                      <Button size="small" startIcon={<VisibilityIcon />}
-                        onClick={(e) => { e.stopPropagation(); navigate(`/projects/${p.id}`); }}>
-                        View
-                      </Button>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button size="small" startIcon={<VisibilityIcon />}
+                          onClick={() => navigate(`/projects/${p.id}`)}>
+                          View
+                        </Button>
+                        <Button size="small" color="primary" startIcon={<EditIcon />}
+                          onClick={() => setEditProject({ id: p.id, name: p.name })}>
+                          Edit
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -212,6 +252,43 @@ export default function AssessmentsOverview() {
             disabled={creating || !projectName.trim()}
           >
             {creating ? <CircularProgress size={20} /> : 'Create'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* ── Edit Project Name Dialog Modal ── */}
+      <Dialog open={Boolean(editProject)} onClose={() => !savingProject && setEditProject(null)} fullWidth maxWidth="xs">
+        <DialogTitle sx={{ fontWeight: 700 }}>Edit Project Name</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Project Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={editProject?.name ?? ''}
+            onChange={(e) => setEditProject(prev => prev ? { ...prev, name: e.target.value } : null)}
+            disabled={savingProject}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSaveProjectName();
+              }
+            }}
+            sx={{ mt: 1 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditProject(null)} disabled={savingProject}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSaveProjectName} 
+            variant="contained" 
+            disabled={savingProject || !editProject?.name.trim()}
+          >
+            {savingProject ? 'Saving…' : 'Save Changes'}
           </Button>
         </DialogActions>
       </Dialog>
