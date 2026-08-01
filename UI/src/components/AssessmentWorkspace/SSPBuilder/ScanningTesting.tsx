@@ -60,6 +60,15 @@ export default function ScanningTesting() {
     updateSection('scanning', nextScans);
   };
 
+  const sanitizeTool = (tool: string) => {
+    if (!tool) return '';
+    let t = tool;
+    if (t.toLowerCase().includes('mnit enterprise tenable')) return 'Example: Burp Suite';
+    if (t.toLowerCase().includes('mnit enterprise radware')) return 'Example: Burp Suite';
+    if (t.toLowerCase().includes('mnit enterprise veracode')) return 'Example: Veracode';
+    return t.replace(/MNIT Enterprise\s*/gi, 'Example: ').replace(/MNIT\s*/gi, 'Enterprise ');
+  };
+
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
@@ -85,7 +94,9 @@ export default function ScanningTesting() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {scans.map((scan: any, idx: number) => (
+                {scans.map((scan: any, idx: number) => {
+                  const displayTool = sanitizeTool(scan.tool || '');
+                  return (
                   <TableRow key={idx}>
                     <TableCell sx={{ py: 1 }}>
                       <Select
@@ -102,8 +113,8 @@ export default function ScanningTesting() {
                     <TableCell sx={{ py: 1 }}>
                       <TextField
                         fullWidth
-                        placeholder="e.g. Nessus, SonarQube"
-                        value={scan.tool || ''}
+                        placeholder="e.g. Burp Suite, Veracode"
+                        value={displayTool}
                         onChange={(e) => handleScanChange(idx, 'tool', e.target.value)}
                         size="small"
                         variant="standard"
@@ -157,7 +168,8 @@ export default function ScanningTesting() {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                ))}
+                );
+              })}
               </TableBody>
             </Table>
           </TableContainer>

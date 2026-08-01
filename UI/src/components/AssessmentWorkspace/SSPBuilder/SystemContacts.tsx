@@ -23,7 +23,7 @@ const DROPDOWNS = {
   technologyPlatform: ["Windows", "Linux", "Mainframe", "Cloud Hosting / API", "Hybrid of above choices", "Other - Describe…"],
   yesNoUnsure: ["Yes", "No", "Unsure"],
   downtimeTolerance: ["Hours", "Days", "Weeks", "Months"],
-  vendorServices: ["Third Party Development", "Third Party Hosting", "Software Maintenance and Support", "MNIT Hosted and Supported", "Not applicable ", "Other"],
+  vendorServices: ["Third Party Development", "Third Party Hosting", "Software Maintenance and Support", "Enterprise Hosted and Supported", "Not applicable ", "Other"],
 };
 
 export default function SystemContacts() {

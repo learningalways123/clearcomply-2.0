@@ -212,7 +212,7 @@ export default function SystemInventoryTab() {
                     <TableCell sx={{ py: 1 }}>
                       <TextField
                         fullWidth
-                        placeholder="e.g. MNIT Agency Support"
+                        placeholder="e.g. Enterprise Agency Support"
                         value={wks.owner || ''}
                         onChange={(e) => handleListChange('workstations', idx, 'owner', e.target.value)}
                         size="small"

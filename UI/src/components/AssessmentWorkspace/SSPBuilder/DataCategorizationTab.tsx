@@ -79,7 +79,7 @@ export default function DataCategorizationTab() {
       <Box sx={{ mb: 3 }}>
         <Typography variant="h5" fontWeight={700} color="primary.main">Data Categorization</Typography>
         <Typography variant="body2" color="text.secondary">
-          Identify all sensitive data elements hosted in the system and define their FIPS-199/MNIT impact profiles.
+          Identify all sensitive data elements hosted in the system and define their FIPS-199 impact profiles.
         </Typography>
       </Box>
 

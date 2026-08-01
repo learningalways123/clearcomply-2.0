@@ -66,11 +66,14 @@ const RISK_VARS = {
       "over 100"
     ],
     "System Support Group": [
-      "MNIT Services",
-      "Other Support"
+      "Enterprise Services",
+      "Cloud Provider / SaaS",
+      "Co-located Data Center",
+      "Agency Data Center",
+      "Enterprise Data Center"
     ],
     "Physical Access": [
-      "MNIT Data Center",
+      "Enterprise Data Center",
       "Agency or Vendor Data Center",
       "General State Employee Access - Not public",
       "Public or Unsecured"
