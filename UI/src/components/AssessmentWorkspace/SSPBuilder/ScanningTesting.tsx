@@ -63,10 +63,10 @@ export default function ScanningTesting() {
   const sanitizeTool = (tool: string) => {
     if (!tool) return '';
     let t = tool;
-    if (t.toLowerCase().includes('mnit enterprise tenable')) return 'Example: Burp Suite';
-    if (t.toLowerCase().includes('mnit enterprise radware')) return 'Example: Burp Suite';
-    if (t.toLowerCase().includes('mnit enterprise veracode')) return 'Example: Veracode';
-    return t.replace(/MNIT Enterprise\s*/gi, 'Example: ').replace(/MNIT\s*/gi, 'Enterprise ');
+    if (t.toLowerCase().includes('enterprise tenable')) return 'Example: Burp Suite';
+    if (t.toLowerCase().includes('enterprise radware')) return 'Example: Burp Suite';
+    if (t.toLowerCase().includes('enterprise veracode')) return 'Example: Veracode';
+    return t.replace(/Enterprise\s*/gi, 'Example: ');
   };
 
   return (

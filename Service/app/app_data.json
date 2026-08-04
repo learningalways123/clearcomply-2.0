@@ -263,7 +263,7 @@
       "family": "Data Categorization",
       "num": 3,
       "name": "Record\nRetention",
-      "detail": "State data storage must be kept to a minimum by implementing data retention and disposal policies, procedures and processes that include at least the following:                                     \n\u2022 Handling and retaining information within systems and information output from systems in accordance with applicable federal and state laws, Executive Orders, directives, policies, regulations, standards, and operational requirements.                                                               \n\u2022 Limiting data storage amount and retention time to that which is required for legal, regulatory, and/or business requirements.                                                                                  \n\u2022 Specific retention requirements for cardholder data and other regulated data.                     \n\u2022 Processes for secure deletion of data when no longer needed.                                               \n\u2022 A quarterly process for identifying and securely deleting stored data with a Data Protection Categorization of High that exceeds defined retention.",
+      "detail": "Enterprise data storage must be kept to a minimum by implementing data retention and disposal policies, procedures and processes that include at least the following:                                     \n\u2022 Handling and retaining information within systems and information output from systems in accordance with applicable federal and state laws, Executive Orders, directives, policies, regulations, standards, and operational requirements.                                                               \n\u2022 Limiting data storage amount and retention time to that which is required for legal, regulatory, and/or business requirements.                                                                                  \n\u2022 Specific retention requirements for cardholder data and other regulated data.                     \n\u2022 Processes for secure deletion of data when no longer needed.                                               \n\u2022 A quarterly process for identifying and securely deleting stored data with a Data Protection Categorization of High that exceeds defined retention.",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -1167,7 +1167,7 @@
       "family": "Identity and Access Management Standard",
       "num": 38,
       "name": "Authorized Distribution",
-      "detail": "Users must ensure State data is only distributed to authorized personnel by:\n\u2022\tOnly allowing authorized personnel to view content on their screen.\n\u2022\tOnly including necessary and relevant information in system output such as reports and printouts.\n\u2022\tOnly distributing system output to individuals authorized to view all content.",
+      "detail": "Users must ensure Enterprise data is only distributed to authorized personnel by:\n\u2022\tOnly allowing authorized personnel to view content on their screen.\n\u2022\tOnly including necessary and relevant information in system output such as reports and printouts.\n\u2022\tOnly distributing system output to individuals authorized to view all content.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -1537,7 +1537,7 @@
       "family": "Information Security Program Standard",
       "num": 7,
       "name": "Information Sharing",
-      "detail": "The State information security program will participate in the local and national information security community to facilitate ongoing security awareness and training and stay current with security best practices. The State will also promptly share relevant, timely and actionable classified and unclassified security information according to standard procedures and protocols with federal, local and private partners with appropriate classifications.",
+      "detail": "The Enterprise information security program will participate in the local and national information security community to facilitate ongoing security awareness and training and stay current with security best practices. The State will also promptly share relevant, timely and actionable classified and unclassified security information according to standard procedures and protocols with federal, local and private partners with appropriate classifications.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -1785,7 +1785,7 @@
       "family": "Network Security Standard",
       "num": 13,
       "name": "Network Placement",
-      "detail": "All systems that store process or transmit State data must be located in network zones appropriate for their function and their protection requirements. System components that store data (such as a database) must be in an internal network zone, segregated from the DMZ and other untrusted networks.\nKey information security tools, mechanisms, and support components associated with system and security administration such as Active Directory Servers, LDAP Servers, DNS Servers, Logging Servers, Patching Servers, etc. must be isolated from other internal information system components via physically or logically separate subnets.",
+      "detail": "All systems that store process or transmit Enterprise data must be located in network zones appropriate for their function and their protection requirements. System components that store data (such as a database) must be in an internal network zone, segregated from the DMZ and other untrusted networks.\nKey information security tools, mechanisms, and support components associated with system and security administration such as Active Directory Servers, LDAP Servers, DNS Servers, Logging Servers, Patching Servers, etc. must be isolated from other internal information system components via physically or logically separate subnets.",
       "responseGuidance": "Response to this control is recorded in the risk assessment tab. ",
       "scope1": [
         "High",
@@ -1899,7 +1899,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 2,
       "name": "Secure Storage of Paper and Electronic Media",
-      "detail": "Paper and electronic media containing State data must be kept under the immediate protection and control of an authorized personnel or securely locked up.",
+      "detail": "Paper and electronic media containing Enterprise data must be kept under the immediate protection and control of an authorized personnel or securely locked up.",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -1914,7 +1914,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 3,
       "name": "Media Inventory",
-      "detail": "Electronic media containing State data must be inventoried at least annually. Inventories must be documented and any discrepancies with previous inventories must be investigated and communicated to the security incident response team.",
+      "detail": "Electronic media containing Enterprise data must be inventoried at least annually. Inventories must be documented and any discrepancies with previous inventories must be investigated and communicated to the security incident response team.",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -1944,7 +1944,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 5,
       "name": "Media Transport",
-      "detail": "The transport of any kind of paper or electronic media containing State data must be strictly controlled, including the following:\n\u2022 Categorize the media based on the data it contains.\n\u2022 Send the media by secured courier or other secure delivery method that can be accurately tracked.\n\u2022 Monitor the transport to ensure that each shipment is properly and timely received and acknowledged.\n\u2022 Document the transport of all media. Documentation must contain:\no a. The name of media recipient.\no b. Signature of media recipient.\no c. Date/time media received.\no d. Media control number and contents.\no e. Movement or routing information.\no f. If disposed of, the date, time, and method of destruction.\n\u2022 Ensure only authorized personnel approve any and all media that is moved from a secured area including when media is distributed to individuals.\n\u2022 Restrict the activities associated with the transport of media to authorized personnel.\n\u2022 Maintain accountability for media during transport outside of secured areas.\n\u2022 Encrypt all electronic media containing data with data protection categorization of High.\n\u2022 Ensure a current, retrievable copy of data is available for systems containing data with a Data Protection Categorization of High before movement of servers.\n\u2022 Paper or electronic media containing Federal Tax Information (FTI) must be double-sealed using one of the following:\no One envelope within another envelope with the inner envelope marked \u201cconfidential\u201d with some indication that only the designated official or delegate is authorized to open it.\no Boxes sealed with tamper evident seals. ",
+      "detail": "The transport of any kind of paper or electronic media containing Enterprise data must be strictly controlled, including the following:\n\u2022 Categorize the media based on the data it contains.\n\u2022 Send the media by secured courier or other secure delivery method that can be accurately tracked.\n\u2022 Monitor the transport to ensure that each shipment is properly and timely received and acknowledged.\n\u2022 Document the transport of all media. Documentation must contain:\no a. The name of media recipient.\no b. Signature of media recipient.\no c. Date/time media received.\no d. Media control number and contents.\no e. Movement or routing information.\no f. If disposed of, the date, time, and method of destruction.\n\u2022 Ensure only authorized personnel approve any and all media that is moved from a secured area including when media is distributed to individuals.\n\u2022 Restrict the activities associated with the transport of media to authorized personnel.\n\u2022 Maintain accountability for media during transport outside of secured areas.\n\u2022 Encrypt all electronic media containing data with data protection categorization of High.\n\u2022 Ensure a current, retrievable copy of data is available for systems containing data with a Data Protection Categorization of High before movement of servers.\n\u2022 Paper or electronic media containing Federal Tax Information (FTI) must be double-sealed using one of the following:\no One envelope within another envelope with the inner envelope marked \u201cconfidential\u201d with some indication that only the designated official or delegate is authorized to open it.\no Boxes sealed with tamper evident seals. ",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -1959,7 +1959,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 6,
       "name": "Secure Disposal of Paper",
-      "detail": "Paper containing State data must be securely disposed of when\nno longer needed for business or legal reasons and in accordance with record retention requirements by:\n\u2022 Ensuring all employees have access to and use secure shred bins or crosscut shredding devices.\no These devices must be cross cut shredders which produce particles that are 1 mm x 5 mm (0.04 in. x 0.2 in.) in size or smaller\n\u2022 Physically securing shred bins.\n\u2022 Emptying secure shred bins on a periodic basis to ensure they do not fill up.\n\u2022 Shredding, incinerating or pulping hard-copy materials so that State data cannot be reconstructed.\n\u2022 Ensuring the disposal or destruction is witnessed or carried out by authorized personnel.\n\u2022 Third parties performing disposal must be National Association for Information Destruction (NAID) certified and the state must maintain a copy of, and periodically validate the NAID certification.",
+      "detail": "Paper containing Enterprise data must be securely disposed of when\nno longer needed for business or legal reasons and in accordance with record retention requirements by:\n\u2022 Ensuring all employees have access to and use secure shred bins or crosscut shredding devices.\no These devices must be cross cut shredders which produce particles that are 1 mm x 5 mm (0.04 in. x 0.2 in.) in size or smaller\n\u2022 Physically securing shred bins.\n\u2022 Emptying secure shred bins on a periodic basis to ensure they do not fill up.\n\u2022 Shredding, incinerating or pulping hard-copy materials so that Enterprise data cannot be reconstructed.\n\u2022 Ensuring the disposal or destruction is witnessed or carried out by authorized personnel.\n\u2022 Third parties performing disposal must be National Association for Information Destruction (NAID) certified and the state must maintain a copy of, and periodically validate the NAID certification.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -2041,7 +2041,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 12,
       "name": "Output Device Locations",
-      "detail": "Prevent the unauthorized viewing of State data by:\n\u2022 Locating printers and fax machines in secure areas.\n\u2022 Using privacy screens and/or positioning monitors and laptop screens so that unauthorized users cannot view the screen.",
+      "detail": "Prevent the unauthorized viewing of Enterprise data by:\n\u2022 Locating printers and fax machines in secure areas.\n\u2022 Using privacy screens and/or positioning monitors and laptop screens so that unauthorized users cannot view the screen.",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -2088,7 +2088,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 15,
       "name": "Alternate Work Locations",
-      "detail": "Personnel working from locations not controlled by the State must ensure the protection of State data. Appropriate security controls must be implemented at alternate work sites that include, but are not limited to, laptop cable locks, recording serial numbers and other identification information about laptops, and disconnecting modems at alternate work sites. \n\nPersonnel must be provided a means to communicate with information security personnel in case of security incidents or problems. \n\nTelework locations for personnel accessing Federal Tax Information must be inspected to ensure that this data is adequately protected. The results of each inspection must be fully documented.",
+      "detail": "Personnel working from locations not controlled by the Enterprise must ensure the protection of Enterprise data. Appropriate security controls must be implemented at alternate work sites that include, but are not limited to, laptop cable locks, recording serial numbers and other identification information about laptops, and disconnecting modems at alternate work sites. \n\nPersonnel must be provided a means to communicate with information security personnel in case of security incidents or problems. \n\nTelework locations for personnel accessing Federal Tax Information must be inspected to ensure that this data is adequately protected. The results of each inspection must be fully documented.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -2120,7 +2120,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 17,
       "name": "Delivery and Removal",
-      "detail": "All systems being brought into or removed from State data centers must be authorized, monitored, controlled and documented.",
+      "detail": "All systems being brought into or removed from Enterprise data centers must be authorized, monitored, controlled and documented.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -2340,7 +2340,7 @@
       "family": "Physical and Environmental Security Standard",
       "num": 8,
       "name": "Physical Barriers",
-      "detail": "Areas of the facility containing State systems and data must be physically separated from other areas of the facility by:\n\u2022 Separating nonpublic areas from public areas with physical barriers (e.g., walls, doors, turnstiles, etc.) and identifying areas as nonpublic with prominent postings.\n\u2022 Separating sensitive areas such as data centers, network closets and areas storing or processing data with data protection categorization of High from other areas of the facility using physical barriers.\n\u2022 Minimizing the number of entrances to nonpublic and sensitive areas.\n\u2022 Controlling entry and exit points to nonpublic and sensitive areas of the facility using physical access control systems/devices and/or guards.\n\u2022 Restricting physical access to wireless access points, gateways, handheld devices, networking/communications hardware and telecommunication lines.",
+      "detail": "Areas of the facility containing Enterprise systems and data must be physically separated from other areas of the facility by:\n\u2022 Separating nonpublic areas from public areas with physical barriers (e.g., walls, doors, turnstiles, etc.) and identifying areas as nonpublic with prominent postings.\n\u2022 Separating sensitive areas such as data centers, network closets and areas storing or processing data with data protection categorization of High from other areas of the facility using physical barriers.\n\u2022 Minimizing the number of entrances to nonpublic and sensitive areas.\n\u2022 Controlling entry and exit points to nonpublic and sensitive areas of the facility using physical access control systems/devices and/or guards.\n\u2022 Restricting physical access to wireless access points, gateways, handheld devices, networking/communications hardware and telecommunication lines.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -2357,7 +2357,7 @@
       "family": "Risk Management",
       "num": 1,
       "name": "Information Security Risk Management Program",
-      "detail": "Establish and maintain an enterprise information security risk management program to manage risks to State data, systems and operations.  The program must include processes for ensuring that plans for conducting security testing, training, and monitoring activities:\n\u2022\tAre developed and maintained.\n\u2022\tContinue to be executed in a timely manner.\n\u2022\tAre consistent with the risk management strategy and priorities. \nThis program must be reviewed and updated at least every two years or as needed to address changes in business processes.",
+      "detail": "Establish and maintain an enterprise information security risk management program to manage risks to Enterprise data, systems and operations.  The program must include processes for ensuring that plans for conducting security testing, training, and monitoring activities:\n\u2022\tAre developed and maintained.\n\u2022\tContinue to be executed in a timely manner.\n\u2022\tAre consistent with the risk management strategy and priorities. \nThis program must be reviewed and updated at least every two years or as needed to address changes in business processes.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -2374,7 +2374,7 @@
       "family": "Risk Management",
       "num": 2,
       "name": "Information Security Risk Assessment",
-      "detail": "An information security risk assessment must be performed on all new and significantly changed systems, processes and third party vendors and contractors with access to State data or systems. This assessment must:\n\u2022\tInclude an assessment of the likelihood and magnitude of harm, from the unauthorized access, use, disclosure, disruption, modification, or destruction of the system, process, or third party and the information it processes, stores, or transmits\n\u2022\tDocument risk assessment results in a risk assessment report\n\u2022\tBe updated upon any significant changes to the system\u2019s environment or threat landscape.\n\u2022\tBe updated at least every 3 years for all systems and processes with data protection categorization of High. Third parties supplying services must be assessed annually. \n\u2022\tIdentify critical assets, threats and vulnerabilities.\n\u2022\tIdentify the likelihood and impact of the risks.\n\u2022\tCommunicate risks to agency and security leadership.\nAgency leadership is responsible for prioritizing and addressing risks identified in the risk assessment.\nRisk Assessment reports must be maintained for at least 6 years.",
+      "detail": "An information security risk assessment must be performed on all new and significantly changed systems, processes and third party vendors and contractors with access to Enterprise data or systems. This assessment must:\n\u2022\tInclude an assessment of the likelihood and magnitude of harm, from the unauthorized access, use, disclosure, disruption, modification, or destruction of the system, process, or third party and the information it processes, stores, or transmits\n\u2022\tDocument risk assessment results in a risk assessment report\n\u2022\tBe updated upon any significant changes to the system\u2019s environment or threat landscape.\n\u2022\tBe updated at least every 3 years for all systems and processes with data protection categorization of High. Third parties supplying services must be assessed annually. \n\u2022\tIdentify critical assets, threats and vulnerabilities.\n\u2022\tIdentify the likelihood and impact of the risks.\n\u2022\tCommunicate risks to agency and security leadership.\nAgency leadership is responsible for prioritizing and addressing risks identified in the risk assessment.\nRisk Assessment reports must be maintained for at least 6 years.",
       "responseGuidance": "Response to this control is recorded in the risk assessment tab. ",
       "scope1": [
         "High",
@@ -2406,7 +2406,7 @@
       "family": "Risk Management",
       "num": 4,
       "name": "Vendor Security Assessments",
-      "detail": "The security practices and compliance with any applicable regulations of third parties with access to State data or systems must be reviewed prior to beginning the engagement with the third party and at least annually. This requirement includes proof of concept and proof of value engagements. Vendor Assessment reports must be maintained for at least 6 years.",
+      "detail": "The security practices and compliance with any applicable regulations of third parties with access to Enterprise data or systems must be reviewed prior to beginning the engagement with the third party and at least annually. This requirement includes proof of concept and proof of value engagements. Vendor Assessment reports must be maintained for at least 6 years.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -2440,7 +2440,7 @@
       "family": "Risk Management",
       "num": 6,
       "name": "Information Security Risk Monitoring and Reporting",
-      "detail": "An information security risk monitoring and reporting program must be in place to:\n\u2022\tMonitor the status of known findings, exceptions and vulnerabilities at least monthly.\n\u2022\tProvide agency, technical and security leadership relevant and current metrics outlining the risks to State data at least quarterly.\n\u2022\tTrack remediation efforts and respond to findings, exceptions and vulnerabilities that are not on track to be resolved in the appropriate timeframes.\n\u2022\tCorrelate findings, exceptions and vulnerabilities to determine the cumulative risks to assets.",
+      "detail": "An information security risk monitoring and reporting program must be in place to:\n\u2022\tMonitor the status of known findings, exceptions and vulnerabilities at least monthly.\n\u2022\tProvide agency, technical and security leadership relevant and current metrics outlining the risks to Enterprise data at least quarterly.\n\u2022\tTrack remediation efforts and respond to findings, exceptions and vulnerabilities that are not on track to be resolved in the appropriate timeframes.\n\u2022\tCorrelate findings, exceptions and vulnerabilities to determine the cumulative risks to assets.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -2525,7 +2525,7 @@
       "family": "Secure Configuration Standard",
       "num": 5,
       "name": "Unapproved Hardware and Software",
-      "detail": "Users must be prevented from installing or using unapproved or unlicensed hardware or software on State systems through automated methods. \nSystems must be continuously monitored for unapproved or unlicensed hardware or software. Any unapproved or unlicensed software or hardware must be disabled or removed.\nThe use of peer-to-peer file sharing technology must be restricted to ensure that this capability is not used for the unauthorized distribution, display, performance, or reproduction of copyrighted work.",
+      "detail": "Users must be prevented from installing or using unapproved or unlicensed hardware or software on Enterprise systems through automated methods. \nSystems must be continuously monitored for unapproved or unlicensed hardware or software. Any unapproved or unlicensed software or hardware must be disabled or removed.\nThe use of peer-to-peer file sharing technology must be restricted to ensure that this capability is not used for the unauthorized distribution, display, performance, or reproduction of copyrighted work.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3036,7 +3036,7 @@
       "family": "Secure Configuration Standard",
       "num": 36,
       "name": "Mobile Device Management",
-      "detail": "Mobile device management must be used to enforce secure configurations on all State, employee or contractor mobile devices with access to State data or networks. All mobile device access to State systems or networks must be authorized. Mobile device management must be configured to:\n\u2022\tRemotely lock the device if necessary.\n\u2022\tRemotely wipe the device if necessary.\n\u2022\tSet and lock the device configuration.\n\u2022\tDetect \u201crooted\u201d and \u201cjailbroken\u201d devices.\n\u2022\tEnforce folder or disk level encryption. \n\u2022\tApply mandatory policy settings on the device.\n\u2022\tDetect unauthorized configurations or software/applications.\n\u2022\tDisable system functionality that provides for automatic execution of code on mobile devices without user direction.\n\u2022\tFor devices containing or accessing FTI\no\tDisable wireless personal area networks that allow a mobile device to connect to a computer via Bluetooth or near field communication (NFC) for data synchronization and storage.\no\tAccess to hardware, such as the digital camera, global positioning system (GPS), and universal serial bus (USB) interface, must be disabled to the extent possible.",
+      "detail": "Mobile device management must be used to enforce secure configurations on all State, employee or contractor mobile devices with access to Enterprise data or networks. All mobile device access to Enterprise systems or networks must be authorized. Mobile device management must be configured to:\n\u2022\tRemotely lock the device if necessary.\n\u2022\tRemotely wipe the device if necessary.\n\u2022\tSet and lock the device configuration.\n\u2022\tDetect \u201crooted\u201d and \u201cjailbroken\u201d devices.\n\u2022\tEnforce folder or disk level encryption. \n\u2022\tApply mandatory policy settings on the device.\n\u2022\tDetect unauthorized configurations or software/applications.\n\u2022\tDisable system functionality that provides for automatic execution of code on mobile devices without user direction.\n\u2022\tFor devices containing or accessing FTI\no\tDisable wireless personal area networks that allow a mobile device to connect to a computer via Bluetooth or near field communication (NFC) for data synchronization and storage.\no\tAccess to hardware, such as the digital camera, global positioning system (GPS), and universal serial bus (USB) interface, must be disabled to the extent possible.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3199,7 +3199,7 @@
       "family": "Secure Configuration Standard",
       "num": 46,
       "name": "Encryption in Transit",
-      "detail": "Strong cryptography and security protocols must be used to protect State data during transmission including the following:\n\u2022\tEncrypt data with a data protection categorization of High in transmission at all times.\n\u2022\tEncrypt data with a data protection categorization of Moderate in transmission over external networks.\n\u2022\tOnly accept trusted keys and certificates.\n\u2022\tOnly support secure versions or configurations of the protocol in use.\n\u2022\tUse an encryption strength that is appropriate for the encryption methodology in use.",
+      "detail": "Strong cryptography and security protocols must be used to protect Enterprise data during transmission including the following:\n\u2022\tEncrypt data with a data protection categorization of High in transmission at all times.\n\u2022\tEncrypt data with a data protection categorization of Moderate in transmission over external networks.\n\u2022\tOnly accept trusted keys and certificates.\n\u2022\tOnly support secure versions or configurations of the protocol in use.\n\u2022\tUse an encryption strength that is appropriate for the encryption methodology in use.",
       "responseGuidance": "Response to this control is recorded in the risk assessment tab. ",
       "scope1": [
         "High",
@@ -3216,7 +3216,7 @@
       "family": "Secure Configuration Standard",
       "num": 47,
       "name": "Certificate Management",
-      "detail": "All public key certificates used in State systems must be:\n\u2022\tAuthorized by a supervisor or a responsible official. \n\u2022\tImplemented using a secure process that verifies the identity of the certificate holder. \n\u2022\tIssued only to the intended party. \n\u2022\tIssued from trusted secure internal certificate authority or obtained from an approved service provider.\n\u2022\tValid for no longer than 3 years.",
+      "detail": "All public key certificates used in Enterprise systems must be:\n\u2022\tAuthorized by a supervisor or a responsible official. \n\u2022\tImplemented using a secure process that verifies the identity of the certificate holder. \n\u2022\tIssued only to the intended party. \n\u2022\tIssued from trusted secure internal certificate authority or obtained from an approved service provider.\n\u2022\tValid for no longer than 3 years.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3281,7 +3281,7 @@
       "family": "Secure Configuration Standard",
       "num": 51,
       "name": "Encryption Key Security",
-      "detail": "Encryption keys must be protected against disclosure and misuse by:\n\u2022\tRestricting access to cryptographic keys to the fewest number of individuals necessary.\n\u2022\tSecurely storing secret and private keys used to encrypt/decrypt State data in one (or more) of the following forms at all times:\no\tEncrypted with a key-encrypting key that is at least as strong as the data-encrypting key and that is stored separately from the data-encrypting key.\no\tWithin a secure cryptographic device (such as a host security module (HSM)).\no\tAs at least two full-length key components or key shares, in accordance with an industry-accepted method.\n\u2022\tStoring encryption keys in the fewest possible locations.\n\u2022\tSecurely distributing encryption keys.",
+      "detail": "Encryption keys must be protected against disclosure and misuse by:\n\u2022\tRestricting access to cryptographic keys to the fewest number of individuals necessary.\n\u2022\tSecurely storing secret and private keys used to encrypt/decrypt Enterprise data in one (or more) of the following forms at all times:\no\tEncrypted with a key-encrypting key that is at least as strong as the data-encrypting key and that is stored separately from the data-encrypting key.\no\tWithin a secure cryptographic device (such as a host security module (HSM)).\no\tAs at least two full-length key components or key shares, in accordance with an industry-accepted method.\n\u2022\tStoring encryption keys in the fewest possible locations.\n\u2022\tSecurely distributing encryption keys.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3416,7 +3416,7 @@
       "family": "Secure Systems Development and Acquisition",
       "num": 4,
       "name": "Information Security Architecture",
-      "detail": "Develop an information security architecture for the system that:\n\u2022 Describes the overall philosophy, requirements, and approach to be taken with regard to protecting the confidentiality, integrity, and availability of State data.                                       \n\u2022 Describes how the information security architecture is integrated into and supports the enterprise architecture.\n\u2022 Describes any information security assumptions about, and dependencies on, external services.\n\u2022 Is reviewed and updated (as necessary) whenever changes are made to the enterprise architecture.\n\u2022 Is reflected in the security plan and procurements/acquisitions.",
+      "detail": "Develop an information security architecture for the system that:\n\u2022 Describes the overall philosophy, requirements, and approach to be taken with regard to protecting the confidentiality, integrity, and availability of Enterprise data.                                       \n\u2022 Describes how the information security architecture is integrated into and supports the enterprise architecture.\n\u2022 Describes any information security assumptions about, and dependencies on, external services.\n\u2022 Is reviewed and updated (as necessary) whenever changes are made to the enterprise architecture.\n\u2022 Is reflected in the security plan and procurements/acquisitions.",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -3431,7 +3431,7 @@
       "family": "Secure Systems Development and Acquisition",
       "num": 5,
       "name": "System Security Plan",
-      "detail": "For all State systems, a documented system security plan must be maintained that:\n\u2022 Is consistent with the organization\u2019s enterprise architecture\n\u2022 Outlines the business function of the system.\n\u2022 Outlines the data elements the system will store, process or transmit along with each element\u2019s data protection categorization.\n\u2022 Identifies the system components and boundary.\n\u2022 Identifies a list of specifically needed system services, ports, and network protocols\n\u2022 Identifies and describes all connections with other systems by port, protocol, service or other similar criteria.\n\u2022 Provides an overview of the security requirements for the system and describes the security controls in place or planned for meeting those requirements\n\u2022 Outlines non-local maintenance procedures.\n\u2022 Is distributed to the system owner as well as agency and security leadership.\n\u2022 Contains results of risk assessments.\n\u2022 Is reviewed and updated upon any significant changes to the system or environment.\n\u2022 Is protected from unauthorized disclosure or modification.",
+      "detail": "For all Enterprise systems, a documented system security plan must be maintained that:\n\u2022 Is consistent with the organization\u2019s enterprise architecture\n\u2022 Outlines the business function of the system.\n\u2022 Outlines the data elements the system will store, process or transmit along with each element\u2019s data protection categorization.\n\u2022 Identifies the system components and boundary.\n\u2022 Identifies a list of specifically needed system services, ports, and network protocols\n\u2022 Identifies and describes all connections with other systems by port, protocol, service or other similar criteria.\n\u2022 Provides an overview of the security requirements for the system and describes the security controls in place or planned for meeting those requirements\n\u2022 Outlines non-local maintenance procedures.\n\u2022 Is distributed to the system owner as well as agency and security leadership.\n\u2022 Contains results of risk assessments.\n\u2022 Is reviewed and updated upon any significant changes to the system or environment.\n\u2022 Is protected from unauthorized disclosure or modification.",
       "responseGuidance": "This workbook is designed to satisfy the System Security Plan requirements.\nReview the control details with system owner, technical owner, and project team. ",
       "scope1": [
         "High"
@@ -3745,7 +3745,7 @@
       "family": "Secure Systems Development and Acquisition",
       "num": 24,
       "name": "Third Party Inventory",
-      "detail": "Maintain a list of third party vendors and contractors with access to State systems or data including: \n\u2022 A description of the data and systems the third party will have access to. \n\u2022 A description of the services provided by the third party. Third party inventories must be updated at least annually.",
+      "detail": "Maintain a list of third party vendors and contractors with access to Enterprise systems or data including: \n\u2022 A description of the data and systems the third party will have access to. \n\u2022 A description of the services provided by the third party. Third party inventories must be updated at least annually.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3762,7 +3762,7 @@
       "family": "Secure Systems Development and Acquisition",
       "num": 25,
       "name": "Third Party Contracts",
-      "detail": "Third party vendors and contractors that store, process or transmit State data must have agreements and contracts in place that require the third party to: \n\u2022 Enforce adequate information security controls to protect State data and comply with applicable laws and regulations. \n\u2022 Comply with required regulatory addendums \n\u2022 Provide an explanation of how State data will be protected and present evidence of appropriate security controls upon request. \n\u2022 Provide acceptable methods for the return, destruction or disposal of State data in possession of the third party at the end of the contract. \n\u2022 Ensure all storage devices where State data has resided are securely sanitized or destroyed using methods acceptable by NSA and Central Security Service (CSS) prior to their disposal or reuse. \n\u2022 Use State data and systems only for the purposes of the agreement. \n\u2022 Isolate all State Data as well as software and services that receive, process, store, or transmit State Data to the maximum extent possible so that other service provider customers sharing physical or virtual space cannot gain access to such data or applications. \n\u2022 Establish service level agreements that define expectations of performance, describe measurable outcomes, and identify remedies and response requirements for any identified instance of noncompliance. \n\u2022 Not disclose State data to other parties. \n\u2022 Allow the State to periodically assess the security of the third party\u2019s systems and processes. \n\u2022 Notify the State of all security incidents/breaches impacting State data or systems. \u2022 Specify licensing arrangements, code ownership and intellectual property rights related to the outsourced content. \n\u2022 Encrypt all State Data in transit. \n\u2022 Ensure all mechanisms used to encrypt data with a Data Protection Categorization of High are FIPS 140-2 compliant, and operate using the FIPS 140-2 compliant module. \n\u2022 Provide the State an escrow arrangement for all source code.\n\u2022 Notify the State of any vendors, contractors or other parties with access to State data and contractually bind them to protect State data.\n\u2022 Periodically deliver an independent report on the effectiveness of controls and timely correct relevant issues raised in the report.\n\u2022 Identify the location of systems that receive, process, store, or transmit State data.\n\u2022 Restrict the location of information systems that receive, process, store, or transmit federally regulated data to areas within the United States territories,\nembassies, or military installation\n\u2022 Have appropriate business continuity and disaster recovery plans in place.\n\u2022 Protect and share audit information with the State through the contract.\n\u2022 Complete the State\u2019s third-party vendor risk assessment prior to awarding of contract and annually thereafter.",
+      "detail": "Third party vendors and contractors that store, process or transmit Enterprise data must have agreements and contracts in place that require the third party to: \n\u2022 Enforce adequate information security controls to protect Enterprise data and comply with applicable laws and regulations. \n\u2022 Comply with required regulatory addendums \n\u2022 Provide an explanation of how Enterprise data will be protected and present evidence of appropriate security controls upon request. \n\u2022 Provide acceptable methods for the return, destruction or disposal of Enterprise data in possession of the third party at the end of the contract. \n\u2022 Ensure all storage devices where Enterprise data has resided are securely sanitized or destroyed using methods acceptable by NSA and Central Security Service (CSS) prior to their disposal or reuse. \n\u2022 Use Enterprise data and systems only for the purposes of the agreement. \n\u2022 Isolate all Enterprise Data as well as software and services that receive, process, store, or transmit Enterprise Data to the maximum extent possible so that other service provider customers sharing physical or virtual space cannot gain access to such data or applications. \n\u2022 Establish service level agreements that define expectations of performance, describe measurable outcomes, and identify remedies and response requirements for any identified instance of noncompliance. \n\u2022 Not disclose Enterprise data to other parties. \n\u2022 Allow the State to periodically assess the security of the third party\u2019s systems and processes. \n\u2022 Notify the State of all security incidents/breaches impacting Enterprise data or systems. \u2022 Specify licensing arrangements, code ownership and intellectual property rights related to the outsourced content. \n\u2022 Encrypt all Enterprise Data in transit. \n\u2022 Ensure all mechanisms used to encrypt data with a Data Protection Categorization of High are FIPS 140-2 compliant, and operate using the FIPS 140-2 compliant module. \n\u2022 Provide the State an escrow arrangement for all source code.\n\u2022 Notify the State of any vendors, contractors or other parties with access to Enterprise data and contractually bind them to protect Enterprise data.\n\u2022 Periodically deliver an independent report on the effectiveness of controls and timely correct relevant issues raised in the report.\n\u2022 Identify the location of systems that receive, process, store, or transmit Enterprise data.\n\u2022 Restrict the location of information systems that receive, process, store, or transmit federally regulated data to areas within the United States territories,\nembassies, or military installation\n\u2022 Have appropriate business continuity and disaster recovery plans in place.\n\u2022 Protect and share audit information with the State through the contract.\n\u2022 Complete the State\u2019s third-party vendor risk assessment prior to awarding of contract and annually thereafter.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3810,7 +3810,7 @@
       "family": "Secure Systems Development and Acquisition",
       "num": 28,
       "name": "Supply Chain Security",
-      "detail": "Vendors providing hardware or software to the State must have controls in place to prevent tampering or other malicious activity that may impact the hardware or software\u2019s ability to protect the confidentiality, availability or integrity of State data. ",
+      "detail": "Vendors providing hardware or software to the State must have controls in place to prevent tampering or other malicious activity that may impact the hardware or software\u2019s ability to protect the confidentiality, availability or integrity of Enterprise data. ",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3827,7 +3827,7 @@
       "family": "Secure Systems Development and Acquisition",
       "num": 29,
       "name": "Commercial Software Testing",
-      "detail": "Software purchased for use with State data must be tested for security flaws and weaknesses and any identified flaws and weaknesses must be addressed prior to being used for production purposes.  ",
+      "detail": "Software purchased for use with Enterprise data must be tested for security flaws and weaknesses and any identified flaws and weaknesses must be addressed prior to being used for production purposes.  ",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3844,7 +3844,7 @@
       "family": "Security Awareness Standard",
       "num": 1,
       "name": "Security Awareness Training",
-      "detail": "Personnel whose job duties require physical or logical access to state data or systems must complete security awareness training approved by the Office of the State Chief Information Security Officer (CISO) within 60 days of receiving access upon hire and at least annually thereafter.  The training materials must be updated annually and cover, at a minimum:\n\u2022\tState information security policies and standards.\n\u2022\tProcess for identifying and reporting security incidents.\n\u2022\tRecognizing and reporting potential indicators of insider threat.\n\u2022\tCurrent security threats and issues.\n\u2022\tHow to create and protect secure passwords and what to do if there is suspicion the password is compromised.",
+      "detail": "Personnel whose job duties require physical or logical access to enterprise data or systems must complete security awareness training approved by the Office of the Chief Information Security Officer (CISO) within 60 days of receiving access upon hire and at least annually thereafter.  The training materials must be updated annually and cover, at a minimum:\n\u2022\tEnterprise information security policies and standards.\n\u2022\tProcess for identifying and reporting security incidents.\n\u2022\tRecognizing and reporting potential indicators of insider threat.\n\u2022\tCurrent security threats and issues.\n\u2022\tHow to create and protect secure passwords and what to do if there is suspicion the password is compromised.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -3861,7 +3861,7 @@
       "family": "Security Awareness Standard",
       "num": 2,
       "name": "Security Reminders",
-      "detail": "Personnel whose job duties require physical or logical access to state data or systems must be provided security updates and reminders via a variety of media and avenues at least monthly.",
+      "detail": "Personnel whose job duties require physical or logical access to enterprise data or systems must be provided security updates and reminders via a variety of media and avenues at least monthly.",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -3876,7 +3876,7 @@
       "family": "Security Awareness Standard",
       "num": 3,
       "name": "Role-Based Security Training For Access To High Data",
-      "detail": "Personnel whose job duties require physical or logical access to state data or systems that have a data protection categorization of High must complete role-based information security training  approved by the Office of the State CISO prior to receiving access upon hire or role transfer and at least annually thereafter.",
+      "detail": "Personnel whose job duties require physical or logical access to enterprise data or systems that have a data protection categorization of High must complete role-based information security training  approved by the Office of the CISO prior to receiving access upon hire or role transfer and at least annually thereafter.",
       "responseGuidance": null,
       "scope1": [
         "High"
@@ -3891,7 +3891,7 @@
       "family": "Security Awareness Standard",
       "num": 4,
       "name": "Role-Based Security Training",
-      "detail": "Developers, system administrators, service desk, and information security personnel must complete role-based information security training approved by the Office of the State CISO prior to receiving access upon hire or role transfer, upon major system changes, and at least annually, thereafter.",
+      "detail": "Developers, system administrators, service desk, and information security personnel must complete role-based information security training approved by the Office of the CISO prior to receiving access upon hire or role transfer, upon major system changes, and at least annually, thereafter.",
       "responseGuidance": "Response to this control is recorded in the risk assessment tab. ",
       "scope1": [
         "High",
@@ -3909,7 +3909,7 @@
       "family": "Security Awareness Standard",
       "num": 5,
       "name": "Annual Acknowledgment of Responsibility",
-      "detail": "Personnel whose jobs require access to State data or systems must document acknowledgment at least annually that they have read, understood and agree to follow the State information security policies and standards relevant to their job responsibilities.",
+      "detail": "Personnel whose jobs require access to Enterprise data or systems must document acknowledgment at least annually that they have read, understood and agree to follow the Enterprise information security policies and standards relevant to their job responsibilities.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -4270,7 +4270,7 @@
       "family": "Threat and Vulnerability Management",
       "num": 1,
       "name": "Threat and Vulnerability Monitoring",
-      "detail": "Monitor reputable outside sources for applicable vendor security alerts, threat intelligence, advisories and directives to identify security vulnerabilities in State systems.",
+      "detail": "Monitor reputable outside sources for applicable vendor security alerts, threat intelligence, advisories and directives to identify security vulnerabilities in Enterprise systems.",
       "responseGuidance": null,
       "scope1": [
         "High",
@@ -4353,7 +4353,7 @@
       "family": "Threat and Vulnerability Management",
       "num": 6,
       "name": "Vulnerability Risk Ranking",
-      "detail": "Information security vulnerabilities impacting the organization must be analyzed for likelihood and impact to the organization and ranked into four Severity categories:\n\u2022\tSeverity 1: Vulnerabilities that pose the highest risk to State systems or data and require immediate attention.\n\u2022\tSeverity 2: Vulnerabilities that pose great risk to State systems or data.\n\u2022\tSeverity 3: Vulnerabilities that pose a moderate or indirect risk to State systems or data.\n\u2022\tSeverity 4: Vulnerabilities that only expose non-critical system information.",
+      "detail": "Information security vulnerabilities impacting the organization must be analyzed for likelihood and impact to the organization and ranked into four Severity categories:\n\u2022\tSeverity 1: Vulnerabilities that pose the highest risk to Enterprise systems or data and require immediate attention.\n\u2022\tSeverity 2: Vulnerabilities that pose great risk to Enterprise systems or data.\n\u2022\tSeverity 3: Vulnerabilities that pose a moderate or indirect risk to Enterprise systems or data.\n\u2022\tSeverity 4: Vulnerabilities that only expose non-critical system information.",
       "responseGuidance": null,
       "scope1": [
         "High",
