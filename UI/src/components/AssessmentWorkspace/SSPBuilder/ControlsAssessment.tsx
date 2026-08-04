@@ -349,11 +349,21 @@ export default function ControlsAssessment() {
 
                     <ListItemText
                       primary={
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography variant="body2" fontWeight={700}>
-                            {ctrl.id}
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+                          <Typography 
+                            variant="body2" 
+                            fontWeight={600}
+                            sx={{
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                              lineHeight: 1.3
+                            }}
+                          >
+                            {ctrl.name}
                           </Typography>
-                          <Stack direction="row" spacing={0.5} alignItems="center">
+                          <Stack direction="row" spacing={0.5} alignItems="center" flexShrink={0}>
                             {data.compliant && (
                               <Chip 
                                 label={data.compliant} 
@@ -372,20 +382,6 @@ export default function ControlsAssessment() {
                             )}
                           </Stack>
                         </Box>
-                      }
-                      secondary={
-                        <Typography 
-                          variant="caption" 
-                          sx={{ 
-                            display: '-webkit-box',
-                            WebkitLineClamp: 1,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            mt: 0.25
-                          }}
-                        >
-                          {ctrl.name}
-                        </Typography>
                       }
                     />
                   </ListItemButton>
@@ -414,7 +410,7 @@ export default function ControlsAssessment() {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="caption" fontWeight={700} color="primary.main" sx={{ display: 'block', mb: 0.5 }}>
-                      {selectedControl.family} &bull; {selectedControl.id}
+                      {selectedControl.family}
                     </Typography>
                     <Typography variant="h6" fontWeight={700}>
                       {selectedControl.name}
