@@ -15,10 +15,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import GroupIcon from '@mui/icons-material/Group';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 import { useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
@@ -111,39 +113,44 @@ export default function AssessmentDashboard() {
     );
   }
 
-  // Calculate dashboard stats
-  const answered = assessment.questionStats?.answeredQuestions ?? 0;
-  const total = assessment.questionStats?.totalQuestions ?? 0;
-  const progressPercent = total > 0 ? Math.round((answered / total) * 100) : 0;
-
   const completedTeams = teams.filter(t => t.status === 'complete').length;
   const totalTeams = teams.length;
 
   const openFindings = poams.filter(p => p.status === 'open').length;
 
-  // Dynamic family progress data calculated from workbook controls
+  // Dynamic family progress data calculated from workbook controls and control definitions
+  const controlDefs = workbook?.controlDefinitions || [];
   const wbControls = workbook?.controls || [];
 
-  const getFamilyStats = (familyId: string) => {
-    const familyControls = wbControls.filter((c: any) => c.id.startsWith(`${familyId}-`));
-    const completed = familyControls.filter((c: any) => c.compliant === 'Implemented').length;
-    const total = familyControls.length;
-    return { completed, total };
-  };
+  const familyMap: Record<string, { id: string; family: string; completed: number; total: number; delta: string }> = {};
 
-  const acStats = getFamilyStats('AC');
-  const iaStats = getFamilyStats('IA');
-  const auStats = getFamilyStats('AU');
-  const raStats = getFamilyStats('RA');
-  const irStats = getFamilyStats('IR');
+  controlDefs.forEach((def: any) => {
+    const wbData = wbControls.find((c: any) => c.id === def.id);
+    const isSelected = wbData ? Boolean(wbData.selected) : false;
+    
+    if (isSelected) {
+      const famName = def.family || 'Other';
+      if (!familyMap[famName]) {
+        familyMap[famName] = { id: famName, family: famName, completed: 0, total: 0, delta: '—' };
+      }
+      familyMap[famName].total += 1;
+      const isCompleted = Boolean(
+        wbData && ((wbData.response && wbData.response.trim() !== '') || (wbData.compliant && wbData.compliant.trim() !== ''))
+      );
+      if (isCompleted) {
+        familyMap[famName].completed += 1;
+      }
+    }
+  });
 
-  const familyProgress = [
-    { id: 'AC', family: 'Access Control (AC)', completed: acStats.completed, total: acStats.total, delta: acStats.completed > 0 ? `▲${acStats.completed}` : '—' },
-    { id: 'IA', family: 'Identification & Auth (IA)', completed: iaStats.completed, total: iaStats.total, delta: iaStats.completed > 0 ? `▲${iaStats.completed}` : '—' },
-    { id: 'AU', family: 'Audit & Accountability (AU)', completed: auStats.completed, total: auStats.total, delta: auStats.completed > 0 ? `▲${auStats.completed}` : '—' },
-    { id: 'RA', family: 'Risk Assessment (RA)', completed: raStats.completed, total: raStats.total, delta: raStats.completed > 0 ? `▲${raStats.completed}` : '—' },
-    { id: 'IR', family: 'Incident Response (IR)', completed: irStats.completed, total: irStats.total, delta: irStats.completed > 0 ? `▲${irStats.completed}` : '—' },
-  ];
+  const familyProgress = Object.values(familyMap).map(f => ({
+    ...f,
+    delta: f.completed > 0 ? `▲${f.completed}` : '—'
+  }));
+
+  const totalSelectedControls = familyProgress.reduce((sum, f) => sum + f.total, 0);
+  const completedSelectedControls = familyProgress.reduce((sum, f) => sum + f.completed, 0);
+  const totalControlsProgressPercent = totalSelectedControls > 0 ? Math.round((completedSelectedControls / totalSelectedControls) * 100) : 0;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3.5 }}>
@@ -169,10 +176,10 @@ export default function AssessmentDashboard() {
                   Controls Complete
                 </Typography>
                 <Typography variant="h4" fontWeight={850} sx={{ color: '#0f172a', mt: 0.25 }}>
-                  {answered}/{total}
+                  {completedSelectedControls}/{totalSelectedControls}
                 </Typography>
                 <Typography variant="caption" color="text.secondary" fontWeight={500}>
-                  {progressPercent}% total progress
+                  {totalSelectedControls > 0 ? `${totalControlsProgressPercent}% total progress` : '0 selected controls'}
                 </Typography>
               </Box>
             </CardContent>
@@ -254,84 +261,107 @@ export default function AssessmentDashboard() {
                 <Typography variant="subtitle1" fontWeight={750} color="#0f172a">
                   Controls Progress by Family
                 </Typography>
-                <Chip 
-                  label="Trend: 58% → 61% → 65% → 68%" 
-                  size="small" 
-                  sx={{ bgcolor: '#f1f5f9', color: '#475569', fontWeight: 650, fontSize: 10 }} 
-                />
+                {familyProgress.length > 0 && (
+                  <Chip 
+                    label={`${completedSelectedControls} of ${totalSelectedControls} controls completed`} 
+                    size="small" 
+                    sx={{ bgcolor: '#f1f5f9', color: '#475569', fontWeight: 650, fontSize: 10 }} 
+                  />
+                )}
               </Box>
               
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {familyProgress.map((item) => {
-                  const pct = item.total > 0 ? Math.round((item.completed / item.total) * 100) : 0;
-                  const barColor = getProgressColor(pct);
-                  return (
-                    <Tooltip key={item.id} title="Click to view and edit controls for this family" arrow>
-                      <Box 
-                        onClick={() => navigate(`/assessments/${assessment.id}/controls?family=${item.id}`)}
-                        sx={{ 
-                          cursor: 'pointer', 
-                          p: 0.75, 
-                          borderRadius: 1.5,
-                          '&:hover': { bgcolor: '#f8fafc' } 
-                        }}
-                      >
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5, alignItems: 'center' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant="body2" fontWeight={600} color="#334155">
-                              {item.family}
-                            </Typography>
-                            {item.delta && item.delta !== '—' && (
-                              <Chip 
-                                label={item.delta} 
-                                size="small" 
-                                sx={{ 
-                                  height: 16, 
-                                  fontSize: 9, 
-                                  fontWeight: 800, 
-                                  ml: 1, 
-                                  bgcolor: 'rgba(16, 185, 129, 0.1)', 
-                                  color: '#10b981' 
-                                }} 
-                              />
-                            )}
+              {familyProgress.length > 0 ? (
+                <>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {familyProgress.map((item) => {
+                      const pct = item.total > 0 ? Math.round((item.completed / item.total) * 100) : 0;
+                      const barColor = getProgressColor(pct);
+                      return (
+                        <Tooltip key={item.id} title="Click to view and edit controls for this family" arrow>
+                          <Box 
+                            onClick={() => navigate(`/assessments/${assessment.id}/controls?family=${encodeURIComponent(item.family)}`)}
+                            sx={{ 
+                              cursor: 'pointer', 
+                              p: 0.75, 
+                              borderRadius: 1.5,
+                              '&:hover': { bgcolor: '#f8fafc' } 
+                            }}
+                          >
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5, alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="body2" fontWeight={600} color="#334155">
+                                  {item.family}
+                                </Typography>
+                                {item.delta && item.delta !== '—' && (
+                                  <Chip 
+                                    label={item.delta} 
+                                    size="small" 
+                                    sx={{ 
+                                      height: 16, 
+                                      fontSize: 9, 
+                                      fontWeight: 800, 
+                                      ml: 1, 
+                                      bgcolor: 'rgba(16, 185, 129, 0.1)', 
+                                      color: '#10b981' 
+                                    }} 
+                                  />
+                                )}
+                              </Box>
+                              <Typography variant="body2" fontWeight={750} sx={{ color: barColor }}>
+                                {item.completed}/{item.total} ({pct}%)
+                              </Typography>
+                            </Box>
+                            <LinearProgress 
+                              variant="determinate" 
+                              value={pct} 
+                              sx={{ 
+                                height: 6, 
+                                borderRadius: 3, 
+                                bgcolor: '#e2e8f0',
+                                '& .MuiLinearProgress-bar': { bgcolor: barColor }
+                              }} 
+                            />
                           </Box>
-                          <Typography variant="body2" fontWeight={750} sx={{ color: barColor }}>
-                            {item.completed}/{item.total} ({pct}%)
-                          </Typography>
-                        </Box>
-                        <LinearProgress 
-                          variant="determinate" 
-                          value={pct} 
-                          sx={{ 
-                            height: 6, 
-                            borderRadius: 3, 
-                            bgcolor: '#e2e8f0',
-                            '& .MuiLinearProgress-bar': { bgcolor: barColor }
-                          }} 
-                        />
-                      </Box>
-                    </Tooltip>
-                  );
-                })}
-              </Box>
+                        </Tooltip>
+                      );
+                    })}
+                  </Box>
 
-              {/* Color Legend */}
-              <Box sx={{ display: 'flex', gap: 2.5, mt: 3, pt: 2, borderTop: '1px dashed #e2e8f0', justifyContent: 'center' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#ef4444' }} />
-                  <Typography variant="caption" color="text.secondary" fontWeight={600}>Critical (&lt;50%)</Typography>
+                  {/* Color Legend */}
+                  <Box sx={{ display: 'flex', gap: 2.5, mt: 3, pt: 2, borderTop: '1px dashed #e2e8f0', justifyContent: 'center' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#ef4444' }} />
+                      <Typography variant="caption" color="text.secondary" fontWeight={600}>Critical (&lt;50%)</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#f59e0b' }} />
+                      <Typography variant="caption" color="text.secondary" fontWeight={600}>At Risk (50%–79%)</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#10b981' }} />
+                      <Typography variant="caption" color="text.secondary" fontWeight={600}>Complete (≥80%)</Typography>
+                    </Box>
+                  </Box>
+                </>
+              ) : (
+                <Box sx={{ p: 4, textAlign: 'center', bgcolor: '#f8fafc', borderRadius: 2.5, border: '1px dashed #cbd5e1' }}>
+                  <PlaylistAddCheckIcon sx={{ fontSize: 42, color: '#94a3b8', mb: 1 }} />
+                  <Typography variant="subtitle2" fontWeight={700} color="#1e293b">
+                    No Control Families Selected
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2, maxWidth: 360, mx: 'auto' }}>
+                    Pick a control family and select family members using the checkboxes in Controls Assessment to view progress here.
+                  </Typography>
+                  <Button 
+                    variant="contained" 
+                    size="small"
+                    onClick={() => navigate(`/assessments/${assessment.id}/controls`)}
+                    sx={{ textTransform: 'none', fontWeight: 650, borderRadius: 2 }}
+                  >
+                    Go to Controls Assessment
+                  </Button>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#f59e0b' }} />
-                  <Typography variant="caption" color="text.secondary" fontWeight={600}>At Risk (50%–79%)</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#10b981' }} />
-                  <Typography variant="caption" color="text.secondary" fontWeight={600}>Complete (≥80%)</Typography>
-                </Box>
-              </Box>
-
+              )}
             </CardContent>
           </Card>
         </Grid>

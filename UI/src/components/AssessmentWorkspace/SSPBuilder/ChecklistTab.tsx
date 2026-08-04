@@ -122,8 +122,11 @@ export default function ChecklistTab() {
         const ctrlDefs = workbook.controlDefinitions || [];
         const ctrlAnswers = workbook.controls || [];
         if (ctrlDefs.length === 0) return 0;
-        const answered = ctrlAnswers.filter((c: any) => (c.response && c.response.trim() !== '') || (c.compliant && c.compliant.trim() !== '')).length;
-        return Math.min(100, Math.round((answered / ctrlDefs.length) * 100));
+        const selectedControls = ctrlAnswers.filter((c: any) => c.selected);
+        const targetList = selectedControls.length > 0 ? selectedControls : ctrlAnswers;
+        const denominator = selectedControls.length > 0 ? selectedControls.length : ctrlDefs.length;
+        const answered = targetList.filter((c: any) => (c.response && c.response.trim() !== '') || (c.compliant && c.compliant.trim() !== '')).length;
+        return Math.min(100, Math.round((answered / denominator) * 100));
       }
       case 'Findings & Policy Exceptions': {
         const extra = workbook.findingsExtra || {};
