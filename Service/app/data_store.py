@@ -418,6 +418,13 @@ class DataStore:
             
             setattr(rec, attr_name, data)
             rec.updated_at = datetime.utcnow()
+
+            if section == "controls" and isinstance(data, list):
+                from app.db_models import AssessmentRecord
+                selected_count = sum(1 for c in data if isinstance(c, dict) and c.get("selected") is True)
+                assoc_assessment = db.query(AssessmentRecord).filter_by(id=assessment_id).first()
+                if assoc_assessment:
+                    assoc_assessment.selected_controls_count = selected_count
             
             db.commit()
             db.refresh(rec)
