@@ -123,38 +123,16 @@
   },
   "contactRoles": [
     {
-      "role": "Business Division Director"
+      "role": "Business Owner / Manager"
     },
     {
-      "role": "Business Manager"
+      "role": "Technical Lead / Contact"
     },
     {
-      "role": "Primary Technical Manager"
+      "role": "Security Analyst / Officer"
     },
     {
-      "role": "Technical Contact"
-    },
-    {
-      "role": "Subject Matter Expert (SME)"
-    },
-    {
-      "role": "Firewall Steward(s)"
-    },
-    {
-      "role": "Tester / QA Contact"
-    },
-    {
-      "role": "Security Analyst"
-    },
-    {
-      "role": "Vendor Contact",
-      "emailLabel": "Vendor Email address"
-    },
-    {
-      "role": "Project Manager"
-    },
-    {
-      "role": "Other"
+      "role": "System Administrator"
     }
   ],
   "dataCategorizationImpacts": [

@@ -14,6 +14,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import { useWorkbook } from './WorkbookContext';
 
@@ -25,6 +29,13 @@ const DROPDOWNS = {
   downtimeTolerance: ["Hours", "Days", "Weeks", "Months"],
   vendorServices: ["Third Party Development", "Third Party Hosting", "Software Maintenance and Support", "Enterprise Hosted and Supported", "Not applicable ", "Other"],
 };
+
+const DEFAULT_ROLES = [
+  { role: "Business Owner / Manager", name: "", email: "" },
+  { role: "Technical Lead / Contact", name: "", email: "" },
+  { role: "Security Analyst / Officer", name: "", email: "" },
+  { role: "System Administrator", name: "", email: "" },
+];
 
 export default function SystemContacts() {
   const { workbook, updateSection, loading } = useWorkbook();
@@ -56,6 +67,8 @@ export default function SystemContacts() {
     risksVulnerabilities: ''
   };
 
+  const contactsList = (tc.contacts && tc.contacts.length > 0) ? tc.contacts : DEFAULT_ROLES;
+
   const handleFieldChange = (field: string, value: string) => {
     updateSection('contactsInfo', {
       ...tc,
@@ -64,11 +77,27 @@ export default function SystemContacts() {
   };
 
   const handleContactChange = (index: number, field: string, value: string) => {
-    const nextContacts = [...(tc.contacts || [])];
+    const nextContacts = [...contactsList];
     nextContacts[index] = {
       ...nextContacts[index],
       [field]: value
     };
+    updateSection('contactsInfo', {
+      ...tc,
+      contacts: nextContacts
+    });
+  };
+
+  const handleAddContact = () => {
+    const nextContacts = [...contactsList, { role: '', name: '', email: '' }];
+    updateSection('contactsInfo', {
+      ...tc,
+      contacts: nextContacts
+    });
+  };
+
+  const handleRemoveContact = (index: number) => {
+    const nextContacts = contactsList.filter((_: any, i: number) => i !== index);
     updateSection('contactsInfo', {
       ...tc,
       contacts: nextContacts
@@ -87,20 +116,42 @@ export default function SystemContacts() {
       {/* Contacts Table */}
       <Card sx={{ mb: 3, borderRadius: 2 }}>
         <CardContent>
-          <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>System Contacts</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="subtitle1" fontWeight={700}>System Contacts</Typography>
+            <Button
+              startIcon={<AddIcon />}
+              variant="outlined"
+              size="small"
+              onClick={handleAddContact}
+              sx={{ textTransform: 'none', fontWeight: 600 }}
+            >
+              Add Custom Role
+            </Button>
+          </Box>
           <TableContainer>
             <Table size="small">
               <TableHead>
                 <TableRow sx={{ bgcolor: 'grey.50' }}>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Name (Agency)</TableCell>
-                  <TableCell>Email</TableCell>
+                  <TableCell width="32%">Role Title</TableCell>
+                  <TableCell width="34%">Name (Organization / Agency)</TableCell>
+                  <TableCell width="28%">Email</TableCell>
+                  <TableCell width="6%" align="center"></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(tc.contacts || []).map((c: any, idx: number) => (
+                {contactsList.map((c: any, idx: number) => (
                   <TableRow key={idx}>
-                    <TableCell sx={{ py: 1, fontWeight: 600 }}>{c.role}</TableCell>
+                    <TableCell sx={{ py: 1 }}>
+                      <TextField
+                        fullWidth
+                        placeholder="Role Title (e.g. Lead Developer)"
+                        value={c.role || ''}
+                        onChange={(e) => handleContactChange(idx, 'role', e.target.value)}
+                        size="small"
+                        variant="standard"
+                        slotProps={{ input: { style: { fontWeight: 600 } } }}
+                      />
+                    </TableCell>
                     <TableCell sx={{ py: 1 }}>
                       <TextField
                         fullWidth
@@ -120,6 +171,16 @@ export default function SystemContacts() {
                         size="small"
                         variant="standard"
                       />
+                    </TableCell>
+                    <TableCell sx={{ py: 1 }} align="center">
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => handleRemoveContact(idx)}
+                        title="Delete Role"
+                      >
+                        <DeleteOutlineIcon fontSize="small" />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
